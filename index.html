@@ -1,34 +1,68 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>你错我队 - 2025浙江省服务外包创新大赛</title>
     <style>
-      .section {
-        background-color: #f1f1f1;
-        text-align: center;
-        padding: 40px;
-        margin: 10px 0;
+      :root {
+        --section1-height: 200px;  /* 第一部分高度 */
+        --section2-height: 700px;  /* 第二部分高度 */
+        --section3-height: 100px;  /* 第三部分高度 */
       }
+      
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      
+      .section {
+        text-align: center;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      #section1 {
+        background-color: #f0f8ff;
+        height: var(--section1-height);
+      }
+      
+      #section2 {
+        background-color: #e6e6fa;
+        height: var(--section2-height);
+      }
+      
+      #section3 {
+        background-color: #f5f5dc;
+        height: var(--section3-height);
+      }
+      
       .logo {
-        height: 80px;
+        max-height: 80%;
+        max-width: 80%;
       }
     </style>
-  </head>
-  <body>
-    <div class="section">
-      <img src="https://example.com/ningbo-university.jpg" 
-           alt="宁波大学" 
+</head>
+<body>
+    <!-- 第一部分：Logo展示 -->
+    <div id="section1" class="section">
+      <img src="https://via.placeholder.com/400x150?text=科技创新+Logo" 
+           alt="科技创新Logo" 
            class="logo">
     </div>
     
-    <div class="section">
-      <h1>🎉Hello!我们是2025浙江省服务外包创新大赛"你错我队"，欢迎来到我们的网站！😊😊😊</h1>
+    <!-- 第二部分：主标题 -->
+    <div id="section2" class="section">
+      <h1>🎉 Hello! 我们是2025浙江省服务外包创新大赛"你错我队"</h1>
+      <p>欢迎来到我们的科技创新项目展示网站！</p>
     </div>
     
-    <div class="section">
-      <p>我们的网站</p>
+    <!-- 第三部分：页脚 -->
+    <div id="section3" class="section">
+      <p>©2025 你错我队 | 浙江省服务外包创新大赛参赛作品</p>
     </div>
-  </body>
+</body>
 </html>
