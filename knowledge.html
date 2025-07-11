@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的知识库 | 知识库管理平台</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-blue: rgb(17, 0, 255);
+      --dark-blue: rgb(13, 0, 196);
+      --light-blue: rgba(17, 0, 255, 0.1);
+      --light-bg: #f5f7fa;
+      --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+      --sidebar-width: 240px;
+      --sidebar-collapsed: 70px;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      transition: var(--transition);
+    }
+    
+    body {
+      background: var(--light-bg);
+      color: #333;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    /* 顶部导航栏 */
+    .topbar {
+      background: linear-gradient(135deg, var(--primary-blue), #0a006e);
+      color: white;
+      padding: 0 30px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo {
+      height: 40px;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    }
+    
+    .app-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+    
+    .search-container {
+      position: relative;
+    }
+    
+    .search-input {
+      padding: 10px 20px 10px 45px;
+      border-radius: 30px;
+      border: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      font-size: 1rem;
+      width: 300px;
+      transition: width 0.3s;
+    }
+    
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .search-input:focus {
+      background: rgba(255, 255, 255, 0.25);
+      outline: none;
+      width: 350px;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .action-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff4757;
+      color: white;
+      font-size: 0.7rem;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-blue);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .user-name {
+      font-weight: 500;
+    }
+    
+    /* 主布局 */
+    .main-container {
+      display: flex;
+      min-height: 100vh;
+      padding-top: 70px;
+    }
+    
+    /* 侧边栏 */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, #0a006e, var(--primary-blue));
+      color: white;
+      height: calc(100vh - 70px);
+      position: fixed;
+      left: 0;
+      top: 70px;
+      overflow-y: auto;
+      z-index: 99;
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: width 0.3s;
+    }
+    
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed);
+    }
+    
+    .toggle-btn {
+      padding: 20px 15px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .toggle-btn:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+    
+    .toggle-btn span {
+      font-size: 0.9rem;
+    }
+    
+    .sidebar.collapsed .toggle-btn span {
+      display: none;
+    }
+    
+    .nav-item {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-left: 3px solid transparent;
+    }
+    
+    .nav-item i {
+      font-size: 1.2rem;
+      min-width: 25px;
+      text-align: center;
+    }
+    
+    .sidebar.collapsed .nav-item span {
+      display: none;
+    }
+    
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.15);
+      border-left: 3px solid white;
+    }
+    
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 15px 20px;
+    }
+    
+    .sidebar-title {
+      padding: 15px 20px 5px;
+      font-size: 0.85rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+    
+    .sidebar.collapsed .sidebar-title {
+      display: none;
+    }
+    
+    /* 主内容区 */
+    .content {
+      flex: 1;
+      padding: 30px;
+      margin-left: var(--sidebar-width);
+      transition: margin-left 0.3s;
+    }
+    
+    .content.sidebar-collapsed {
+      margin-left: var(--sidebar-collapsed);
+    }
+    
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .content-title {
+      color: var(--primary-blue);
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    
+    .date-info {
+      color: #777;
+      font-size: 1rem;
+    }
+    
+    /* 知识库页面样式 */
+    .knowledge-container {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    
+    .knowledge-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .toolbar-left {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .toolbar-right {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #ddd;
+      color: #555;
+    }
+    
+    .btn-outline:hover {
+      background: #f9f9f9;
+    }
+    
+    .search-box {
+      position: relative;
+    }
+    
+    .search-box input {
+      padding: 10px 15px 10px 40px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      width: 250px;
+      font-size: 1rem;
+    }
+    
+    .search-box i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+    }
+    
+    .filter-select {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      background: white;
+      font-size: 1rem;
+    }
+    
+    .categories {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    
+    .category {
+      padding: 10px 20px;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid transparent;
+    }
+    
+    .category:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category.active {
+      border-color: var(--primary-blue);
+      background: rgba(17, 0, 255, 0.05);
+    }
+    
+    .category-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    
+    .documents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+    
+    .document-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .document-header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .document-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .document-info {
+      flex: 1;
+    }
+    
+    .document-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #2c3e50;
+    }
+    
+    .document-category {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    
+    .document-body {
+      padding: 20px;
+      flex: 1;
+    }
+    
+    .document-desc {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    .document-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #777;
+      font-size: 0.85rem;
+    }
+    
+    .document-footer {
+      padding: 15px 20px;
+      background: #f9f9f9;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .action-icon {
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #555;
+    }
+    
+    .action-icon:hover {
+      background: rgba(17, 0, 255, 0.1);
+      color: var(--primary-blue);
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    
+    .page-item {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: white;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .page-item.active {
+      background: var(--primary-blue);
+      color: white;
+    }
+    
+    .page-item:hover:not(.active) {
+      background: #f5f5f5;
+    }
+    
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .empty-icon {
+      font-size: 4rem;
+      color: #ddd;
+      margin-bottom: 20px;
+    }
+    
+    .empty-text {
+      color: #777;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    
+    /* 页脚 */
+    .footer {
+      background: linear-gradient(135deg, #0a006e, var(--primary-blue));
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      border-radius: 15px;
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 1200px) {
+      .search-input {
+        width: 200px;
+      }
+      
+      .search-input:focus {
+        width: 250px;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.collapsed {
+        transform: translateX(0);
+        width: var(--sidebar-collapsed);
+      }
+      
+      .content {
+        margin-left: 0;
+      }
+      
+      .content.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .topbar {
+        padding: 0 15px;
+      }
+      
+      .app-title {
+        display: none;
+      }
+      
+      .search-container {
+        flex: 1;
+        margin: 0 15px;
+      }
+      
+      .search-input {
+        width: 100%;
+      }
+      
+      .user-name {
+        display: none;
+      }
+      
+      .knowledge-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .toolbar-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .documents-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* 动画效果 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.6s forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部导航栏 -->
+    <div class="topbar">
+      <div class="logo-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/681/681662.png" alt="科技图标" class="logo">
+        <div class="app-title">知识库管理平台</div>
+      </div>
+      
+      <div class="user-actions">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="搜索文档、用户或标签...">
+        </div>
+        
+        <button class="action-btn">
+          <i class="far fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        
+        <button class="action-btn">
+          <i class="far fa-envelope"></i>
+          <span class="notification-badge">5</span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="user-avatar">张</div>
+          <div class="user-name">张工程师</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 主布局 -->
+    <div class="main-container">
+      <!-- 侧边栏 -->
+      <div class="sidebar" :class="{ 'collapsed': isCollapsed }">
+        <div class="toggle-btn" @click="isCollapsed = !isCollapsed">
+          <i :class="isCollapsed ? 'fas fa-angle-double-right' : 'fas fa-angle-double-left'"></i>
+          <span v-if="!isCollapsed">收起菜单</span>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <div 
+          v-for="(item, index) in navItems" 
+          :key="index"
+          class="nav-item"
+          :class="{ 'active': activeIndex === index }"
+          @click="navigateTo(item, index)"
+        >
+          <i :class="item.icon"></i>
+          <span>{{ item.title }}</span>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <div class="sidebar-title">知识管理</div>
+        <div class="nav-item">
+          <i class="fas fa-folder"></i>
+          <span>文档分类</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-tags"></i>
+          <span>标签管理</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-shield-alt"></i>
+          <span>权限设置</span>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <div class="sidebar-title">团队协作</div>
+        <div class="nav-item">
+          <i class="fas fa-users"></i>
+          <span>团队成员</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-comments"></i>
+          <span>讨论区</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-tasks"></i>
+          <span>任务管理</span>
+        </div>
+      </div>
+      
+      <!-- 主内容区 -->
+      <div class="content" :class="{ 'sidebar-collapsed': isCollapsed }">
+        <div class="content-header">
+          <h1 class="content-title">我的知识库</h1>
+          <div class="date-info">{{ currentDate }}</div>
+        </div>
+        
+        <!-- 知识库内容 -->
+        <div class="knowledge-container fade-in">
+          <!-- 工具栏 -->
+          <div class="knowledge-toolbar">
+            <div class="toolbar-left">
+              <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" v-model="searchQuery" placeholder="搜索文档...">
+              </div>
+              
+              <select class="filter-select" v-model="selectedFilter">
+                <option value="all">全部文档</option>
+                <option value="recent">最近更新</option>
+                <option value="popular">最受欢迎</option>
+                <option value="my">我的文档</option>
+              </select>
+            </div>
+            
+            <div class="toolbar-right">
+              <button class="btn btn-outline">
+                <i class="fas fa-sync-alt"></i> 刷新
+              </button>
+              <button class="btn btn-primary">
+                <i class="fas fa-plus"></i> 新建文档
+              </button>
+            </div>
+          </div>
+          
+          <!-- 分类导航 -->
+          <div class="categories">
+            <div 
+              v-for="(category, index) in categories" 
+              :key="index"
+              class="category"
+              :class="{ 'active': activeCategory === index }"
+              @click="activeCategory = index"
+            >
+              <div class="category-icon" :style="{ backgroundColor: category.color + '20', color: category.color }">
+                <i :class="category.icon"></i>
+              </div>
+              <span>{{ category.name }}</span>
+            </div>
+          </div>
+          
+          <!-- 文档网格 -->
+          <div class="documents-grid">
+            <div 
+              v-for="(doc, index) in filteredDocuments" 
+              :key="index"
+              class="document-card fade-in"
+              :style="{ 'animation-delay': (index * 0.1) + 's' }"
+            >
+              <div class="document-header">
+                <div class="document-icon" :style="{ backgroundColor: doc.color + '20', color: doc.color }">
+                  <i :class="doc.icon"></i>
+                </div>
+                <div class="document-info">
+                  <div class="document-title">{{ doc.title }}</div>
+                  <div class="document-category">{{ doc.category }}</div>
+                </div>
+              </div>
+              
+              <div class="document-body">
+                <p class="document-desc">{{ doc.description }}</p>
+                
+                <div class="document-meta">
+                  <div>
+                    <i class="far fa-clock"></i> {{ doc.updated }}
+                  </div>
+                  <div>
+                    <i class="far fa-eye"></i> {{ doc.views }} 次浏览
+                  </div>
+                </div>
+              </div>
+              
+              <div class="document-footer">
+                <div class="action-icon" title="编辑">
+                  <i class="fas fa-edit"></i>
+                </div>
+                <div class="action-icon" title="分享">
+                  <i class="fas fa-share-alt"></i>
+                </div>
+                <div class="action-icon" title="下载">
+                  <i class="fas fa-download"></i>
+                </div>
+                <div class="action-icon" title="删除">
+                  <i class="fas fa-trash"></i>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 空状态 -->
+            <div v-if="filteredDocuments.length === 0" class="empty-state">
+              <div class="empty-icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <h3 class="empty-text">没有找到匹配的文档</h3>
+              <button class="btn btn-primary">
+                <i class="fas fa-plus"></i> 创建新文档
+              </button>
+            </div>
+          </div>
+          
+          <!-- 分页 -->
+          <div class="pagination">
+            <div 
+              v-for="page in totalPages" 
+              :key="page"
+              class="page-item"
+              :class="{ 'active': currentPage === page }"
+              @click="currentPage = page"
+            >
+              {{ page }}
+            </div>
+          </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+          <p>©2025 你错我队 | 浙江省服务外包创新大赛参赛作品 | 知识库平台</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        isCollapsed: false,
+        activeIndex: 1, // 激活"我的知识库"
+        navItems: [
+          {
+            title: '仪表板',
+            icon: 'fas fa-tachometer-alt',
+            link: 'dashboard.html'
+          },
+          {
+            title: '我的知识库',
+            icon: 'fas fa-box-open',
+            link: 'knowledge.html'
+          },
+          {
+            title: '团队协作',
+            icon: 'fas fa-users',
+            link: 'collaboration.html'
+          },
+          {
+            title: '数据分析',
+            icon: 'fas fa-chart-bar',
+            link: 'analytics.html'
+          },
+          {
+            title: '系统设置',
+            icon: 'fas fa-cog',
+            link: 'settings.html'
+          }
+        ],
+        currentDate: '',
+        searchQuery: '',
+        selectedFilter: 'all',
+        activeCategory: 0,
+        currentPage: 1,
+        totalPages: 5,
+        categories: [
+          { name: '全部', icon: 'fas fa-layer-group', color: '#3498db' },
+          { name: '技术文档', icon: 'fas fa-code', color: '#2ecc71' },
+          { name: '产品设计', icon: 'fas fa-paint-brush', color: '#9b59b6' },
+          { name: '项目管理', icon: 'fas fa-tasks', color: '#f1c40f' },
+          { name: '客户资料', icon: 'fas fa-users', color: '#e74c3c' },
+          { name: '财务报告', icon: 'fas fa-chart-line', color: '#1abc9c' },
+          { name: '培训资料', icon: 'fas fa-graduation-cap', color: '#d35400' }
+        ],
+        documents: [
+          {
+            title: '前端开发规范 V3.0',
+            category: '技术文档',
+            description: '包含HTML、CSS、JavaScript等前端开发的最佳实践和规范说明，适用于团队协作开发场景。',
+            updated: '2025-07-10',
+            views: 124,
+            icon: 'fas fa-code',
+            color: '#2ecc71'
+          },
+          {
+            title: 'UI设计系统指南',
+            category: '产品设计',
+            description: '统一的设计语言和组件库，确保产品在不同平台和终端上保持一致的视觉体验。',
+            updated: '2025-07-08',
+            views: 89,
+            icon: 'fas fa-paint-brush',
+            color: '#9b59b6'
+          },
+          {
+            title: '项目进度报告 Q3',
+            category: '项目管理',
+            description: '2025年第三季度项目进度汇总，包含里程碑达成情况、风险分析和下一步计划。',
+            updated: '2025-07-05',
+            views: 67,
+            icon: 'fas fa-tasks',
+            color: '#f1c40f'
+          },
+          {
+            title: '客户需求分析报告',
+            category: '客户资料',
+            description: '基于客户访谈和市场调研的需求分析文档，包含用户画像、需求矩阵和优先级排序。',
+            updated: '2025-07-03',
+            views: 42,
+            icon: 'fas fa-users',
+            color: '#e74c3c'
+          },
+          {
+            title: 'API接口文档',
+            category: '技术文档',
+            description: '后端服务API接口详细说明，包含请求参数、响应格式和错误代码定义。',
+            updated: '2025-07-01',
+            views: 156,
+            icon: 'fas fa-plug',
+            color: '#3498db'
+          },
+          {
+            title: '财务季度报表 Q2',
+            category: '财务报告',
+            description: '2025年第二季度财务数据汇总分析，包含收入、支出、利润和现金流等关键指标。',
+            updated: '2025-06-28',
+            views: 38,
+            icon: 'fas fa-chart-line',
+            color: '#1abc9c'
+          },
+          {
+            title: '新员工入职培训',
+            category: '培训资料',
+            description: '新员工入职培训材料，包含公司文化、制度规范、工作流程和工具使用指南。',
+            updated: '2025-06-25',
+            views: 95,
+            icon: 'fas fa-graduation-cap',
+            color: '#d35400'
+          },
+          {
+            title: '产品需求文档 V2.1',
+            category: '产品设计',
+            description: '产品功能需求详细说明，包含用户故事、功能流程图和验收标准。',
+            updated: '2025-06-20',
+            views: 112,
+            icon: 'fas fa-file-alt',
+            color: '#9b59b6'
+          }
+        ]
+      },
+      computed: {
+        filteredDocuments() {
+          let docs = [...this.documents];
+          
+          // 搜索过滤
+          if (this.searchQuery) {
+            const query = this.searchQuery.toLowerCase();
+            docs = docs.filter(doc => 
+              doc.title.toLowerCase().includes(query) || 
+              doc.description.toLowerCase().includes(query) ||
+              doc.category.toLowerCase().includes(query)
+            );
+          }
+          
+          // 分类过滤
+          if (this.activeCategory > 0) {
+            const categoryName = this.categories[this.activeCategory].name;
+            docs = docs.filter(doc => doc.category === categoryName);
+          }
+          
+          // 排序
+          switch (this.selectedFilter) {
+            case 'recent':
+              return docs.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+            case 'popular':
+              return docs.sort((a, b) => b.views - a.views);
+            default:
+              return docs;
+          }
+        }
+      },
+      mounted() {
+        this.updateDate();
+        setInterval(this.updateDate, 60000);
+      },
+      methods: {
+        navigateTo(item, index) {
+          // 如果是当前页面则不跳转
+          if (window.location.pathname.includes(item.link)) {
+            this.activeIndex = index;
+            return;
+          }
+          
+          // 有链接则跳转，无链接则切换内容
+          if (item.link) {
+            window.location.href = item.link;
+          } else {
+            this.activeIndex = index;
+          }
+        },
+        updateDate() {
+          const now = new Date();
+          const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            weekday: 'long',
+            hour: '2-digit',
+            minute: '2-digit'
+          };
+          this.currentDate = now.toLocaleDateString('zh-CN', options);
+        }
+      }
+    })
+  </script>
+</body>
+</html>
