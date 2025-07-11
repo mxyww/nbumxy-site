@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识库注册</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .register-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: rgb(17, 0, 255);
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        input[type="text"], 
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group {
+            text-align: left;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .checkbox-group label {
+            margin: 0;
+            font-weight: normal;
+        }
+        
+        button {
+            background-color: rgb(17, 0, 255);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: rgb(13, 0, 196);
+        }
+        
+        .login-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .login-link a {
+            color: rgb(17, 0, 255);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .privacy-link {
+            color: rgb(17, 0, 255);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .privacy-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* 隐私协议弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .strength-weak {
+            color: #e74c3c;
+        }
+        
+        .strength-medium {
+            color: #f39c12;
+        }
+        
+        .strength-strong {
+            color: #2ecc71;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>创建知识库账号</h1>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">用户名：</label>
+                <input type="text" id="username" placeholder="请输入用户名(4-16位字符)" required>
+                <div id="usernameError" class="error-message">用户名必须是4-16位字母、数字或下划线</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">电子邮箱：</label>
+                <input type="email" id="email" placeholder="请输入有效邮箱地址" required>
+                <div id="emailError" class="error-message">请输入有效的邮箱地址</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密码：</label>
+                <input type="password" id="password" placeholder="请输入密码(8-20位)" required>
+                <div id="passwordStrength" class="password-strength"></div>
+                <div id="passwordError" class="error-message">密码必须是8-20位且包含字母和数字</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">确认密码：</label>
+                <input type="password" id="confirmPassword" placeholder="请再次输入密码" required>
+                <div id="confirmError" class="error-message">两次输入的密码不一致</div>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="agree" required>
+                <label for="agree">我已阅读并同意<a href="javascript:void(0)" class="privacy-link" onclick="showPrivacy()">《隐私保护协议》</a></label>
+            </div>
+            
+            <button type="submit">注册账号</button>
+            
+            <div class="login-link">
+                已有账号？<a href="index.html">立即登录</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- 隐私协议弹窗 -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>隐私保护协议</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h3>一、我们如何收集和使用您的个人信息</h3>
+                <p>1.1 在您注册知识库账号时，我们会收集您的用户名、电子邮箱地址和密码等信息。</p>
+                <p>1.2 当您使用我们的服务时，我们会自动收集您的设备信息和日志信息。</p>
+                
+                <h3>二、我们如何保护您的个人信息</h3>
+                <p>2.1 我们采用符合行业标准的安全防护措施来保护您的个人信息。</p>
+                <p>2.2 我们对数据进行加密存储和传输，确保数据安全。</p>
+                
+                <h3>三、我们如何共享、转让、公开披露您的个人信息</h3>
+                <p>3.1 我们不会与任何公司、组织和个人共享您的个人信息，除非获得您的明确同意。</p>
+                <p>3.2 我们不会将您的个人信息转让给任何公司、组织和个人。</p>
+                
+                <h3>四、您的权利</h3>
+                <p>4.1 您可以随时访问、更正或删除您的个人信息。</p>
+                <p>4.2 您可以注销您的账号，我们将停止为您提供服务并删除您的个人信息。</p>
+                
+                <h3>五、本协议的更新</h3>
+                <p>我们可能会适时更新本隐私政策。更新后的隐私政策将在网站上公布，并自公布之日起生效。</p>
+                
+                <p><strong>最后更新日期：2023年11月1日</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 显示隐私协议弹窗
+        function showPrivacy() {
+            document.getElementById('privacyModal').style.display = 'block';
+        }
+        
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+        
+        // 点击弹窗外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('privacyModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // 密码强度检测
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthText = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthText.textContent = '';
+                return;
+            }
+            
+            let strength = 0;
+            
+            // 长度评分
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            
+            // 复杂度评分
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength <= 2) {
+                strengthText.textContent = '密码强度：弱';
+                strengthText.className = 'password-strength strength-weak';
+            } else if (strength <= 4) {
+                strengthText.textContent = '密码强度：中';
+                strengthText.className = 'password-strength strength-medium';
+            } else {
+                strengthText.textContent = '密码强度：强';
+                strengthText.className = 'password-strength strength-strong';
+            }
+        });
+        
+        // 表单验证
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 重置错误信息
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            let isValid = true;
+            
+            // 用户名验证 (4-16位字母数字下划线)
+            const username = document.getElementById('username').value;
+            if (!/^[a-zA-Z0-9_]{4,16}$/.test(username)) {
+                document.getElementById('usernameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // 邮箱验证
+            const email = document.getElementById('email').value;
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // 密码验证 (8-20位且包含字母和数字)
+            const password = document.getElementById('password').value;
+            if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/.test(password)) {
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // 确认密码
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                document.getElementById('confirmError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // 协议勾选
+            if (!document.getElementById('agree').checked) {
+                alert('请先阅读并同意隐私保护协议');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // 这里添加实际的注册逻辑
+                const formData = {
+                    username: username,
+                    email: email,
+                    password: password
+                };
+                
+                console.log('注册信息:', formData);
+                alert('注册成功！即将跳转到登录页面');
+                // 实际应用中这里应该是注册API调用成功后跳转
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
