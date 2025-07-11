@@ -653,7 +653,7 @@
           :key="index"
           class="nav-item"
           :class="{ 'active': activeIndex === index }"
-          @click="activeIndex = index"
+          @click="navigateTo(item, index)"
         >
           <i :class="item.icon"></i>
           <span>{{ item.title }}</span>
@@ -701,7 +701,7 @@
         
         <!-- 欢迎卡片 -->
         <div class="welcome-card fade-in">
-          <h2 class="welcome-title">欢迎回来， 工程师！</h2>
+          <h2 class="welcome-title">欢迎回来，工程师！</h2>
           <p class="welcome-text">您有3个待处理任务，2个文档需要审核，1个团队协作请求等待您的处理。今日新增文档12篇，团队讨论15条。</p>
         </div>
         
@@ -713,9 +713,9 @@
             </div>
             <div class="stat-info">
               <div class="stat-title">文档总数</div>
-              <div class="stat-value">1,248</div>
+              <div class="stat-value">total num</div>
               <div class="stat-change change-up">
-                <i class="fas fa-arrow-up"></i> 12% 本月增长
+                <i class="fas fa-arrow-up"></i> raise of total n% 本月增长
               </div>
             </div>
           </div>
@@ -726,9 +726,9 @@
             </div>
             <div class="stat-info">
               <div class="stat-title">团队成员</div>
-              <div class="stat-value">42</div>
+              <div class="stat-value">munbers amount</div>
               <div class="stat-change change-up">
-                <i class="fas fa-arrow-up"></i> 2 位新成员
+                <i class="fas fa-arrow-up"></i> munber up n位新成员
               </div>
             </div>
           </div>
@@ -739,7 +739,7 @@
             </div>
             <div class="stat-info">
               <div class="stat-title">存储使用</div>
-              <div class="stat-value">78%</div>
+              <div class="stat-value">xxx%</div>
               <div class="stat-change change-down">
                 <i class="fas fa-exclamation-triangle"></i> 即将满额
               </div>
@@ -752,9 +752,9 @@
             </div>
             <div class="stat-info">
               <div class="stat-title">本周活跃度</div>
-              <div class="stat-value">86%</div>
+              <div class="stat-value">active%</div>
               <div class="stat-change change-up">
-                <i class="fas fa-arrow-up"></i> 较上周提升15%
+                <i class="fas fa-arrow-up"></i> 较上周提升act up n%
               </div>
             </div>
           </div>
