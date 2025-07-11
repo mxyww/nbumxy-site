@@ -872,51 +872,94 @@
     </div>
   </div>
 
-  <script>
+ <script>
     new Vue({
       el: '#app',
       data: {
         isCollapsed: false,
-        activeIndex: 0,
+        activeIndex: 0, // 默认激活仪表板
         navItems: [
           {
             title: '仪表板',
             icon: 'fas fa-tachometer-alt',
-            content: '这是仪表板的内容区域...'
+            content: '这是仪表板的内容区域...',
+            link: 'dashboard.html'
           },
           {
             title: '我的知识库',
             icon: 'fas fa-box-open',
-            content: '这里是我的知识库...'
+            content: '这里是我的知识库...',
+            link: 'knowledge.html'
           },
           {
             title: '团队协作',
             icon: 'fas fa-users',
-            content: '团队协作内容...'
+            content: '团队协作内容...',
+            link: 'collaboration.html'
           },
           {
             title: '数据分析',
             icon: 'fas fa-chart-bar',
-            content: '数据分析内容...'
+            content: '数据分析内容...',
+            link: 'analytics.html'
           },
           {
             title: '系统设置',
             icon: 'fas fa-cog',
-            content: '系统设置内容...'
+            content: '系统设置内容...',
+            link: 'settings.html'
           }
         ],
-        currentDate: ''
+        settingsTabs: [
+          { title: '常规设置', icon: 'fas fa-sliders-h' },
+          { title: '通知设置', icon: 'fas fa-bell' },
+          { title: '安全设置', icon: 'fas fa-shield-alt' },
+          { title: '存储设置', icon: 'fas fa-database' },
+          { title: '团队设置', icon: 'fas fa-users' },
+          { title: '高级设置', icon: 'fas fa-cogs' }
+        ],
+        currentDate: '',
+        // 添加其他页面数据
+        dashboardStats: {
+          documents: 1245,
+          members: 28,
+          storage: '3.2/5 GB',
+          activity: '78%'
+        },
+        recentActivities: [
+          // 活动数据...
+        ]
       },
       computed: {
         activeNavItem() {
           return this.navItems[this.activeIndex]
+        },
+        // 添加其他计算属性
+        storagePercentage() {
+          return Math.round((3.2 / 5) * 100) + '%';
         }
       },
       mounted() {
         this.updateDate();
         setInterval(this.updateDate, 60000);
+        // 初始化数据
+        this.fetchDashboardData();
       },
       methods: {
+        navigateTo(item, index) {
+          // 如果是当前页面则不跳转
+          if (window.location.pathname.includes(item.link)) {
+            this.activeIndex = index;
+            return;
+          }
+          
+          // 有链接则跳转，无链接则切换内容
+          if (item.link) {
+            window.location.href = item.link;
+          } else {
+            this.activeIndex = index;
+          }
+        },
         updateDate() {
           const now = new Date();
           const options = { 
@@ -928,6 +971,30 @@
             minute: '2-digit'
           };
           this.currentDate = now.toLocaleDateString('zh-CN', options);
+        },
+        fetchDashboardData() {
+          // 模拟API获取数据
+          // 实际应用中这里应该是AJAX请求
+          console.log('Fetching dashboard data...');
+        },
+        toggleSidebar() {
+          this.isCollapsed = !this.isCollapsed;
+        },
+        // 添加其他方法
+        saveSettings() {
+          alert('设置已保存');
+          // 实际应用中这里应该是保存到服务器的逻辑
+        },
+        resetSettings() {
+          if(confirm('确定要重置所有设置吗？')) {
+            // 重置逻辑
+          }
+        }
+      },
+      // 添加其他Vue选项
+      watch: {
+        isCollapsed(newVal) {
+          console.log('侧边栏状态:', newVal ? '折叠' : '展开');
         }
       }
     })
