@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识库主页</title>
+  <!-- 引入Vue和Font Awesome图标 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+    }
+    
+    .sidebar-container {
+      display: flex;
+      height: 100vh;
+    }
+    
+    .sidebar {
+      width: 200px;
+      background-color: #2c3e50;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: width 0.3s;
+    }
+    
+    .sidebar.collapsed {
+      width: 60px;
+    }
+    
+    .toggle-btn {
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #34495e;
+      border-bottom: 1px solid #3d5166;
+    }
+    
+    .toggle-btn:hover {
+      background-color: #3d5166;
+    }
+    
+    .nav-item {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .nav-item i {
+      margin-right: 10px;
+      min-width: 20px;
+      text-align: center;
+    }
+    
+    .sidebar.collapsed .nav-item span {
+      display: none;
+    }
+    
+    .sidebar.collapsed .nav-item i {
+      margin-right: 0;
+      font-size: 1.2em;
+    }
+    
+    .nav-item:hover {
+      background-color: #34495e;
+    }
+    
+    .nav-item.active {
+      background-color: hsl(249, 97%, 49%);
+    }
+    
+    .content {
+      flex: 1;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    .content h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .content p {
+      color: #555;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="sidebar-container">
+      <div class="sidebar" :class="{ 'collapsed': isCollapsed }">
+        <div class="toggle-btn" @click="isCollapsed = !isCollapsed">
+          <i :class="isCollapsed ? 'fas fa-angle-double-right' : 'fas fa-angle-double-left'"></i>
+          <span v-if="!isCollapsed">收起</span>
+        </div>
+        <div 
+          v-for="(item, index) in navItems" 
+          :key="index"
+          class="nav-item"
+          :class="{ 'active': activeIndex === index }"
+          @click="activeIndex = index"
+        >
+          <i :class="item.icon"></i>
+          <span>{{ item.title }}</span>
+        </div>
+      </div>
+      <div class="content">
+        <h2>{{ activeNavItem.title }}</h2>
+        <p>{{ activeNavItem.content }}</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        isCollapsed: false,
+        activeIndex: 0,
+        navItems: [
+          {
+            title: '首页',
+            icon: 'fas fa-home',
+            content: '这是首页的内容区域...'
+          },
+          {
+            title: '我的知识库',
+            icon: 'fas fa-box-open',
+            content: '这里是我的知识库...'
+          },
+          {
+            title: '关于我们',
+            icon: 'fas fa-info-circle',
+            content: '团队联系方式...'
+          }
+        ]
+      },
+      computed: {
+        activeNavItem() {
+          return this.navItems[this.activeIndex]
+        }
+      }
+    })
+  </script>
+</body>
+</html>
