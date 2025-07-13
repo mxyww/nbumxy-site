@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>系统设置 | 知识库仪表板</title>
+  <title>系统设置 | 知识库管理平台</title>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -19,6 +19,9 @@
       --success: #2ecc71;
       --warning: #f39c12;
       --danger: #e74c3c;
+      --dark-bg: #1e1f2e;
+      --dark-card: #2d3047;
+      --dark-text: #e4e6eb;
     }
     
     * {
@@ -34,6 +37,11 @@
       color: #333;
       overflow-x: hidden;
       min-height: 100vh;
+    }
+    
+    body.dark-mode {
+      background: var(--dark-bg);
+      color: var(--dark-text);
     }
     
     /* 顶部导航栏 */
@@ -289,218 +297,139 @@
       font-weight: 600;
     }
     
+    .dark-mode .content-title {
+      color: #7a9eff;
+    }
+    
     .date-info {
       color: #777;
       font-size: 1rem;
     }
     
-    /* 系统设置页面样式 */
+    .dark-mode .date-info {
+      color: #a0aec0;
+    }
+    
+    /* 设置页面样式 */
     .settings-container {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
       gap: 25px;
     }
     
-    .settings-tabs {
-      display: flex;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 20px;
-    }
-    
-    .settings-tab {
-      flex: 1;
-      padding: 18px 20px;
-      text-align: center;
-      cursor: pointer;
-      font-weight: 500;
-      color: #555;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
-    }
-    
-    .settings-tab:hover {
-      background: rgba(17, 0, 255, 0.05);
-    }
-    
-    .settings-tab.active {
-      color: var(--primary-blue);
-      border-bottom: 3px solid var(--primary-blue);
-      background: rgba(17, 0, 255, 0.08);
-    }
-    
-    .settings-card {
+    .setting-card {
       background: white;
       border-radius: 15px;
-      padding: 30px;
       box-shadow: var(--card-shadow);
-      margin-bottom: 25px;
+      padding: 25px;
     }
     
-    .settings-card-header {
+    .dark-mode .setting-card {
+      background: var(--dark-card);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .card-header {
       display: flex;
       align-items: center;
+      gap: 15px;
       margin-bottom: 25px;
       padding-bottom: 15px;
       border-bottom: 1px solid #eee;
     }
     
-    .settings-card-icon {
-      width: 50px;
-      height: 50px;
+    .dark-mode .card-header {
+      border-bottom: 1px solid #3a3e5c;
+    }
+    
+    .card-icon {
+      width: 45px;
+      height: 45px;
       border-radius: 12px;
-      background: var(--light-blue);
-      color: var(--primary-blue);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      margin-right: 20px;
+      font-size: 1.5rem;
+      background: rgba(17, 0, 255, 0.1);
+      color: var(--primary-blue);
     }
     
-    .settings-card-title {
+    .dark-mode .card-icon {
+      background: rgba(122, 158, 255, 0.15);
+      color: #7a9eff;
+    }
+    
+    .card-title {
       font-size: 1.4rem;
       font-weight: 600;
       color: #2c3e50;
     }
     
-    .settings-card-desc {
-      color: #777;
-      margin-top: 5px;
-      font-size: 0.95rem;
+    .dark-mode .card-title {
+      color: var(--dark-text);
     }
     
-    .settings-form {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #f0f0f0;
     }
     
-    .form-group {
-      margin-bottom: 25px;
+    .dark-mode .setting-item {
+      border-bottom: 1px solid #3a3e5c;
     }
     
-    .form-label {
-      display: block;
-      margin-bottom: 10px;
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+    
+    .setting-label {
       font-weight: 500;
       color: #444;
+      flex: 1;
+    }
+    
+    .dark-mode .setting-label {
+      color: #cbd5e0;
+    }
+    
+    .setting-control {
+      flex: 1;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
     }
     
-    .form-label span:last-child {
-      font-weight: normal;
-      font-size: 0.9rem;
-      color: #777;
-    }
-    
-    .form-control {
+    .form-input {
       width: 100%;
       padding: 12px 15px;
-      border: 1px solid #ddd;
       border-radius: 8px;
+      border: 1px solid #ddd;
       font-size: 1rem;
-      transition: all 0.2s;
+      background: white;
+      color: #333;
     }
     
-    .form-control:focus {
-      outline: none;
+    .dark-mode .form-input {
+      background: #25283d;
+      border: 1px solid #3a3e5c;
+      color: var(--dark-text);
+    }
+    
+    .form-input:focus {
       border-color: var(--primary-blue);
+      outline: none;
       box-shadow: 0 0 0 3px rgba(17, 0, 255, 0.1);
     }
     
-    .form-select {
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 1em;
-    }
-    
-    .switch-container {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 26px;
-    }
-    
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
-    }
-    
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    
-    input:checked + .slider {
-      background-color: var(--primary-blue);
-    }
-    
-    input:checked + .slider:before {
-      transform: translateX(24px);
-    }
-    
-    .checkbox-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-top: 10px;
-    }
-    
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .checkbox-item input {
-      width: 18px;
-      height: 18px;
-    }
-    
-    .settings-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 15px;
-      margin-top: 30px;
-      padding-top: 25px;
-      border-top: 1px solid #eee;
+    .dark-mode .form-input:focus {
+      border-color: #7a9eff;
+      box-shadow: 0 0 0 3px rgba(122, 158, 255, 0.2);
     }
     
     .btn {
-      padding: 12px 28px;
+      padding: 10px 20px;
       border-radius: 8px;
       font-weight: 500;
       cursor: pointer;
@@ -526,59 +455,63 @@
       color: #555;
     }
     
+    .dark-mode .btn-outline {
+      border: 1px solid #3a3e5c;
+      color: #cbd5e0;
+    }
+    
     .btn-outline:hover {
       background: #f9f9f9;
     }
     
-    .storage-info {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    .dark-mode .btn-outline:hover {
+      background: #2d3047;
     }
     
-    .storage-bar {
-      height: 12px;
-      background: #f0f0f0;
-      border-radius: 10px;
-      overflow: hidden;
+    /* 开关样式 */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
     }
     
-    .storage-progress {
-      height: 100%;
-      border-radius: 10px;
-      background: linear-gradient(90deg, var(--primary-blue), #6a11cb);
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
     
-    .storage-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #666;
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
     }
     
-    .storage-usage {
-      margin-top: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
     }
     
-    .usage-item {
-      background: #f9f9f9;
-      border-radius: 10px;
-      padding: 15px;
+    input:checked + .slider {
+      background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
     }
     
-    .usage-title {
-      font-size: 0.9rem;
-      color: #777;
-      margin-bottom: 5px;
-    }
-    
-    .usage-value {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #333;
+    input:checked + .slider:before {
+      transform: translateX(26px);
     }
     
     /* 页脚 */
@@ -592,6 +525,20 @@
     }
     
     /* 响应式设计 */
+    @media (max-width: 1200px) {
+      .search-input {
+        width: 200px;
+      }
+      
+      .search-input:focus {
+        width: 250px;
+      }
+      
+      .settings-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
     @media (max-width: 992px) {
       .sidebar {
         transform: translateX(-100%);
@@ -632,14 +579,6 @@
       .user-name {
         display: none;
       }
-      
-      .settings-tabs {
-        flex-wrap: wrap;
-      }
-      
-      .settings-tab {
-        flex: 1 0 33%;
-      }
     }
     
     /* 动画效果 */
@@ -653,7 +592,7 @@
     }
   </style>
 </head>
-<body>
+<body :class="{ 'dark-mode': darkMode }">
   <div id="app">
     <!-- 顶部导航栏 -->
     <div class="topbar">
@@ -701,7 +640,7 @@
           :key="index"
           class="nav-item"
           :class="{ 'active': activeIndex === index }"
-          @click="activeIndex = index"
+          @click="navigateTo(item, index)"
         >
           <i :class="item.icon"></i>
           <span>{{ item.title }}</span>
@@ -743,343 +682,293 @@
       <!-- 主内容区 -->
       <div class="content" :class="{ 'sidebar-collapsed': isCollapsed }">
         <div class="content-header">
-          <h1 class="content-title">{{ activeNavItem.title }}</h1>
+          <h1 class="content-title">系统设置</h1>
           <div class="date-info">{{ currentDate }}</div>
         </div>
         
-        <!-- 系统设置内容 -->
-        <div v-show="activeIndex === 4" class="settings-container fade-in">
-          <!-- 设置标签页 -->
-          <div class="settings-tabs">
-            <div 
-              v-for="(tab, index) in settingsTabs" 
-              :key="index"
-              class="settings-tab"
-              :class="{ 'active': activeTab === index }"
-              @click="activeTab = index"
-            >
-              <i :class="tab.icon"></i>
-              <span>{{ tab.title }}</span>
-            </div>
-          </div>
-          
-          <!-- 常规设置 -->
-          <div v-show="activeTab === 0" class="settings-card fade-in">
-            <div class="settings-card-header">
-              <div class="settings-card-icon">
-                <i class="fas fa-sliders-h"></i>
+        <!-- 设置区域 -->
+        <div class="settings-container fade-in">
+          <!-- 账户设置 -->
+          <div class="setting-card fade-in">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-user-cog"></i>
               </div>
-              <div>
-                <h2 class="settings-card-title">常规设置</h2>
-                <p class="settings-card-desc">调整平台的基本行为和外观</p>
+              <h2 class="card-title">账户设置</h2>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">头像</div>
+              <div class="setting-control">
+                <div class="user-avatar" style="width: 60px; height: 60px; font-size: 1.5rem;">张</div>
+                <button class="btn btn-outline" style="margin-left: 15px;">
+                  <i class="fas fa-edit"></i> 更换
+                </button>
               </div>
             </div>
             
-            <div class="settings-form">
-              <div class="form-group">
-                <label class="form-label">
-                  <span>平台语言</span>
-                </label>
-                <select class="form-control form-select">
-                  <option>简体中文</option>
-                  <option>English</option>
-                  <option>日本語</option>
-                  <option>Español</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>主题设置</span>
-                </label>
-                <select class="form-control form-select">
-                  <option>默认主题</option>
-                  <option>深色模式</option>
-                  <option>浅色模式</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>默认主页</span>
-                </label>
-                <select class="form-control form-select">
-                  <option>仪表板</option>
-                  <option>我的知识库</option>
-                  <option>最近活动</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>每页显示项目数</span>
-                </label>
-                <input type="number" class="form-control" min="10" max="100" value="25">
+            <div class="setting-item">
+              <div class="setting-label">用户名</div>
+              <div class="setting-control">
+                <input type="text" class="form-input" value="张工程师">
               </div>
             </div>
             
-            <div class="settings-actions">
-              <button class="btn btn-outline">
-                <i class="fas fa-redo"></i> 重置
-              </button>
+            <div class="setting-item">
+              <div class="setting-label">电子邮箱</div>
+              <div class="setting-control">
+                <input type="email" class="form-input" value="zhang.engineer@example.com">
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">密码</div>
+              <div class="setting-control">
+                <button class="btn btn-outline">
+                  <i class="fas fa-lock"></i> 修改密码
+                </button>
+              </div>
+            </div>
+            
+            <div class="setting-item" style="justify-content: flex-end; margin-top: 20px;">
               <button class="btn btn-primary">
-                <i class="fas fa-save"></i> 保存设置
+                <i class="fas fa-save"></i> 保存更改
               </button>
             </div>
           </div>
           
           <!-- 通知设置 -->
-          <div v-show="activeTab === 1" class="settings-card fade-in">
-            <div class="settings-card-header">
-              <div class="settings-card-icon">
+          <div class="setting-card fade-in">
+            <div class="card-header">
+              <div class="card-icon">
                 <i class="fas fa-bell"></i>
               </div>
-              <div>
-                <h2 class="settings-card-title">通知设置</h2>
-                <p class="settings-card-desc">管理您接收通知的方式和频率</p>
+              <h2 class="card-title">通知设置</h2>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">接收邮件通知</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="emailNotifications" checked>
+                  <span class="slider"></span>
+                </label>
               </div>
             </div>
             
-            <div class="settings-form">
-              <div class="form-group">
-                <label class="form-label">
-                  <span>接收通知方式</span>
+            <div class="setting-item">
+              <div class="setting-label">接收站内信通知</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="siteNotifications" checked>
+                  <span class="slider"></span>
                 </label>
-                <div class="checkbox-group">
-                  <div class="checkbox-item">
-                    <input type="checkbox" id="email-notif" checked>
-                    <label for="email-notif">电子邮件</label>
-                  </div>
-                  <div class="checkbox-item">
-                    <input type="checkbox" id="web-notif" checked>
-                    <label for="web-notif">站内通知</label>
-                  </div>
-                  <div class="checkbox-item">
-                    <input type="checkbox" id="mobile-notif">
-                    <label for="mobile-notif">移动推送</label>
-                  </div>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">接收短信通知</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="smsNotifications">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">文档更新通知</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="docUpdateNotifications" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">评论和回复通知</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="commentNotifications" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 隐私设置 -->
+          <div class="setting-card fade-in">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h2 class="card-title">隐私设置</h2>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">公开个人资料</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="publicProfile">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">显示在线状态</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="showOnlineStatus" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">数据收集与个性化</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="dataCollection">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">自动保存文档历史</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="autoSaveHistory" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">隐私级别</div>
+              <div class="setting-control">
+                <select class="form-input" v-model="privacyLevel">
+                  <option value="public">公开</option>
+                  <option value="team">仅团队可见</option>
+                  <option value="private">仅自己可见</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 主题设置 -->
+          <div class="setting-card fade-in">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-palette"></i>
+              </div>
+              <h2 class="card-title">主题设置</h2>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">深色模式</div>
+              <div class="setting-control">
+                <label class="switch">
+                  <input type="checkbox" v-model="darkMode">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">主题颜色</div>
+              <div class="setting-control">
+                <div class="color-options">
+                  <div class="color-option" :class="{ 'active': themeColor === 'blue' }" 
+                       style="background: linear-gradient(135deg, #1100ff, #0d00c4);"
+                       @click="themeColor = 'blue'"></div>
+                  <div class="color-option" :class="{ 'active': themeColor === 'green' }" 
+                       style="background: linear-gradient(135deg, #00c16e, #009a5a);"
+                       @click="themeColor = 'green'"></div>
+                  <div class="color-option" :class="{ 'active': themeColor === 'purple' }" 
+                       style="background: linear-gradient(135deg, #8a2be2, #6a1cb9);"
+                       @click="themeColor = 'purple'"></div>
                 </div>
               </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>新文档通知</span>
-                </label>
-                <div class="switch-container">
-                  <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                  </label>
-                  <span>当有新文档添加时通知我</span>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>评论通知</span>
-                </label>
-                <div class="switch-container">
-                  <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                  </label>
-                  <span>当有人评论我的文档时通知我</span>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>任务分配通知</span>
-                </label>
-                <div class="switch-container">
-                  <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                  </label>
-                  <span>当有任务分配给我时通知我</span>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>通知频率</span>
-                </label>
-                <select class="form-control form-select">
-                  <option>实时通知</option>
-                  <option>每小时摘要</option>
-                  <option>每日摘要</option>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-label">字体大小</div>
+              <div class="setting-control">
+                <select class="form-input" v-model="fontSize">
+                  <option value="small">较小</option>
+                  <option value="medium" selected>中等</option>
+                  <option value="large">较大</option>
                 </select>
               </div>
             </div>
             
-            <div class="settings-actions">
-              <button class="btn btn-outline">
-                <i class="fas fa-redo"></i> 重置
-              </button>
-              <button class="btn btn-primary">
-                <i class="fas fa-save"></i> 保存设置
-              </button>
+            <div class="setting-item">
+              <div class="setting-label">界面密度</div>
+              <div class="setting-control">
+                <select class="form-input" v-model="uiDensity">
+                  <option value="compact">紧凑</option>
+                  <option value="normal" selected>标准</option>
+                  <option value="comfortable">宽松</option>
+                </select>
+              </div>
             </div>
           </div>
           
-          <!-- 安全设置 -->
-          <div v-show="activeTab === 2" class="settings-card fade-in">
-            <div class="settings-card-header">
-              <div class="settings-card-icon">
-                <i class="fas fa-shield-alt"></i>
+          <!-- 高级设置 -->
+          <div class="setting-card fade-in">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-cogs"></i>
               </div>
-              <div>
-                <h2 class="settings-card-title">安全设置</h2>
-                <p class="settings-card-desc">管理您的账户安全和访问权限</p>
-              </div>
+              <h2 class="card-title">高级设置</h2>
             </div>
             
-            <div class="settings-form">
-              <div class="form-group">
-                <label class="form-label">
-                  <span>双重验证</span>
-                  <span>增强账户安全性</span>
-                </label>
-                <div class="switch-container">
-                  <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                  </label>
-                  <span>启用双重验证</span>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>登录历史</span>
-                  <span>最近登录记录</span>
-                </label>
-                <div class="security-log">
-                  <div class="log-item">
-                    <div>2025-07-11 10:25:32</div>
-                    <div>浙江省杭州市 · Chrome 浏览器</div>
-                  </div>
-                  <div class="log-item">
-                    <div>2025-07-10 18:42:15</div>
-                    <div>浙江省杭州市 · Safari 浏览器</div>
-                  </div>
-                  <div class="log-item">
-                    <div>2025-07-09 09:15:47</div>
-                    <div>浙江省宁波市 · Chrome 浏览器</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>密码更新</span>
-                  <span>上次修改：2025-06-15</span>
-                </label>
+            <div class="setting-item">
+              <div class="setting-label">API密钥管理</div>
+              <div class="setting-control">
                 <button class="btn btn-outline">
-                  <i class="fas fa-lock"></i> 更改密码
-                </button>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  <span>会话管理</span>
-                  <span>管理活动会话</span>
-                </label>
-                <button class="btn btn-outline">
-                  <i class="fas fa-desktop"></i> 查看所有活动会话
+                  <i class="fas fa-key"></i> 管理密钥
                 </button>
               </div>
             </div>
             
-            <div class="settings-actions">
-              <button class="btn btn-outline">
-                <i class="fas fa-redo"></i> 重置
-              </button>
-              <button class="btn btn-primary">
-                <i class="fas fa-save"></i> 保存设置
-              </button>
-            </div>
-          </div>
-          
-          <!-- 存储设置 -->
-          <div v-show="activeTab === 3" class="settings-card fade-in">
-            <div class="settings-card-header">
-              <div class="settings-card-icon">
-                <i class="fas fa-database"></i>
-              </div>
-              <div>
-                <h2 class="settings-card-title">存储设置</h2>
-                <p class="settings-card-desc">管理您的知识库存储空间</p>
+            <div class="setting-item">
+              <div class="setting-label">数据导出</div>
+              <div class="setting-control">
+                <button class="btn btn-outline">
+                  <i class="fas fa-file-export"></i> 导出数据
+                </button>
               </div>
             </div>
             
-            <div class="storage-info">
-              <div>
-                <label class="form-label">
-                  <span>存储使用情况</span>
-                  <span>已使用 3.2GB / 5GB</span>
-                </label>
-                <div class="storage-bar">
-                  <div class="storage-progress" style="width: 64%"></div>
-                </div>
-                <div class="storage-labels">
-                  <span>0 GB</span>
-                  <span>5 GB</span>
-                </div>
-              </div>
-              
-              <div class="storage-usage">
-                <div class="usage-item">
-                  <div class="usage-title">文档</div>
-                  <div class="usage-value">1.8 GB</div>
-                </div>
-                <div class="usage-item">
-                  <div class="usage-title">图片</div>
-                  <div class="usage-value">0.9 GB</div>
-                </div>
-                <div class="usage-item">
-                  <div class="usage-title">视频</div>
-                  <div class="usage-value">0.3 GB</div>
-                </div>
-                <div class="usage-item">
-                  <div class="usage-title">其他</div>
-                  <div class="usage-value">0.2 GB</div>
-                </div>
+            <div class="setting-item">
+              <div class="setting-label">数据备份</div>
+              <div class="setting-control">
+                <button class="btn btn-outline">
+                  <i class="fas fa-database"></i> 创建备份
+                </button>
               </div>
             </div>
             
-            <div class="form-group">
-              <label class="form-label">
-                <span>自动清理设置</span>
-                <span>删除未使用的文件</span>
-              </label>
-              <div class="switch-container">
-                <label class="switch">
-                  <input type="checkbox">
-                  <span class="slider"></span>
-                </label>
-                <span>启用自动清理</span>
+            <div class="setting-item">
+              <div class="setting-label">账户注销</div>
+              <div class="setting-control">
+                <button class="btn btn-outline" style="color: var(--danger);">
+                  <i class="fas fa-user-times"></i> 注销账户
+                </button>
               </div>
             </div>
             
-            <div class="form-group">
-              <label class="form-label">
-                <span>清理频率</span>
-              </label>
-              <select class="form-control form-select">
-                <option>每月一次</option>
-                <option>每季度一次</option>
-                <option>每半年一次</option>
-              </select>
-            </div>
-            
-            <div class="settings-actions">
-              <button class="btn btn-outline">
-                <i class="fas fa-redo"></i> 重置
-              </button>
-              <button class="btn btn-primary">
-                <i class="fas fa-save"></i> 保存设置
-              </button>
+            <div class="setting-item">
+              <div class="setting-label">重置所有设置</div>
+              <div class="setting-control">
+                <button class="btn btn-outline" style="color: var(--warning);">
+                  <i class="fas fa-redo"></i> 恢复默认
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1097,55 +986,67 @@
       el: '#app',
       data: {
         isCollapsed: false,
-        activeIndex: 4, // 默认激活系统设置
-        activeTab: 0, // 默认激活第一个设置标签页
+        activeIndex: 4, // 激活"系统设置"
+        darkMode: false,
+        themeColor: 'blue',
+        emailNotifications: true,
+        siteNotifications: true,
+        smsNotifications: false,
+        docUpdateNotifications: true,
+        commentNotifications: true,
+        publicProfile: false,
+        showOnlineStatus: true,
+        dataCollection: true,
+        autoSaveHistory: true,
+        privacyLevel: 'team',
+        fontSize: 'medium',
+        uiDensity: 'normal',
         navItems: [
           {
             title: '仪表板',
             icon: 'fas fa-tachometer-alt',
-            content: '这是仪表板的内容区域...'
+            link: 'dashboard.html'
           },
           {
             title: '我的知识库',
             icon: 'fas fa-box-open',
-            content: '这里是我的知识库...'
+            link: 'knowledge.html'
           },
           {
             title: '团队协作',
             icon: 'fas fa-users',
-            content: '团队协作内容...'
+            link: 'collaboration.html'
           },
           {
             title: '数据分析',
             icon: 'fas fa-chart-bar',
-            content: '数据分析内容...'
+            link: 'analytics.html'
           },
           {
             title: '系统设置',
             icon: 'fas fa-cog',
-            content: '系统设置内容...'
+            link: 'settings.html'
           }
         ],
-        settingsTabs: [
-          { title: '常规设置', icon: 'fas fa-sliders-h' },
-          { title: '通知设置', icon: 'fas fa-bell' },
-          { title: '安全设置', icon: 'fas fa-shield-alt' },
-          { title: '存储设置', icon: 'fas fa-database' },
-          { title: '团队设置', icon: 'fas fa-users' },
-          { title: '高级设置', icon: 'fas fa-cogs' }
-        ],
         currentDate: ''
-      },
-      computed: {
-        activeNavItem() {
-          return this.navItems[this.activeIndex]
-        }
       },
       mounted() {
         this.updateDate();
         setInterval(this.updateDate, 60000);
       },
       methods: {
+        navigateTo(item, index) {
+          if (window.location.pathname.includes(item.link)) {
+            this.activeIndex = index;
+            return;
+          }
+          
+          if (item.link) {
+            window.location.href = item.link;
+          } else {
+            this.activeIndex = index;
+          }
+        },
         updateDate() {
           const now = new Date();
           const options = { 
