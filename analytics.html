@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据分析 | 知识库管理平台</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-blue: rgb(17, 0, 255);
+      --dark-blue: rgb(13, 0, 196);
+      --light-blue: rgba(17, 0, 255, 0.1);
+      --light-bg: #f5f7fa;
+      --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+      --sidebar-width: 240px;
+      --sidebar-collapsed: 70px;
+      --success: #2ecc71;
+      --warning: #f39c12;
+      --danger: #e74c3c;
+      --purple: #9b59b6;
+      --teal: #1abc9c;
+      --orange: #f39c12;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      transition: var(--transition);
+    }
+    
+    body {
+      background: var(--light-bg);
+      color: #333;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    /* 顶部导航栏 */
+    .topbar {
+      background: linear-gradient(135deg, var(--primary-blue), #0a006e);
+      color: white;
+      padding: 0 30px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo {
+      height: 40px;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    }
+    
+    .app-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+    
+    .search-container {
+      position: relative;
+    }
+    
+    .search-input {
+      padding: 10px 20px 10px 45px;
+      border-radius: 30px;
+      border: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      font-size: 1rem;
+      width: 300px;
+      transition: width 0.3s;
+    }
+    
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .search-input:focus {
+      background: rgba(255, 255, 255, 0.25);
+      outline: none;
+      width: 350px;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .action-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ff4757;
+      color: white;
+      font-size: 0.7rem;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-blue);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .user-name {
+      font-weight: 500;
+    }
+    
+    /* 主布局 */
+    .main-container {
+      display: flex;
+      min-height: 100vh;
+      padding-top: 70px;
+    }
+    
+    /* 侧边栏 */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, #0a006e, var(--primary-blue));
+      color: white;
+      height: calc(100vh - 70px);
+      position: fixed;
+      left: 0;
+      top: 70px;
+      overflow-y: auto;
+      z-index: 99;
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: width 0.3s;
+    }
+    
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed);
+    }
+    
+    .toggle-btn {
+      padding: 20px 15px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .toggle-btn:hover {
+      background: rgba(0, 0, 0, 0.25);
+    }
+    
+    .toggle-btn span {
+      font-size: 0.9rem;
+    }
+    
+    .sidebar.collapsed .toggle-btn span {
+      display: none;
+    }
+    
+    .nav-item {
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-left: 3px solid transparent;
+    }
+    
+    .nav-item i {
+      font-size: 1.2rem;
+      min-width: 25px;
+      text-align: center;
+    }
+    
+    .sidebar.collapsed .nav-item span {
+      display: none;
+    }
+    
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.15);
+      border-left: 3px solid white;
+    }
+    
+    .sidebar-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.15);
+      margin: 15px 20px;
+    }
+    
+    .sidebar-title {
+      padding: 15px 20px 5px;
+      font-size: 0.85rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+    
+    .sidebar.collapsed .sidebar-title {
+      display: none;
+    }
+    
+    /* 主内容区 */
+    .content {
+      flex: 1;
+      padding: 30px;
+      margin-left: var(--sidebar-width);
+      transition: margin-left 0.3s;
+    }
+    
+    .content.sidebar-collapsed {
+      margin-left: var(--sidebar-collapsed);
+    }
+    
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .content-title {
+      color: var(--primary-blue);
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    
+    .date-info {
+      color: #777;
+      font-size: 1rem;
+    }
+    
+    /* 数据分析页面样式 */
+    .analytics-container {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    
+    /* 统计卡片 */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+    }
+    
+    .stat-card:nth-child(1)::after { background: var(--primary-blue); }
+    .stat-card:nth-child(2)::after { background: var(--teal); }
+    .stat-card:nth-child(3)::after { background: var(--purple); }
+    .stat-card:nth-child(4)::after { background: var(--orange); }
+    
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .stat-title {
+      font-size: 1rem;
+      color: #777;
+      font-weight: 500;
+    }
+    
+    .stat-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    
+    .stat-card:nth-child(1) .stat-icon { background: rgba(17, 0, 255, 0.1); color: var(--primary-blue); }
+    .stat-card:nth-child(2) .stat-icon { background: rgba(26, 188, 156, 0.1); color: var(--teal); }
+    .stat-card:nth-child(3) .stat-icon { background: rgba(155, 89, 182, 0.1); color: var(--purple); }
+    .stat-card:nth-child(4) .stat-icon { background: rgba(243, 156, 18, 0.1); color: var(--orange); }
+    
+    .stat-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .stat-change {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .positive { color: var(--success); }
+    .negative { color: var(--danger); }
+    
+    /* 图表区域 */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .chart-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .chart-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .chart-actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .chart-action-btn {
+      background: #f5f7fa;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 8px;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .chart-action-btn:hover {
+      background: var(--light-blue);
+      color: var(--primary-blue);
+    }
+    
+    .chart-container {
+      height: 300px;
+      position: relative;
+    }
+    
+    .chart-placeholder {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #777;
+    }
+    
+    .chart-placeholder i {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.3;
+    }
+    
+    /* 表格样式 */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .data-table th {
+      background-color: #f8f9fa;
+      text-align: left;
+      padding: 15px 20px;
+      font-weight: 600;
+      color: #495057;
+      border-bottom: 2px solid #e9ecef;
+    }
+    
+    .data-table td {
+      padding: 12px 20px;
+      border-bottom: 1px solid #e9ecef;
+      color: #495057;
+    }
+    
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .data-table tr:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .trend-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .trend-up {
+      color: var(--success);
+    }
+    
+    .trend-down {
+      color: var(--danger);
+    }
+    
+    /* 时间选择器 */
+    .time-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+    
+    .time-btn {
+      padding: 8px 15px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid #ddd;
+      color: #555;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .time-btn.active {
+      background: var(--primary-blue);
+      color: white;
+      border-color: var(--primary-blue);
+    }
+    
+    /* 页脚 */
+    .footer {
+      background: linear-gradient(135deg, #0a006e, var(--primary-blue));
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      border-radius: 15px;
+    }
+    
+    /* 响应式设计 */
+    @media (max-width: 1200px) {
+      .search-input {
+        width: 200px;
+      }
+      
+      .search-input:focus {
+        width: 250px;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.collapsed {
+        transform: translateX(0);
+        width: var(--sidebar-collapsed);
+      }
+      
+      .content {
+        margin-left: 0;
+      }
+      
+      .content.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .topbar {
+        padding: 0 15px;
+      }
+      
+      .app-title {
+        display: none;
+      }
+      
+      .search-container {
+        flex: 1;
+        margin: 0 15px;
+      }
+      
+      .search-input {
+        width: 100%;
+      }
+      
+      .user-name {
+        display: none;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* 动画效果 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.6s forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部导航栏 -->
+    <div class="topbar">
+      <div class="logo-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/681/681662.png" alt="科技图标" class="logo">
+        <div class="app-title">知识库管理平台</div>
+      </div>
+      
+      <div class="user-actions">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="搜索文档、用户或标签...">
+        </div>
+        
+        <button class="action-btn">
+          <i class="far fa-bell"></i>
+          <span class="notification-badge">3</span>
+        </button>
+        
+        <button class="action-btn">
+          <i class="far fa-envelope"></i>
+          <span class="notification-badge">5</span>
+        </button>
+        
+        <div class="user-profile">
+          <div class="user-avatar">张</div>
+          <div class="user-name">张工程师</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 主布局 -->
+    <div class="main-container">
+      <!-- 侧边栏 -->
+      <div class="sidebar" :class="{ 'collapsed': isCollapsed }">
+        <div class="toggle-btn" @click="isCollapsed = !isCollapsed">
+          <i :class="isCollapsed ? 'fas fa-angle-double-right' : 'fas fa-angle-double-left'"></i>
+          <span v-if="!isCollapsed">收起菜单</span>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <div 
+          v-for="(item, index) in navItems" 
+          :key="index"
+          class="nav-item"
+          :class="{ 'active': activeIndex === index }"
+          @click="navigateTo(item, index)"
+        >
+          <i :class="item.icon"></i>
+          <span>{{ item.title }}</span>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <div class="sidebar-title">知识管理</div>
+        <div class="nav-item">
+          <i class="fas fa-folder"></i>
+          <span>文档分类</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-tags"></i>
+          <span>标签管理</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-shield-alt"></i>
+          <span>权限设置</span>
+        </div>
+        
+        <div class="sidebar-divider"></div>
+        
+        <div class="sidebar-title">团队协作</div>
+        <div class="nav-item">
+          <i class="fas fa-users"></i>
+          <span>团队成员</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-comments"></i>
+          <span>讨论区</span>
+        </div>
+        <div class="nav-item">
+          <i class="fas fa-tasks"></i>
+          <span>任务管理</span>
+        </div>
+      </div>
+      
+      <!-- 主内容区 -->
+      <div class="content" :class="{ 'sidebar-collapsed': isCollapsed }">
+        <div class="content-header">
+          <h1 class="content-title">数据分析</h1>
+          <div class="date-info">{{ currentDate }}</div>
+        </div>
+        
+        <!-- 时间选择器 -->
+        <div class="time-selector">
+          <button 
+            v-for="(period, index) in timePeriods" 
+            :key="index"
+            class="time-btn"
+            :class="{ 'active': activePeriod === index }"
+            @click="activePeriod = index"
+          >
+            {{ period }}
+          </button>
+        </div>
+        
+        <!-- 数据分析内容 -->
+        <div class="analytics-container fade-in">
+          <!-- 统计卡片 -->
+          <div class="stats-grid">
+            <div class="stat-card fade-in">
+              <div class="stat-header">
+                <div class="stat-title">文档总数</div>
+                <div class="stat-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+              </div>
+              <div class="stat-value">2,158</div>
+              <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i> 12.5% (过去30天)
+              </div>
+            </div>
+            
+            <div class="stat-card fade-in">
+              <div class="stat-header">
+                <div class="stat-title">团队成员</div>
+                <div class="stat-icon">
+                  <i class="fas fa-users"></i>
+                </div>
+              </div>
+              <div class="stat-value">42</div>
+              <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i> 5.0% (新增2人)
+              </div>
+            </div>
+            
+            <div class="stat-card fade-in">
+              <div class="stat-header">
+                <div class="stat-title">活跃用户</div>
+                <div class="stat-icon">
+                  <i class="fas fa-user-check"></i>
+                </div>
+              </div>
+              <div class="stat-value">35</div>
+              <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i> 9.4% (过去7天)
+              </div>
+            </div>
+            
+            <div class="stat-card fade-in">
+              <div class="stat-header">
+                <div class="stat-title">知识贡献量</div>
+                <div class="stat-icon">
+                  <i class="fas fa-pencil-alt"></i>
+                </div>
+              </div>
+              <div class="stat-value">1,248</div>
+              <div class="stat-change negative">
+                <i class="fas fa-arrow-down"></i> 3.2% (较上月)
+              </div>
+            </div>
+          </div>
+          
+          <!-- 图表区域 -->
+          <div class="charts-grid">
+            <div class="chart-card fade-in">
+              <div class="chart-header">
+                <h3 class="chart-title">文档分类分布</h3>
+                <div class="chart-actions">
+                  <button class="chart-action-btn">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="chart-action-btn">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="chart-card fade-in">
+              <div class="chart-header">
+                <h3 class="chart-title">文档增长趋势</h3>
+                <div class="chart-actions">
+                  <button class="chart-action-btn">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="chart-action-btn">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="growthChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <div class="charts-grid">
+            <div class="chart-card fade-in">
+              <div class="chart-header">
+                <h3 class="chart-title">热门文档TOP10</h3>
+                <div class="chart-actions">
+                  <button class="chart-action-btn">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="chart-action-btn">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="popularChart"></canvas>
+              </div>
+            </div>
+            
+            <div class="chart-card fade-in">
+              <div class="chart-header">
+                <h3 class="chart-title">团队贡献分析</h3>
+                <div class="chart-actions">
+                  <button class="chart-action-btn">
+                    <i class="fas fa-download"></i>
+                  </button>
+                  <button class="chart-action-btn">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="contributionChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 表格 -->
+          <div class="chart-card fade-in">
+            <div class="chart-header">
+              <h3 class="chart-title">用户活跃度排行榜</h3>
+              <div class="chart-actions">
+                <button class="chart-action-btn">
+                  <i class="fas fa-download"></i>
+                </button>
+              </div>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>用户名</th>
+                  <th>职位</th>
+                  <th>文档数量</th>
+                  <th>编辑次数</th>
+                  <th>最近活跃</th>
+                  <th>活跃度</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(user, index) in activeUsers" :key="index">
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.position }}</td>
+                  <td>{{ user.documents }}</td>
+                  <td>{{ user.edits }}</td>
+                  <td>{{ user.lastActive }}</td>
+                  <td>
+                    <span class="trend-indicator" :class="user.trendClass">
+                      {{ user.activity }}%
+                      <i :class="user.trendIcon"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <div class="footer">
+          <p>©2025 你错我队 | 浙江省服务外包创新大赛参赛作品 | 知识库平台</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        isCollapsed: false,
+        activeIndex: 2, // 激活"数据分析"
+        navItems: [
+          {
+            title: '仪表板',
+            icon: 'fas fa-tachometer-alt',
+            link: 'dashboard.html'
+          },
+          {
+            title: '我的知识库',
+            icon: 'fas fa-box-open',
+            link: 'knowledge.html'
+          },
+          {
+            title: '数据分析',
+            icon: 'fas fa-chart-bar',
+            link: 'analytics.html'
+          },
+          {
+            title: '团队协作',
+            icon: 'fas fa-users',
+            link: 'collaboration.html'
+          },
+          {
+            title: '系统设置',
+            icon: 'fas fa-cog',
+            link: 'settings.html'
+          }
+        ],
+        currentDate: '',
+        activePeriod: 0,
+        timePeriods: ['今天', '本周', '本月', '本季度', '全年'],
+        activeUsers: [
+          { name: '张工程师', position: '前端开发', documents: 28, edits: 142, lastActive: '今天', activity: 98, trendIcon: 'fas fa-arrow-up', trendClass: 'trend-up' },
+          { name: '李设计师', position: 'UI/UX设计师', documents: 24, edits: 118, lastActive: '今天', activity: 95, trendIcon: 'fas fa-arrow-up', trendClass: 'trend-up' },
+          { name: '王架构师', position: '技术总监', documents: 19, edits: 92, lastActive: '昨天', activity: 89, trendIcon: 'fas fa-arrow-down', trendClass: 'trend-down' },
+          { name: '赵产品', position: '产品经理', documents: 22, edits: 87, lastActive: '今天', activity: 86, trendIcon: 'fas fa-arrow-up', trendClass: 'trend-up' },
+          { name: '钱测试', position: '测试工程师', documents: 15, edits: 65, lastActive: '昨天', activity: 82, trendIcon: 'fas fa-arrow-up', trendClass: 'trend-up' }
+        ]
+      },
+      mounted() {
+        this.updateDate();
+        setInterval(this.updateDate, 60000);
+        this.renderCharts();
+      },
+      methods: {
+        navigateTo(item, index) {
+          if (window.location.pathname.includes(item.link)) {
+            this.activeIndex = index;
+            return;
+          }
+          
+          if (item.link) {
+            window.location.href = item.link;
+          } else {
+            this.activeIndex = index;
+          }
+        },
+        updateDate() {
+          const now = new Date();
+          const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            weekday: 'long',
+            hour: '2-digit',
+            minute: '2-digit'
+          };
+          this.currentDate = now.toLocaleDateString('zh-CN', options);
+        },
+        renderCharts() {
+          // 文档分类分布图
+          const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+          new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+              labels: ['技术文档', '产品设计', '项目管理', '客户资料', '财务报告', '培训资料'],
+              datasets: [{
+                data: [28, 22, 18, 15, 10, 7],
+                backgroundColor: [
+                  '#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6', '#1abc9c'
+                ],
+                borderWidth: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'right',
+                  labels: {
+                    font: {
+                      size: 13
+                    }
+                  }
+                }
+              }
+            }
+          });
+          
+          // 文档增长趋势图
+          const growthCtx = document.getElementById('growthChart').getContext('2d');
+          new Chart(growthCtx, {
+            type: 'line',
+            data: {
+              labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+              datasets: [{
+                label: '新增文档',
+                data: [120, 145, 178, 195, 210, 238, 275],
+                borderColor: '#3498db',
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                tension: 0.3,
+                fill: true
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false
+                  }
+                }
+              }
+            }
+          });
+          
+          // 热门文档TOP10
+          const popularCtx = document.getElementById('popularChart').getContext('2d');
+          new Chart(popularCtx, {
+            type: 'bar',
+            data: {
+              labels: ['前端规范', 'API文档', 'UI指南', '项目报告', '需求分析', '财务Q2', '培训资料'],
+              datasets: [{
+                label: '浏览次数',
+                data: [124, 156, 89, 67, 42, 38, 95],
+                backgroundColor: '#1abc9c',
+                borderRadius: 5
+              }]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                }
+              },
+              scales: {
+                x: {
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                  }
+                },
+                y: {
+                  grid: {
+                    display: false
+                  }
+                }
+              }
+            }
+          });
+          
+          // 团队贡献分析
+          const contributionCtx = document.getElementById('contributionChart').getContext('2d');
+          new Chart(contributionCtx, {
+            type: 'radar',
+            data: {
+              labels: ['文档创建', '文档编辑', '评论互动', '知识分享', '问题解决', '协作参与'],
+              datasets: [
+                {
+                  label: '张工程师',
+                  data: [95, 85, 75, 90, 80, 85],
+                  fill: true,
+                  backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                  borderColor: '#3498db',
+                  pointBackgroundColor: '#3498db',
+                  pointBorderColor: '#fff'
+                },
+                {
+                  label: '李设计师',
+                  data: [70, 90, 85, 75, 85, 80],
+                  fill: true,
+                  backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                  borderColor: '#2ecc71',
+                  pointBackgroundColor: '#2ecc71',
+                  pointBorderColor: '#fff'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                r: {
+                  angleLines: {
+                    display: true
+                  },
+                  suggestedMin: 0,
+                  suggestedMax: 100
+                }
+              }
+            }
+          });
+        }
+      }
+    })
+  </script>
+</body>
+</html>
