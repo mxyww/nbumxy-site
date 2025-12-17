@@ -1,587 +1,138 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>你错我队 - 知识库登录</title>
-    <style>
-        :root {
-            --primary-blue: rgb(17, 0, 255);
-            --dark-blue: rgb(13, 0, 196);
-            --light-bg: #f5f5f5;
-            --section1-bg: #f0f8ff;
-            --section2-bg: #e6e6fa;
-            --section3-bg: #f5f5dc;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-            background-color: var(--light-bg);
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* 顶部导航栏 */
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-blue), #0a006e);
-            color: white;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo {
-            height: 50px;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
-        }
-        
-        .nav-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        /* 主内容区 */
-        .main-container {
-            display: flex;
-            flex: 1;
-            padding: 30px 5%;
-            gap: 30px;
-        }
-        
-        /* 左侧大赛展示区 */
-        .event-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            max-width: 600px;
-        }
-        
-        .event-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            padding: 30px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-        
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary-blue);
-        }
-        
-        .card-icon {
-            font-size: 2rem;
-            margin-right: 15px;
-            color: var(--primary-blue);
-        }
-        
-        .card-title {
-            font-size: 1.8rem;
-            color: var(--primary-blue);
-        }
-        
-        .team-name {
-            background: var(--primary-blue);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin: 15px 0;
-            display: inline-block;
-        }
-        
-        .event-description {
-            line-height: 1.7;
-            margin: 20px 0;
-            font-size: 1.1rem;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-        }
-        
-        .feature-item {
-            background: rgba(17, 0, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .feature-item:hover {
-            background: rgba(17, 0, 255, 0.1);
-            transform: scale(1.03);
-        }
-        
-        .feature-icon {
-            font-size: 2.2rem;
-            color: var(--primary-blue);
-            margin-bottom: 10px;
-        }
-        
-        /* 右侧登录区 */
-        .login-section {
-            flex: 0 0 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .login-container {
-            background-color: white;
-            padding: 35px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-            width: 100%;
-            text-align: center;
-            position: sticky;
-            top: 30px;
-        }
-        
-        .login-title {
-            color: var(--primary-blue);
-            font-size: 1.8rem;
-            margin-bottom: 25px;
-            position: relative;
-        }
-        
-        .login-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: var(--primary-blue);
-            border-radius: 3px;
-        }
-        
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        input {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus {
-            border-color: var(--primary-blue);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(17, 0, 255, 0.1);
-        }
-        
-        input[type="text"], input[type="password"] {
-            width: 100%;
-        }
-        
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .form-group {
-            text-align: left;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-        }
-        
-        .checkbox-group input {
-            width: auto;
-            margin-right: 10px;
-        }
-        
-        .checkbox-group label {
-            margin: 0;
-            font-weight: normal;
-        }
-        
-        button {
-            background: linear-gradient(135deg, var(--primary-blue), #0a006e);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 6px;
-            font-size: 17px;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-            transition: all 0.3s ease;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-        
-        button:hover {
-            background: linear-gradient(135deg, var(--dark-blue), #08005a);
-            box-shadow: 0 5px 15px rgba(17, 0, 255, 0.3);
-        }
-        
-        .register-link {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 15px;
-        }
-        
-        .register-link a {
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-        
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .privacy-link {
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .privacy-link:hover {
-            text-decoration: underline;
-        }
-        
-        /* 隐私协议弹窗样式 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 25px;
-            border-radius: 10px;
-            width: 85%;
-            max-width: 700px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
-            position: relative;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .close {
-            color: #aaa;
-            font-size: 32px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        
-        .close:hover {
-            color: #333;
-        }
-        
-        .modal-body h3 {
-            color: var(--primary-blue);
-            margin: 20px 0 10px;
-        }
-        
-        .modal-body p {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        
-        /* 页脚 */
-        .footer {
-            background: linear-gradient(135deg, #0a006e, var(--primary-blue));
-            color: white;
-            text-align: center;
-            padding: 25px;
-            font-size: 1rem;
-            margin-top: auto;
-        }
-        
-        /* 响应式设计 */
-        @media (max-width: 900px) {
-            .main-container {
-                flex-direction: column;
-            }
-            
-            .login-section {
-                flex: 0 0 auto;
-                width: 100%;
-                max-width: 500px;
-                margin: 0 auto;
-            }
-            
-            .event-section {
-                max-width: 100%;
-            }
-            
-            .features-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .navbar {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-            
-            .main-container {
-                padding: 20px;
-            }
-            
-            .login-container {
-                padding: 25px;
-            }
-            
-            .event-card {
-                padding: 20px;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>期末刷题小工具</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background: #f5f7fa;
+    }
+    .container {
+      width: 600px;
+      margin: 60px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .option {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: #eef1f6;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .option:hover {
+      background: #dbe4ff;
+    }
+    .correct {
+      background: #c8f7c5 !important;
+    }
+    .wrong {
+      background: #f7c5c5 !important;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    #nextBtn {
+      margin-top: 20px;
+      padding: 8px 16px;
+      font-size: 16px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <!-- 顶部导航栏 -->
-    <div class="navbar">
-        <div class="logo-container">
-            <img src="https://cdn-icons-png.flaticon.com/512/681/681662.png" alt="科技图标" class="logo">
-            <div class="nav-title">2025浙江省服务外包创新大赛 - 知识库平台</div>
-        </div>
-        <div class="team-name">你错我队</div>
-    </div>
 
-    <!-- 主内容区 -->
-    <div class="main-container">
-        <!-- 左侧大赛展示区 -->
-        <div class="event-section">
-            <div class="event-card">
-                <div class="card-header">
-                    <div class="card-icon">🏆</div>
-                    <h2 class="card-title">2025浙江省服务外包创新大赛</h2>
-                </div>
-                <div class="team-name">你错我队</div>
-                <p class="event-description">
-                    欢迎来到我们的科技创新项目展示平台！我们是一支充满激情与创意的团队，致力于通过技术创新解决实际问题。
-                    本次参赛项目聚焦于知识管理与共享平台，旨在为企业提供高效、安全的知识库解决方案。
-                </p>
-                <p class="event-description">
-                    我们的项目结合了先进的人工智能技术和人性化设计，打造了您正在使用的知识库平台。
-                    通过这个平台，团队成员可以轻松创建、共享和管理知识内容，提升团队协作效率。
-                </p>
-            </div>
-            
-            <div class="event-card">
-                <div class="card-header">
-                    <div class="card-icon">💡</div>
-                    <h2 class="card-title">项目核心功能</h2>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <div class="feature-icon">🔐</div>
-                        <h3>安全认证</h3>
-                        <p>多层次安全保障机制</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">📚</div>
-                        <h3>知识管理</h3>
-                        <p>结构化知识存储与检索</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">🤝</div>
-                        <h3>团队协作</h3>
-                        <p>实时协作与版本控制</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon">📊</div>
-                        <h3>智能分析</h3>
-                        <p>知识图谱与数据分析</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 右侧登录区 -->
-        <div class="login-section">
-            <div class="login-container">
-                <h1 class="login-title">欢迎登录知识库！</h1>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="username">用户名：</label>
-                        <input type="text" id="username" placeholder="请输入用户名" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">密码：</label>
-                        <input type="password" id="password" placeholder="请输入密码" required>
-                    </div>
-                    
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="agree" required>
-                        <label for="agree">我已阅读并同意<a href="javascript:void(0)" class="privacy-link" onclick="showPrivacy()">《隐私保护协议》</a></label>
-                    </div>
-                    
-                    <button type="submit">登录</button>
-                    
-                    <div class="register-link">
-                        还没有账号？<a href="register.html">立即注册</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<div class="container">
+  <h2 id="question"></h2>
+  <div id="options"></div>
+  <div id="result"></div>
+  <button id="nextBtn" onclick="nextQuestion()">下一题</button>
+</div>
 
-    <!-- 隐私协议弹窗 -->
-    <div id="privacyModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>隐私保护协议</h2>
-                <span class="close" onclick="closeModal()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <h3>一、我们如何收集和使用您的个人信息</h3>
-                <p>1.1 在您注册知识库账号时，我们会收集您的用户名、电子邮箱地址和密码等信息。</p>
-                <p>1.2 当您使用我们的服务时，我们会自动收集您的设备信息和日志信息。</p>
-                
-                <h3>二、我们如何保护您的个人信息</h3>
-                <p>2.1 我们采用符合行业标准的安全防护措施来保护您的个人信息。</p>
-                <p>2.2 我们对数据进行加密存储和传输，确保数据安全。</p>
-                
-                <h3>三、我们如何共享、转让、公开披露您的个人信息</h3>
-                <p>3.1 我们不会与任何公司、组织和个人共享您的个人信息，除非获得您的明确同意。</p>
-                <p>3.2 我们不会将您的个人信息转让给任何公司、组织和个人。</p>
-                
-                <h3>四、您的权利</h3>
-                <p>4.1 您可以随时访问、更正或删除您的个人信息。</p>
-                <p>4.2 您可以注销您的账号，我们将停止为您提供服务并删除您的个人信息。</p>
-                
-                <h3>五、本协议的更新</h3>
-                <p>我们可能会适时更新本隐私政策。更新后的隐私政策将在网站上公布，并自公布之日起生效。</p>
-                
-                <p><strong>最后更新日期：2025年7月10日</strong></p>
-            </div>
-        </div>
-    </div>
+<script>
+  // ====== 题库（你主要改这里） ======
+  const questions = [
+    {
+      title: "计算机中 1 Byte 等于多少 bit？",
+      options: ["4", "8", "16", "32"],
+      answer: 1
+    },
+    {
+      title: "下列哪一种不是操作系统？",
+      options: ["Windows", "Linux", "Oracle", "macOS"],
+      answer: 2
+    },
+    {
+      title: "数据库中用于唯一标识一条记录的是？",
+      options: ["外键", "主键", "索引", "视图"],
+      answer: 1
+    }
+  ];
 
-    <!-- 页脚 -->
-    <div class="footer">
-        <p>©2025 你错我队 | 浙江省服务外包创新大赛参赛作品 | 知识库平台</p>
-    </div>
+  let current = 0;
 
-    <script>
-        // 显示隐私协议弹窗
-        function showPrivacy() {
-            document.getElementById('privacyModal').style.display = 'block';
-        }
-        
-        // 关闭弹窗
-        function closeModal() {
-            document.getElementById('privacyModal').style.display = 'none';
-        }
-        
-        // 点击弹窗外部关闭
-        window.onclick = function(event) {
-            const modal = document.getElementById('privacyModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-        
-        // 表单提交处理
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (!document.getElementById('agree').checked) {
-                alert('请先阅读并同意隐私保护协议');
-                return;
-            }
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // 模拟登录成功
-            if (username && password) {
-                // 实际项目中这里应有AJAX请求
-                alert(`欢迎回来，${username}！登录成功！`);
-                // 跳转到仪表盘
-                window.location.href = 'dashboard.html';
-            } else {
-                alert('请输入有效的用户名和密码');
-            }
-        });
-        
-        // 页面加载后添加动画效果
-        document.addEventListener('DOMContentLoaded', function() {
-            // 卡片动画
-            const cards = document.querySelectorAll('.event-card');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 300 * index);
-            });
-            
-            // 登录表单动画
-            const loginContainer = document.querySelector('.login-container');
-            setTimeout(() => {
-                loginContainer.style.opacity = '1';
-                loginContainer.style.transform = 'translateY(0)';
-            }, 600);
-        });
-    </script>
+  function loadQuestion() {
+    const q = questions[current];
+    document.getElementById("question").innerText =
+      (current + 1) + ". " + q.title;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    document.getElementById("result").innerText = "";
+    document.getElementById("nextBtn").style.display = "none";
+
+    q.options.forEach((opt, index) => {
+      const div = document.createElement("div");
+      div.className = "option";
+      div.innerText = opt;
+      div.onclick = () => checkAnswer(div, index);
+      optionsDiv.appendChild(div);
+    });
+  }
+
+  function checkAnswer(optionDiv, index) {
+    const q = questions[current];
+    const options = document.getElementsByClassName("option");
+
+    // 禁止重复点击
+    for (let opt of options) {
+      opt.onclick = null;
+    }
+
+    if (index === q.answer) {
+      optionDiv.classList.add("correct");
+      document.getElementById("result").innerText = "✔ 回答正确";
+    } else {
+      optionDiv.classList.add("wrong");
+      options[q.answer].classList.add("correct");
+      document.getElementById("result").innerText =
+        "✘ 回答错误，正确答案是：" + q.options[q.answer];
+    }
+
+    document.getElementById("nextBtn").style.display = "inline-block";
+  }
+
+  function nextQuestion() {
+    current++;
+    if (current < questions.length) {
+      loadQuestion();
+    } else {
+      document.querySelector(".container").innerHTML =
+        "<h2>🎉 题目做完啦，复习辛苦了！</h2>";
+    }
+  }
+
+  loadQuestion();
+</script>
+
 </body>
 </html>
