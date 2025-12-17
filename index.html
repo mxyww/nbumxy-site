@@ -2,137 +2,43 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>期末刷题小工具</title>
+  <title>期末刷题入口</title>
   <style>
     body {
-      font-family: "Microsoft YaHei", sans-serif;
+      font-family: "Microsoft YaHei";
       background: #f5f7fa;
     }
     .container {
-      width: 600px;
-      margin: 60px auto;
+      width: 400px;
+      margin: 100px auto;
       background: #fff;
       padding: 30px;
       border-radius: 8px;
+      text-align: center;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    h2 {
-      margin-bottom: 20px;
-    }
-    .option {
+    a {
       display: block;
-      margin: 10px 0;
-      padding: 10px;
-      background: #eef1f6;
+      margin: 15px 0;
+      padding: 12px;
+      background: #4f7cff;
+      color: #fff;
+      text-decoration: none;
       border-radius: 5px;
-      cursor: pointer;
     }
-    .option:hover {
-      background: #dbe4ff;
-    }
-    .correct {
-      background: #c8f7c5 !important;
-    }
-    .wrong {
-      background: #f7c5c5 !important;
-    }
-    #result {
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    #nextBtn {
-      margin-top: 20px;
-      padding: 8px 16px;
-      font-size: 16px;
-      display: none;
+    a:hover {
+      background: #345eea;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h2 id="question"></h2>
-  <div id="options"></div>
-  <div id="result"></div>
-  <button id="nextBtn" onclick="nextQuestion()">下一题</button>
+  <h2>📚 期末刷题系统</h2>
+  <a href="db.html">数据库原理</a>
+  <a href="co.html">计算机组成原理</a>
+  <a href="os.html">毛泽东思想和中国特色社会主义理论体系概论>ma>
 </div>
-
-<script>
-  // ====== 题库（你主要改这里） ======
-  const questions = [
-    {
-      title: "计算机中 1 Byte 等于多少 bit？",
-      options: ["4", "8", "16", "32"],
-      answer: 1
-    },
-    {
-      title: "下列哪一种不是操作系统？",
-      options: ["Windows", "Linux", "Oracle", "macOS"],
-      answer: 2
-    },
-    {
-      title: "数据库中用于唯一标识一条记录的是？",
-      options: ["外键", "主键", "索引", "视图"],
-      answer: 1
-    }
-  ];
-
-  let current = 0;
-
-  function loadQuestion() {
-    const q = questions[current];
-    document.getElementById("question").innerText =
-      (current + 1) + ". " + q.title;
-
-    const optionsDiv = document.getElementById("options");
-    optionsDiv.innerHTML = "";
-
-    document.getElementById("result").innerText = "";
-    document.getElementById("nextBtn").style.display = "none";
-
-    q.options.forEach((opt, index) => {
-      const div = document.createElement("div");
-      div.className = "option";
-      div.innerText = opt;
-      div.onclick = () => checkAnswer(div, index);
-      optionsDiv.appendChild(div);
-    });
-  }
-
-  function checkAnswer(optionDiv, index) {
-    const q = questions[current];
-    const options = document.getElementsByClassName("option");
-
-    // 禁止重复点击
-    for (let opt of options) {
-      opt.onclick = null;
-    }
-
-    if (index === q.answer) {
-      optionDiv.classList.add("correct");
-      document.getElementById("result").innerText = "✔ 回答正确";
-    } else {
-      optionDiv.classList.add("wrong");
-      options[q.answer].classList.add("correct");
-      document.getElementById("result").innerText =
-        "✘ 回答错误，正确答案是：" + q.options[q.answer];
-    }
-
-    document.getElementById("nextBtn").style.display = "inline-block";
-  }
-
-  function nextQuestion() {
-    current++;
-    if (current < questions.length) {
-      loadQuestion();
-    } else {
-      document.querySelector(".container").innerHTML =
-        "<h2>🎉 题目做完啦，复习辛苦了！</h2>";
-    }
-  }
-
-  loadQuestion();
-</script>
 
 </body>
 </html>
