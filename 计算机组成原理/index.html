@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计算机组成原理 - 期末刷题系统</title>
+  <style>
+    :root {
+      --primary-color: #7209b7;
+      --primary-light: #f3e5f5;
+      --secondary-color: #4361ee;
+      --accent-color: #f72585;
+      --success-color: #06d6a0;
+      --warning-color: #ff9e00;
+      --info-color: #00b4d8;
+      --danger-color: #ef476f;
+      --dark-color: #2b2d42;
+      --light-color: #f8f9fa;
+      --gray-color: #8d99ae;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 背景装饰元素 */
+    .bg-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(114, 9, 183, 0.1) 0%, rgba(67, 97, 238, 0.05) 100%);
+    }
+
+    .shape-1 {
+      width: 300px;
+      height: 300px;
+      top: -100px;
+      right: -100px;
+    }
+
+    .shape-2 {
+      width: 200px;
+      height: 200px;
+      bottom: -80px;
+      left: -80px;
+    }
+
+    .shape-3 {
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      left: 10%;
+    }
+
+    /* 顶部导航栏 */
+    .top-nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--primary-light);
+      border-radius: 50px;
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+    }
+
+    .subject-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .progress-bar {
+      width: 150px;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      width: 25%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-color);
+      min-width: 60px;
+    }
+
+    /* 主容器 */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    /* 头部样式 */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .icon-container {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(114, 9, 183, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    .icon-container i {
+      font-size: 42px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--gray-color);
+      font-size: 16px;
+      font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto 15px;
+    }
+
+    .stats-summary {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-color);
+      display: block;
+    }
+
+    /* 章节网格样式 */
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .chapter-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: var(--dark-color);
+      transition: var(--transition);
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .chapter-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--primary-light);
+    }
+
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .chapter-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .chapter-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dark-color);
+    }
+
+    .chapter-desc {
+      font-size: 14px;
+      color: var(--gray-color);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .chapter-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .questions-count {
+      font-size: 14px;
+      color: var(--gray-color);
+    }
+
+    .questions-count i {
+      margin-right: 5px;
+      color: var(--primary-color);
+    }
+
+    .start-btn {
+      padding: 8px 18px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .start-btn:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
+    }
+
+    .chapter-progress {
+      width: 100%;
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      margin-top: 15px;
+      overflow: hidden;
+    }
+
+    .chapter-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--success-color), #4cc9f0);
+      width: 0%;
+      transition: width 1s ease;
+    }
+
+    /* 底部样式 */
+    .footer {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .hint {
+      font-size: 15px;
+      color: var(--gray-color);
+      background: var(--light-color);
+      padding: 12px 20px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .hint i {
+      margin-right: 8px;
+      color: var(--success-color);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .action-btn.secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+      border: 1px solid #ddd;
+    }
+
+    .action-btn.warning {
+      background: linear-gradient(to right, var(--warning-color), #ff6b00);
+      color: white;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 确认对话框样式 */
+    .confirm-dialog {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .confirm-content {
+      background: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-hover);
+    }
+
+    .confirm-content h3 {
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .confirm-content p {
+      margin-bottom: 25px;
+      color: var(--gray-color);
+    }
+
+    .confirm-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .confirm-btn {
+      padding: 10px 25px;
+      border-radius: 50px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: inherit;
+    }
+
+    .confirm-btn.confirm {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    .confirm-btn.cancel {
+      background: var(--light-color);
+      color: var(--dark-color);
+      border: 1px solid #ddd;
+    }
+
+    .confirm-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 动画 */
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(114, 9, 183, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(114, 9, 183, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(114, 9, 183, 0);
+      }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1100px) {
+      .chapter-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 20px;
+      }
+      
+      .header {
+        padding: 25px 20px;
+      }
+      
+      .top-nav {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-left {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .progress-container {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      h1 {
+        font-size: 26px;
+      }
+      
+      .subtitle {
+        font-size: 15px;
+      }
+      
+      .chapter-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-summary {
+        flex-wrap: wrap;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+      
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .confirm-buttons {
+        flex-direction: column;
+      }
+      
+      .confirm-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 20px 15px;
+      }
+      
+      .icon-container {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .icon-container i {
+        font-size: 32px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .chapter-card {
+        padding: 20px;
+      }
+      
+      .chapter-title {
+        font-size: 18px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 背景装饰元素 -->
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <!-- 确认对话框 -->
+  <div class="confirm-dialog" id="confirmDialog">
+    <div class="confirm-content">
+      <h3>确认清空学习历史</h3>
+      <p>确定要清空所有章节的学习进度吗？这个操作无法撤销，所有学习记录将被重置为0。</p>
+      <div class="confirm-buttons">
+        <button class="confirm-btn confirm" id="confirmClear">确认清空</button>
+        <button class="confirm-btn cancel" id="cancelClear">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <div class="top-nav">
+    <div class="nav-left">
+      <a href="../index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        返回科目选择
+      </a>
+      <div class="subject-title">计算机组成原理</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="overall-progress"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0%</div>
+    </div>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="main-container">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="icon-container">
+        <i class="fas fa-microchip"></i>
+      </div>
+      <h1>计算机组成原理刷题系统</h1>
+      <p class="subtitle">深入理解计算机硬件系统的工作原理，掌握计算机各组成部分的设计与实现</p>
+      <div class="stats-summary">
+        <div class="stat-item">
+          <span class="stat-number">7</span>
+          <span class="stat-label">个章节</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">240+</span>
+          <span class="stat-label">道题目</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">12+</span>
+          <span class="stat-label">学习小时</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 章节网格 -->
+    <div class="chapter-grid">
+      <!-- 第1章 -->
+      <a href="1第一章.html" class="chapter-card" data-chapter="1">
+        <div class="chapter-header">
+          <div class="chapter-number">01</div>
+          <div class="chapter-title">计算机系统概述</div>
+        </div>
+        <div class="chapter-desc">
+          计算机的基本组成、工作原理、性能指标，计算机系统的层次结构，计算机的发展历程与分类。
+        </div>
+        <div class="chapter-progress">
+          <div class="chapter-progress-fill" id="progress-ch1"></div>
+        </div>
+        <div class="chapter-meta">
+          <div class="questions-count">
+            <i class="fas fa-question-circle"></i>
+            20 道题目
+          </div>
+          <span class="start-btn">开始学习</span>
+        </div>
+      </a>
+
+      <!-- 第2章 -->
+      <a href="2第二章.html" class="chapter-card" data-chapter="2">
+        <div class="chapter-header">
+          <div class="chapter-number">02</div>
+          <div class="chapter-title">运算方法和运算器</div>
+        </div>
+        <div class="chapter-desc">
+          数据表示方法（原码、补码、反码、移码），定点数和浮点数的运算，ALU设计与实现，运算器组成与工作原理。
+        </div>
+        <div class="chapter-progress">
+          <div class="chapter-progress-fill" id="progress-ch2"></div>
+        </div>
+        <div class="chapter-meta">
+          <div class="questions-count">
+            <i class="fas fa-question-circle"></i>
+            20 道题目
+          </div>
+          <span class="start-btn">开始学习</span>
+        </div>
+      </a>
+
+      <!-- 第3章 -->
+      <a href="3第三章.html" class="chapter-card" data-chapter="3">
+        <div class="chapter-header">
+          <div class="chapter-number">03</div>
+          <div class="chapter-title">存储系统</div>
+        </div>
+        <div class="chapter-desc">
+          存储器层次结构，主存储器原理与设计，Cache工作原理与映射方式，虚拟存储器与地址转换，存储系统性能优化。
+        </div>
+        <div class="chapter-progress">
+          <div class="chapter-progress-fill" id="progress-ch3"></div>
+        </div>
+        <div class="chapter-meta">
+          <div class="questions-count">
+            <i class="fas fa-question-circle"></i>
+            20 道题目
+          </div>
+          <span class="start-btn">开始学习</span>
+        </div>
+      </a>
+
+      <!-- 第4章 -->
+      <a href="4第四章.html" class="chapter-card" data-chapter="4">
+        <div class="chapter-header">
+          <div class="chapter-number">04</div>
+          <div class="chapter-title">指令系统</div>
+        </div>
+        <div class="chapter-desc">
+          指令格式与寻址方式，指令类型与功能，RISC与CISC架构比较，指令系统设计原则，MIPS指令集简介。
+        </div>
+        <div class="chapter-progress">
+          <div class="chapter-progress-fill" id="progress-ch4"></div>
+        </div>
+        <div class="chapter-meta">
+          <div class="questions-count">
+            <i class="fas fa-question-circle"></i>
+            20 道题目
+          </div>
+          <span class="start-btn">开始学习</span>
+        </div>
+      </a>
+
+      <!-- 第5章 -->
+      <a href="5第五章.html" class="chapter-card" data-chapter="5">
+        <div class="chapter-header">
+          <div class="chapter-number">05</div>
+          <div class="chapter-title">中央处理器</div>
+        </div>
+        <div class="chapter-desc">
+          CPU功能与结构，指令执行过程，数据通路与控制单元设计，微程序控制器与硬连线控制器，流水线技术与性能分析。
+        </div>
+        <div class="chapter-progress">
+          <div class="chapter-progress-fill" id="progress-ch5"></div>
+        </div>
+        <div class="chapter-meta">
+          <div class="questions-count">
+            <i class="fas fa-question-circle"></i>
+            20 道题目
+          </div>
+          <span class="start-btn">开始学习</span>
+        </div>
+      </a>
+
+      <!-- 第6章 -->
+      <a href="6第六章.html" class="chapter-card" data-chapter="6">
+        <div class="chapter-header">
+          <div class="chapter-number">06</div>
+          <div class="chapter-title">总线系统</div>
+        </div>
+        <div class="chapter-desc">
+          总线概念与分类，总线仲裁与定时，总线标准与性能指标，常见总线结构（单总线、多总线），总线传输控制方式。
+        </div>
+        <div class="chapter-progress">
+          <div class="chapter-progress-fill" id="progress-ch6"></div>
+        </div>
+        <div class="chapter-meta">
+          <div class="questions-count">
+            <i class="fas fa-question-circle"></i>
+            20 道题目
+          </div>
+          <span class="start-btn">开始学习</span>
+        </div>
+      </a>
+
+      <!-- 第7章 -->
+      <a href="7第七章.html" class="chapter-card" data-chapter="7">
+        <div class="chapter-header">
+          <div class="chapter-number">07</div>
+          <div class="chapter-title">输入/输出系统</div>
+        </div>
+        <div class="chapter-desc">
+          I/O接口功能与结构，I/O控制方式（程序查询、中断、DMA），外部设备工作原理，I/O性能优化，I/O软件设计。
+        </div>
+        <div class="chapter-progress">
+          <div class="chapter-progress-fill" id="progress-ch7"></div>
+        </div>
+        <div class="chapter-meta">
+          <div class="questions-count">
+            <i class="fas fa-question-circle"></i>
+            20 道题目
+          </div>
+          <span class="start-btn">开始学习</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+      <p class="hint">
+        <i class="fas fa-lightbulb"></i>
+        点击章节卡片开始学习，系统将自动记录你的学习进度和答题情况
+      </p>
+      <div class="actions">
+        <a href="#" class="action-btn primary">
+          <i class="fas fa-random"></i>
+          随机练习
+        </a>
+        <a href="#" class="action-btn secondary">
+          <i class="fas fa-chart-bar"></i>
+          查看学习报告
+        </a>
+        <a href="#" class="action-btn secondary">
+          <i class="fas fa-clipboard-list"></i>
+          模拟考试
+        </a>
+      </div>
+      <button class="action-btn warning" id="clearHistoryBtn">
+        <i class="fas fa-trash-alt"></i>
+        清空学习历史
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 模拟学习进度数据
+    const chapterProgress = {
+      1: 15, // 第1章进度百分比
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+      6: 0,
+      7: 0
+    };
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化进度条
+      updateProgressBars();
+      
+      // 卡片逐个显示动画
+      const cards = document.querySelectorAll('.chapter-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 200 + index * 100);
+      });
+
+      // 为每个卡片添加点击事件 - 更新进度
+      cards.forEach(card => {
+        const chapter = card.getAttribute('data-chapter');
+        
+        card.addEventListener('click', function(e) {
+          // 只更新进度，不阻止默认跳转行为
+          if (e.target.classList.contains('start-btn') || e.target.closest('.start-btn')) {
+            // 点击的是开始学习按钮
+            updateChapterProgress(chapter);
+          } else if (!e.target.closest('.chapter-meta')) {
+            // 点击卡片主体部分（不是元数据区域）
+            updateChapterProgress(chapter);
+          }
+        });
+      });
+
+      // 背景形状动画
+      const shapes = document.querySelectorAll('.shape');
+      shapes.forEach(shape => {
+        const randomX = Math.random() * 20 - 10;
+        const randomY = Math.random() * 20 - 10;
+        
+        shape.style.animation = `float 20s infinite ease-in-out`;
+        shape.style.animationDelay = `${Math.random() * 5}s`;
+        
+        // 创建浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(${randomX}px, ${randomY}px) rotate(1deg); }
+            66% { transform: translate(${-randomX}px, ${-randomY}px) rotate(-1deg); }
+          }
+        `;
+        document.head.appendChild(style);
+      });
+
+      // 添加按钮点击效果
+      const actionBtns = document.querySelectorAll('.action-btn:not(#clearHistoryBtn)');
+      actionBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const btnText = this.textContent.trim();
+          alert(`即将进入${btnText}功能，此功能正在开发中...`);
+        });
+      });
+
+      // 清空历史按钮事件
+      const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+      const confirmDialog = document.getElementById('confirmDialog');
+      const confirmClearBtn = document.getElementById('confirmClear');
+      const cancelClearBtn = document.getElementById('cancelClear');
+      
+      clearHistoryBtn.addEventListener('click', function() {
+        confirmDialog.style.display = 'flex';
+      });
+      
+      confirmClearBtn.addEventListener('click', function() {
+        clearAllProgress();
+        confirmDialog.style.display = 'none';
+        alert('学习历史已清空！');
+      });
+      
+      cancelClearBtn.addEventListener('click', function() {
+        confirmDialog.style.display = 'none';
+      });
+      
+      // 点击对话框背景关闭
+      confirmDialog.addEventListener('click', function(e) {
+        if (e.target === confirmDialog) {
+          confirmDialog.style.display = 'none';
+        }
+      });
+
+      // 模拟从本地存储获取学习进度
+      loadProgressFromStorage();
+    });
+
+    // 更新章节进度
+    function updateChapterProgress(chapter) {
+      // 模拟学习进度增加
+      if (chapterProgress[chapter] < 100) {
+        chapterProgress[chapter] = Math.min(chapterProgress[chapter] + 25, 100);
+        updateProgressBars();
+        saveProgressToStorage();
+      }
+    }
+
+    // 更新所有进度条
+    function updateProgressBars() {
+      let totalProgress = 0;
+      
+      for (let i = 1; i <= 7; i++) {
+        const progress = chapterProgress[i];
+        const progressBar = document.getElementById(`progress-ch${i}`);
+        
+        if (progressBar) {
+          progressBar.style.width = `${progress}%`;
+          totalProgress += progress;
+        }
+      }
+      
+      // 计算总体进度
+      const overallProgress = Math.round(totalProgress / 7);
+      const overallProgressBar = document.getElementById('overall-progress');
+      const progressText = document.getElementById('progress-text');
+      
+      if (overallProgressBar) {
+        overallProgressBar.style.width = `${overallProgress}%`;
+      }
+      
+      if (progressText) {
+        progressText.textContent = `${overallProgress}%`;
+      }
+    }
+
+    // 清空所有进度
+    function clearAllProgress() {
+      for (let i = 1; i <= 7; i++) {
+        chapterProgress[i] = 0;
+      }
+      updateProgressBars();
+      saveProgressToStorage();
+    }
+
+    // 从本地存储加载进度
+    function loadProgressFromStorage() {
+      const savedProgress = localStorage.getItem('computerOrganizationProgress');
+      if (savedProgress) {
+        try {
+          const parsedProgress = JSON.parse(savedProgress);
+          for (let i = 1; i <= 7; i++) {
+            if (parsedProgress[i] !== undefined) {
+              chapterProgress[i] = parsedProgress[i];
+            }
+          }
+          updateProgressBars();
+        } catch (e) {
+          console.error('加载进度数据失败:', e);
+        }
+      }
+    }
+
+    // 保存进度到本地存储
+    function saveProgressToStorage() {
+      try {
+        localStorage.setItem('computerOrganizationProgress', JSON.stringify(chapterProgress));
+      } catch (e) {
+        console.error('保存进度数据失败:', e);
+      }
+    }
+
+    // 键盘导航支持
+    document.addEventListener('keydown', function(e) {
+      const cards = document.querySelectorAll('.chapter-card');
+      let currentIndex = -1;
+      
+      // 找到当前焦点元素
+      cards.forEach((card, index) => {
+        if (card === document.activeElement) {
+          currentIndex = index;
+        }
+      });
+      
+      // 方向键导航
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        const nextIndex = (currentIndex + 1) % cards.length;
+        cards[nextIndex].focus();
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+        cards[prevIndex].focus();
+      } else if (e.key === 'Enter' && currentIndex !== -1) {
+        // 按回车键访问当前焦点章节
+        const chapter = cards[currentIndex].getAttribute('data-chapter');
+        updateChapterProgress(chapter);
+        // 允许默认行为继续（跳转）
+      } else if (e.key === 'Escape') {
+        // 按ESC关闭确认对话框
+        const confirmDialog = document.getElementById('confirmDialog');
+        if (confirmDialog.style.display === 'flex') {
+          confirmDialog.style.display = 'none';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

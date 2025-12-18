@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计算机系统概述 - 选择题练习</title>
+  <style>
+    :root {
+      --primary-color: #7209b7;
+      --primary-light: #f3e5f5;
+      --secondary-color: #4361ee;
+      --accent-color: #f72585;
+      --success-color: #06d6a0;
+      --warning-color: #ff9e00;
+      --info-color: #00b4d8;
+      --danger-color: #ef476f;
+      --dark-color: #2b2d42;
+      --light-color: #f8f9fa;
+      --gray-color: #8d99ae;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* 背景装饰元素 */
+    .bg-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(114, 9, 183, 0.1) 0%, rgba(67, 97, 238, 0.05) 100%);
+    }
+
+    .shape-1 {
+      width: 300px;
+      height: 300px;
+      top: -100px;
+      right: -100px;
+    }
+
+    .shape-2 {
+      width: 200px;
+      height: 200px;
+      bottom: -80px;
+      left: -80px;
+    }
+
+    .shape-3 {
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      left: 10%;
+    }
+
+    /* 顶部导航栏 */
+    .top-nav {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--primary-light);
+      border-radius: 50px;
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+    }
+
+    .subject-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .progress-bar {
+      width: 150px;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      width: 5%; /* 初始进度为5% */
+      transition: width 0.5s ease;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-color);
+      min-width: 60px;
+    }
+
+    /* 主容器 */
+    .main-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    /* 头部样式 */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .icon-container {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(114, 9, 183, 0.3);
+    }
+
+    .icon-container i {
+      font-size: 32px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--gray-color);
+      font-size: 16px;
+      font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto 15px;
+    }
+
+    .stats-summary {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-color);
+      display: block;
+    }
+
+    /* 题目容器 */
+    .question-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .question-number {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .question-tags {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tag {
+      padding: 4px 12px;
+      background: var(--primary-light);
+      border-radius: 50px;
+      font-size: 12px;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+
+    .question-text {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .option:hover {
+      background: white;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(6, 214, 160, 0.1);
+    }
+
+    .option.incorrect {
+      border-color: var(--danger-color);
+      background: rgba(239, 71, 111, 0.1);
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--dark-color);
+      flex-shrink: 0;
+      border: 2px solid #e0e0e0;
+      transition: var(--transition);
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--danger-color);
+      color: white;
+      border-color: var(--danger-color);
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* 导航按钮 */
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .nav-btn {
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    .nav-btn.primary {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .nav-btn.secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+      border: 1px solid #ddd;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* 底部样式 */
+    .footer {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 25px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .hint {
+      font-size: 15px;
+      color: var(--gray-color);
+      background: var(--light-color);
+      padding: 12px 20px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .hint i {
+      margin-right: 8px;
+      color: var(--success-color);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+    }
+
+    .action-btn.secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+      border: 1px solid #ddd;
+    }
+
+    .action-btn.warning {
+      background: linear-gradient(to right, var(--warning-color), #ff6b00);
+      color: white;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 结果面板 */
+    .result-panel {
+      display: none;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .result-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--success-color), #4cc9f0);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .result-icon i {
+      font-size: 36px;
+      color: white;
+    }
+
+    .result-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--dark-color);
+    }
+
+    .result-score {
+      font-size: 48px;
+      font-weight: 800;
+      margin: 20px 0;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .result-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 30px 0;
+    }
+
+    .result-stat {
+      text-align: center;
+    }
+
+    .result-stat-number {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .result-stat-label {
+      font-size: 14px;
+      color: var(--gray-color);
+      display: block;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 20px;
+      }
+      
+      .header {
+        padding: 25px 20px;
+      }
+      
+      .top-nav {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-left {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .progress-container {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .subtitle {
+        font-size: 15px;
+      }
+      
+      .question-container {
+        padding: 25px 20px;
+      }
+      
+      .question-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .nav-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .nav-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+      
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .result-stats {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header {
+        padding: 20px 15px;
+      }
+      
+      .icon-container {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .icon-container i {
+        font-size: 28px;
+      }
+      
+      h1 {
+        font-size: 22px;
+      }
+      
+      .question-text {
+        font-size: 16px;
+      }
+      
+      .option {
+        padding: 15px;
+      }
+      
+      .option-text {
+        font-size: 15px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 背景装饰元素 -->
+  <div class="bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <div class="top-nav">
+    <div class="nav-left">
+      <a href="../计算机组成原理/index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        返回章节选择
+      </a>
+      <div class="subject-title">计算机系统概述</div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="overall-progress"></div>
+      </div>
+      <div class="progress-text" id="progress-text">5%</div>
+    </div>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="main-container">
+    <!-- 头部 -->
+    <div class="header">
+      <div class="icon-container">
+        <i class="fas fa-desktop"></i>
+      </div>
+      <h1>计算机系统概述 - 选择题练习</h1>
+      <p class="subtitle">测试你对计算机硬件、系统性能评价和冯·诺依曼体系结构的理解</p>
+      <div class="stats-summary">
+        <div class="stat-item">
+          <span class="stat-number" id="total-questions">20</span>
+          <span class="stat-label">道题目</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="answered-count">0</span>
+          <span class="stat-label">已作答</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="correct-count">0</span>
+          <span class="stat-label">正确</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 题目容器 -->
+    <div class="question-container">
+      <div class="question-header">
+        <div class="question-number">题目 <span id="current-question">1</span>/20</div>
+        <div class="question-tags">
+          <div class="tag" id="question-tag">冯·诺依曼体系结构</div>
+        </div>
+      </div>
+      <div class="question-text" id="question-text">
+        冯·诺依曼体系结构的核心思想不包括下列哪一项？
+      </div>
+      <div class="options-container" id="options-container">
+        <!-- 选项将通过JavaScript动态生成 -->
+      </div>
+      <div class="nav-buttons">
+        <button class="nav-btn secondary" id="prev-btn" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="nav-btn primary" id="next-btn">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 结果面板 -->
+    <div class="result-panel" id="result-panel">
+      <div class="result-icon">
+        <i class="fas fa-trophy"></i>
+      </div>
+      <h2 class="result-title">练习完成！</h2>
+      <p>你已完成所有题目，下面是你的成绩：</p>
+      <div class="result-score" id="final-score">0/100</div>
+      <div class="result-stats">
+        <div class="result-stat">
+          <span class="result-stat-number" id="total-correct">0</span>
+          <span class="result-stat-label">正确题数</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-number" id="total-answered">0</span>
+          <span class="result-stat-label">已答题数</span>
+        </div>
+        <div class="result-stat">
+          <span class="result-stat-number" id="accuracy">0%</span>
+          <span class="result-stat-label">正确率</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="action-btn primary" id="restart-btn">
+          <i class="fas fa-redo"></i>
+          重新练习
+        </button>
+        <button class="action-btn secondary" id="review-btn">
+          <i class="fas fa-eye"></i>
+          查看错题
+        </button>
+      </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+      <p class="hint">
+        <i class="fas fa-lightbulb"></i>
+        点击选项选择答案，系统会自动记录你的答题情况
+      </p>
+      <div class="actions">
+        <button class="action-btn primary" id="submit-btn">
+          <i class="fas fa-paper-plane"></i>
+          提交答案
+        </button>
+        <button class="action-btn secondary" id="reset-btn">
+          <i class="fas fa-undo"></i>
+          重置练习
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 题目数据
+    const questions = [
+      {
+        id: 1,
+        text: "冯·诺依曼体系结构的核心思想不包括下列哪一项？",
+        options: [
+          "A. 程序存储和程序控制",
+          "B. 采用二进制表示数据和指令",
+          "C. 计算机由运算器、控制器、存储器、输入设备和输出设备五大部分组成",
+          "D. 采用多级缓存提高性能"
+        ],
+        correctAnswer: 3,
+        explanation: "冯·诺依曼体系结构的核心思想包括：程序存储和程序控制、采用二进制、计算机由五大部件组成。多级缓存是现代计算机的优化技术，不是冯·诺依曼原始提出的思想。",
+        tag: "冯·诺依曼体系结构"
+      },
+      {
+        id: 2,
+        text: "下列哪一项不属于计算机硬件系统的五大组成部分？",
+        options: [
+          "A. 运算器",
+          "B. 控制器",
+          "C. 操作系统",
+          "D. 存储器"
+        ],
+        correctAnswer: 2,
+        explanation: "计算机硬件系统的五大组成部分是：运算器、控制器、存储器、输入设备和输出设备。操作系统是软件系统的一部分，不属于硬件。",
+        tag: "计算机硬件"
+      },
+      {
+        id: 3,
+        text: "计算机的性能评价指标中，MIPS的含义是什么？",
+        options: [
+          "A. 每秒百万次浮点运算",
+          "B. 每秒百万条指令",
+          "C. 每秒百万字节传输",
+          "D. 每秒百万次逻辑运算"
+        ],
+        correctAnswer: 1,
+        explanation: "MIPS（Million Instructions Per Second）表示每秒百万条指令，是衡量CPU性能的重要指标之一。",
+        tag: "系统性能评价"
+      },
+      {
+        id: 4,
+        text: "下列哪种存储器速度最快？",
+        options: [
+          "A. 硬盘",
+          "B. 主存（内存）",
+          "C. 缓存（Cache）",
+          "D. 寄存器"
+        ],
+        correctAnswer: 3,
+        explanation: "存储器层次结构中，速度从快到慢依次为：寄存器 > 缓存 > 主存 > 硬盘/SSD。寄存器是CPU内部最快速的存储单元。",
+        tag: "计算机硬件"
+      },
+      {
+        id: 5,
+        text: "在冯·诺依曼体系结构中，负责解释指令、发出控制信号的是哪个部件？",
+        options: [
+          "A. 运算器",
+          "B. 控制器",
+          "C. 存储器",
+          "D. 输入设备"
+        ],
+        correctAnswer: 1,
+        explanation: "控制器负责从存储器中取出指令，解释指令，并发出各种控制信号，指挥计算机各部件协调工作。",
+        tag: "冯·诺依曼体系结构"
+      },
+      {
+        id: 6,
+        text: "CPU的主频为3.2GHz，表示CPU的时钟周期是多少？",
+        options: [
+          "A. 3.2纳秒",
+          "B. 0.3125纳秒",
+          "C. 3.2微秒",
+          "D. 0.3125微秒"
+        ],
+        correctAnswer: 1,
+        explanation: "主频f=3.2GHz=3.2×10^9Hz，时钟周期T=1/f≈0.3125×10^-9秒=0.3125纳秒。",
+        tag: "系统性能评价"
+      },
+      {
+        id: 7,
+        text: "下列哪项不是衡量计算机系统性能的常用指标？",
+        options: [
+          "A. CPI（每条指令的平均时钟周期数）",
+          "B. MIPS（每秒百万条指令）",
+          "C. FLOPS（每秒浮点运算次数）",
+          "D. PPI（每英寸像素数）"
+        ],
+        correctAnswer: 3,
+        explanation: "CPI、MIPS和FLOPS都是计算机系统性能评价指标。PPI（Pixels Per Inch）是显示设备分辨率指标，不是计算机系统性能指标。",
+        tag: "系统性能评价"
+      },
+      {
+        id: 8,
+        text: "冯·诺依曼体系结构中的“程序存储”概念是指什么？",
+        options: [
+          "A. 程序和数据以二进制形式存储在存储器中",
+          "B. 程序存储在专门的程序存储器中",
+          "C. 程序只能存储在ROM中",
+          "D. 程序存储在外部设备中"
+        ],
+        correctAnswer: 0,
+        explanation: "冯·诺依曼体系结构的核心思想之一是程序存储，即程序和数据以二进制形式共同存储在存储器中，计算机能够自动地从存储器中取出指令并执行。",
+        tag: "冯·诺依曼体系结构"
+      },
+      {
+        id: 9,
+        text: "计算机的总线通常不包括以下哪一类？",
+        options: [
+          "A. 数据总线",
+          "B. 地址总线",
+          "C. 控制总线",
+          "D. 指令总线"
+        ],
+        correctAnswer: 3,
+        explanation: "计算机系统总线通常包括数据总线、地址总线和控制总线。没有单独的“指令总线”，指令通过数据总线传输。",
+        tag: "计算机硬件"
+      },
+      {
+        id: 10,
+        text: "CPU的CPI为2，主频为2GHz，执行一个包含100万条指令的程序需要多长时间？",
+        options: [
+          "A. 1毫秒",
+          "B. 2毫秒",
+          "C. 0.5毫秒",
+          "D. 4毫秒"
+        ],
+        correctAnswer: 0,
+        explanation: "CPU时间 = 指令数 × CPI × 时钟周期 = 10^6 × 2 × (1/(2×10^9)) = 10^-3秒 = 1毫秒。",
+        tag: "系统性能评价"
+      },
+      {
+        id: 11,
+        text: "下列哪一项不是输入设备？",
+        options: [
+          "A. 鼠标",
+          "B. 键盘",
+          "C. 打印机",
+          "D. 扫描仪"
+        ],
+        correctAnswer: 2,
+        explanation: "鼠标、键盘和扫描仪都是输入设备，用于向计算机输入信息。打印机是输出设备，用于将计算机处理的结果输出。",
+        tag: "计算机硬件"
+      },
+      {
+        id: 12,
+        text: "计算机系统层次结构中，最接近硬件的是哪一层？",
+        options: [
+          "A. 操作系统",
+          "B. 汇编语言",
+          "C. 微程序",
+          "D. 高级语言"
+        ],
+        correctAnswer: 2,
+        explanation: "计算机系统层次从下到上依次为：硬件层、微程序层、机器语言层、操作系统层、汇编语言层、高级语言层。微程序层最接近硬件。",
+        tag: "系统结构"
+      },
+      {
+        id: 13,
+        text: "计算机执行一条指令的基本步骤不包括以下哪一项？",
+        options: [
+          "A. 取指令",
+          "B. 分析指令",
+          "C. 执行指令",
+          "D. 保存指令"
+        ],
+        correctAnswer: 3,
+        explanation: "指令执行的基本步骤是：取指令、分析指令、执行指令。保存指令不是指令执行的必要步骤。",
+        tag: "计算机硬件"
+      },
+      {
+        id: 14,
+        text: "下列哪个指标更适合评价科学计算计算机的性能？",
+        options: [
+          "A. MIPS",
+          "B. MFLOPS",
+          "C. CPI",
+          "D. 主频"
+        ],
+        correctAnswer: 1,
+        explanation: "科学计算主要涉及浮点运算，因此MFLOPS（每秒百万次浮点运算）是评价科学计算计算机性能的更合适指标。",
+        tag: "系统性能评价"
+      },
+      {
+        id: 15,
+        text: "冯·诺依曼体系结构中，运算器的主要功能是什么？",
+        options: [
+          "A. 存储数据和程序",
+          "B. 执行算术和逻辑运算",
+          "C. 控制程序执行顺序",
+          "D. 实现输入输出操作"
+        ],
+        correctAnswer: 1,
+        explanation: "运算器是计算机中执行算术运算和逻辑运算的部件，是CPU的核心组成部分之一。",
+        tag: "冯·诺依曼体系结构"
+      },
+      {
+        id: 16,
+        text: "计算机的性能与下列哪个因素无关？",
+        options: [
+          "A. CPU的主频",
+          "B. 内存容量",
+          "C. 硬盘转速",
+          "D. 显示器的分辨率"
+        ],
+        correctAnswer: 3,
+        explanation: "CPU主频、内存容量和硬盘转速都直接影响计算机性能。显示器分辨率影响显示效果，但不直接影响计算机处理性能。",
+        tag: "系统性能评价"
+      },
+      {
+        id: 17,
+        text: "计算机中用来暂时存储当前正在执行的指令和数据的部件是？",
+        options: [
+          "A. 硬盘",
+          "B. 缓存",
+          "C. 寄存器",
+          "D. 主存"
+        ],
+        correctAnswer: 2,
+        explanation: "寄存器是CPU内部的高速存储单元，用于暂时存储当前正在执行的指令和数据。",
+        tag: "计算机硬件"
+      },
+      {
+        id: 18,
+        text: "计算机系统的兼容性不包括以下哪一项？",
+        options: [
+          "A. 硬件兼容性",
+          "B. 软件兼容性",
+          "C. 数据兼容性",
+          "D. 网络兼容性"
+        ],
+        correctAnswer: 3,
+        explanation: "计算机系统兼容性主要包括硬件兼容性、软件兼容性和数据兼容性。网络兼容性不是系统兼容性的主要方面。",
+        tag: "系统结构"
+      },
+      {
+        id: 19,
+        text: "下列哪一项是冯·诺依曼体系结构与哈佛体系结构的主要区别？",
+        options: [
+          "A. 是否采用二进制",
+          "B. 是否采用存储程序原理",
+          "C. 指令和数据是否分开存储",
+          "D. 是否由五大部件组成"
+        ],
+        correctAnswer: 2,
+        explanation: "冯·诺依曼体系结构指令和数据混合存储在同一存储器中，哈佛体系结构指令和数据分开存储在不同的存储器中。",
+        tag: "冯·诺依曼体系结构"
+      },
+      {
+        id: 20,
+        text: "计算机的性能评价中，Amdahl定律主要研究的是什么？",
+        options: [
+          "A. CPU主频与性能的关系",
+          "B. 并行计算中的加速比问题",
+          "C. 存储器的访问速度",
+          "D. 总线带宽的影响"
+        ],
+        correctAnswer: 1,
+        explanation: "Amdahl定律是并行计算中的重要定律，描述了系统加速比与系统并行化程度和可并行化部分比例之间的关系。",
+        tag: "系统性能评价"
+      }
+    ];
+
+    // 当前题目索引
+    let currentQuestionIndex = 0;
+    
+    // 用户答案记录
+    let userAnswers = new Array(questions.length).fill(null);
+    
+    // 是否已提交答案
+    let submitted = false;
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化进度条
+      updateProgress();
+      
+      // 加载第一道题目
+      loadQuestion(currentQuestionIndex);
+      
+      // 添加事件监听器
+      document.getElementById('prev-btn').addEventListener('click', goToPreviousQuestion);
+      document.getElementById('next-btn').addEventListener('click', goToNextQuestion);
+      document.getElementById('submit-btn').addEventListener('click', submitAnswers);
+      document.getElementById('reset-btn').addEventListener('click', resetPractice);
+      document.getElementById('restart-btn').addEventListener('click', restartPractice);
+      document.getElementById('review-btn').addEventListener('click', reviewWrongAnswers);
+      
+      // 背景形状动画
+      const shapes = document.querySelectorAll('.shape');
+      shapes.forEach(shape => {
+        const randomX = Math.random() * 20 - 10;
+        const randomY = Math.random() * 20 - 10;
+        
+        shape.style.animation = `float 20s infinite ease-in-out`;
+        shape.style.animationDelay = `${Math.random() * 5}s`;
+        
+        // 创建浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(${randomX}px, ${randomY}px) rotate(1deg); }
+            66% { transform: translate(${-randomX}px, ${-randomY}px) rotate(-1deg); }
+          }
+        `;
+        document.head.appendChild(style);
+      });
+    });
+
+    // 加载题目
+    function loadQuestion(index) {
+      const question = questions[index];
+      
+      // 更新题目信息
+      document.getElementById('current-question').textContent = index + 1;
+      document.getElementById('question-text').textContent = question.text;
+      document.getElementById('question-tag').textContent = question.tag;
+      
+      // 更新导航按钮状态
+      document.getElementById('prev-btn').disabled = index === 0;
+      document.getElementById('next-btn').disabled = index === questions.length - 1;
+      
+      // 如果已提交，显示正确答案
+      if (submitted) {
+        document.getElementById('next-btn').textContent = index === questions.length - 1 ? '查看结果' : '下一题';
+      }
+      
+      // 生成选项
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+      
+      question.options.forEach((option, optionIndex) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        
+        // 如果已提交，标记正确答案和用户答案
+        if (submitted) {
+          if (optionIndex === question.correctAnswer) {
+            optionElement.classList.add('correct');
+          } else if (userAnswers[index] === optionIndex && userAnswers[index] !== question.correctAnswer) {
+            optionElement.classList.add('incorrect');
+          }
+        } else if (userAnswers[index] === optionIndex) {
+          optionElement.classList.add('selected');
+        }
+        
+        optionElement.innerHTML = `
+          <div class="option-letter">${String.fromCharCode(65 + optionIndex)}</div>
+          <div class="option-text">${option}</div>
+        `;
+        
+        // 如果没有提交，添加点击事件
+        if (!submitted) {
+          optionElement.addEventListener('click', () => selectOption(optionIndex));
+        }
+        
+        optionsContainer.appendChild(optionElement);
+      });
+      
+      // 更新进度
+      updateProgress();
+    }
+
+    // 选择选项
+    function selectOption(optionIndex) {
+      userAnswers[currentQuestionIndex] = optionIndex;
+      loadQuestion(currentQuestionIndex);
+    }
+
+    // 上一题
+    function goToPreviousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion(currentQuestionIndex);
+      }
+    }
+
+    // 下一题
+    function goToNextQuestion() {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+      } else if (submitted) {
+        // 如果已提交且是最后一题，显示结果
+        showResults();
+      }
+    }
+
+    // 提交答案
+    function submitAnswers() {
+      const answeredCount = userAnswers.filter(answer => answer !== null).length;
+      
+      if (answeredCount < questions.length) {
+        if (confirm(`您还有${questions.length - answeredCount}道题未作答，确定要提交吗？`)) {
+          submitted = true;
+          showResults();
+        }
+      } else {
+        submitted = true;
+        showResults();
+      }
+    }
+
+    // 显示结果
+    function showResults() {
+      // 计算得分
+      let correctCount = 0;
+      questions.forEach((question, index) => {
+        if (userAnswers[index] === question.correctAnswer) {
+          correctCount++;
+        }
+      });
+      
+      const score = Math.round((correctCount / questions.length) * 100);
+      const accuracy = Math.round((correctCount / questions.length) * 100);
+      
+      // 更新结果面板
+      document.getElementById('final-score').textContent = `${score}/100`;
+      document.getElementById('total-correct').textContent = correctCount;
+      document.getElementById('total-answered').textContent = questions.length;
+      document.getElementById('accuracy').textContent = `${accuracy}%`;
+      
+      // 隐藏题目容器，显示结果面板
+      document.querySelector('.question-container').style.display = 'none';
+      document.getElementById('result-panel').style.display = 'block';
+      document.querySelector('.footer').style.display = 'none';
+      
+      // 更新进度条
+      document.getElementById('overall-progress').style.width = '100%';
+      document.getElementById('progress-text').textContent = '100%';
+    }
+
+    // 重置练习
+    function resetPractice() {
+      if (confirm('确定要重置所有答题记录吗？')) {
+        userAnswers = new Array(questions.length).fill(null);
+        currentQuestionIndex = 0;
+        submitted = false;
+        
+        // 重新加载第一题
+        loadQuestion(currentQuestionIndex);
+        
+        // 隐藏结果面板，显示题目容器
+        document.querySelector('.question-container').style.display = 'block';
+        document.getElementById('result-panel').style.display = 'none';
+        document.querySelector('.footer').style.display = 'block';
+        
+        // 更新统计信息
+        updateAnsweredCount();
+        updateCorrectCount();
+      }
+    }
+
+    // 重新练习
+    function restartPractice() {
+      userAnswers = new Array(questions.length).fill(null);
+      currentQuestionIndex = 0;
+      submitted = false;
+      
+      // 重新加载第一题
+      loadQuestion(currentQuestionIndex);
+      
+      // 隐藏结果面板，显示题目容器
+      document.querySelector('.question-container').style.display = 'block';
+      document.getElementById('result-panel').style.display = 'none';
+      document.querySelector('.footer').style.display = 'block';
+    }
+
+    // 查看错题
+    function reviewWrongAnswers() {
+      // 找出错题
+      const wrongQuestions = [];
+      questions.forEach((question, index) => {
+        if (userAnswers[index] !== question.correctAnswer) {
+          wrongQuestions.push(index);
+        }
+      });
+      
+      if (wrongQuestions.length === 0) {
+        alert('恭喜！您没有错题。');
+        return;
+      }
+      
+      // 跳转到第一道错题
+      currentQuestionIndex = wrongQuestions[0];
+      loadQuestion(currentQuestionIndex);
+      
+      // 隐藏结果面板，显示题目容器
+      document.querySelector('.question-container').style.display = 'block';
+      document.getElementById('result-panel').style.display = 'none';
+      document.querySelector('.footer').style.display = 'block';
+    }
+
+    // 更新进度
+    function updateProgress() {
+      const answeredCount = userAnswers.filter(answer => answer !== null).length;
+      const totalQuestions = questions.length;
+      const progressPercentage = Math.round((answeredCount / totalQuestions) * 100);
+      
+      // 更新进度条
+      document.getElementById('overall-progress').style.width = `${progressPercentage}%`;
+      document.getElementById('progress-text').textContent = `${progressPercentage}%`;
+      
+      // 更新统计信息
+      updateAnsweredCount();
+      updateCorrectCount();
+    }
+
+    // 更新已答题数
+    function updateAnsweredCount() {
+      const answeredCount = userAnswers.filter(answer => answer !== null).length;
+      document.getElementById('answered-count').textContent = answeredCount;
+    }
+
+    // 更新正确题数
+    function updateCorrectCount() {
+      let correctCount = 0;
+      questions.forEach((question, index) => {
+        if (userAnswers[index] === question.correctAnswer) {
+          correctCount++;
+        }
+      });
+      document.getElementById('correct-count').textContent = correctCount;
+    }
+
+    // 键盘导航支持
+    document.addEventListener('keydown', function(e) {
+      // 数字键1-4选择选项
+      if (e.key >= '1' && e.key <= '4' && !submitted) {
+        const optionIndex = parseInt(e.key) - 1;
+        if (optionIndex >= 0 && optionIndex < 4) {
+          selectOption(optionIndex);
+        }
+      }
+      
+      // 左右箭头切换题目
+      if (e.key === 'ArrowLeft') {
+        goToPreviousQuestion();
+      } else if (e.key === 'ArrowRight') {
+        goToNextQuestion();
+      }
+      
+      // 回车键提交
+      if (e.key === 'Enter' && currentQuestionIndex === questions.length - 1) {
+        if (!submitted) {
+          submitAnswers();
+        } else {
+          showResults();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
