@@ -11,6 +11,9 @@
       --secondary-color: #7209b7;
       --accent-color: #f72585;
       --success-color: #06d6a0;
+      --warning-color: #ff9e00;
+      --info-color: #00b4d8;
+      --danger-color: #ef476f;
       --dark-color: #2b2d42;
       --light-color: #f8f9fa;
       --gray-color: #8d99ae;
@@ -80,7 +83,7 @@
     /* 主容器 */
     .container {
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       padding: 40px;
@@ -211,6 +214,22 @@
       background: linear-gradient(135deg, #f72585, #e01e75);
     }
 
+    .stats-icon {
+      background: linear-gradient(135deg, #06d6a0, #05b88a);
+    }
+
+    .java-icon {
+      background: linear-gradient(135deg, #ff9e00, #e68a00);
+    }
+
+    .python-icon {
+      background: linear-gradient(135deg, #00b4d8, #0096c7);
+    }
+
+    .ds-icon {
+      background: linear-gradient(135deg, #ef476f, #d43d63);
+    }
+
     .subject-info {
       flex: 1;
       text-align: left;
@@ -311,7 +330,7 @@
     }
 
     /* 响应式设计 */
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
       .container {
         padding: 30px 25px;
         margin: 20px;
@@ -393,7 +412,7 @@
 
     <!-- 科目选择 -->
     <div class="subject-grid">
-      <a href="数据库管理.html" class="subject-card">
+      <a href="数据库原理/index.html" class="subject-card">
         <div class="subject-icon db-icon">
           <i class="fas fa-database"></i>
         </div>
@@ -406,7 +425,7 @@
         </div>
       </a>
 
-      <a href="计算机组成原理.html" class="subject-card">
+      <a href="计算机组成原理/index.html" class="subject-card">
         <div class="subject-icon co-icon">
           <i class="fas fa-microchip"></i>
         </div>
@@ -419,7 +438,7 @@
         </div>
       </a>
 
-      <a href="毛泽东思想和中国特色社会主义理论体系概论.html" class="subject-card">
+      <a href="毛泽东思想和中国特色社会主义理论体系概论/index.html" class="subject-card">
         <div class="subject-icon os-icon">
           <i class="fas fa-book"></i>
         </div>
@@ -431,17 +450,70 @@
           <i class="fas fa-chevron-right"></i>
         </div>
       </a>
+
+      <!-- 新增科目 -->
+      <a href="概率论与数理统计/index.html" class="subject-card">
+        <div class="subject-icon stats-icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="subject-info">
+          <span class="subject-name">概率论与数理统计</span>
+          <span class="subject-desc">概率分布、假设检验、回归分析等</span>
+        </div>
+        <div class="arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </a>
+
+      <a href="Java程序设计/index.html" class="subject-card">
+        <div class="subject-icon java-icon">
+          <i class="fab fa-java"></i>
+        </div>
+        <div class="subject-info">
+          <span class="subject-name">Java程序设计</span>
+          <span class="subject-desc">面向对象、多线程、集合框架等</span>
+        </div>
+        <div class="arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </a>
+
+      <a href="Python程序设计与数据分析/index.html" class="subject-card">
+        <div class="subject-icon python-icon">
+          <i class="fab fa-python"></i>
+        </div>
+        <div class="subject-info">
+          <span class="subject-name">Python程序设计与数据分析</span>
+          <span class="subject-desc">Python基础、NumPy、Pandas、可视化等</span>
+        </div>
+        <div class="arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </a>
+
+      <a href="数据结构/index.html" class="subject-card">
+        <div class="subject-icon ds-icon">
+          <i class="fas fa-sitemap"></i>
+        </div>
+        <div class="subject-info">
+          <span class="subject-name">数据结构</span>
+          <span class="subject-desc">链表、树、图、排序与查找算法等</span>
+        </div>
+        <div class="arrow">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </a>
     </div>
 
     <!-- 底部 -->
     <div class="footer">
       <div class="stats">
         <div class="stat-item">
-          <span class="stat-number">3</span>
+          <span class="stat-number">7</span>
           <span class="stat-label">个科目</span>
         </div>
         <div class="stat-item">
-          <span class="stat-number">150+</span>
+          <span class="stat-number">350+</span>
           <span class="stat-label">道题目</span>
         </div>
         <div class="stat-item">
@@ -469,7 +541,7 @@
           card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
           card.style.opacity = '1';
           card.style.transform = 'translateX(0)';
-        }, 200 + index * 150);
+        }, 200 + index * 100);
       });
 
       // 添加点击反馈
