@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第一章：Java简介 - Java程序设计课程</title>
+  <style>
+    :root {
+      --primary-color: #2196F3;
+      --primary-light: #64b5f6;
+      --primary-dark: #1976d2;
+      --secondary-color: #4CAF50;
+      --accent-color: #FF9800;
+      --light-color: #f5f5f5;
+      --dark-color: #212121;
+      --gray-color: #757575;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+      position: relative;
+    }
+
+    /* 背景装饰 */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(33, 150, 243, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(255, 152, 0, 0.05) 0%, transparent 20%);
+      z-index: -1;
+    }
+
+    /* 主容器 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* 返回按钮 */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 18px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      margin-bottom: 30px;
+      border: 2px solid transparent;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    /* 章节标题 */
+    .chapter-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+      background-size: cover;
+    }
+
+    .chapter-header-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .chapter-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .chapter-subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .chapter-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* 题目卡片 */
+    .question-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      margin-bottom: 25px;
+      border-left: 6px solid var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .question-card.correct {
+      border-left-color: var(--secondary-color);
+    }
+
+    .question-card.incorrect {
+      border-left-color: #f44336;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .question-number::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: currentColor;
+      border-radius: 50%;
+      margin-right: 10px;
+      opacity: 0.2;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    /* 选项区域 */
+    .options-container {
+      margin-bottom: 25px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+
+    .option:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background-color: rgba(33, 150, 243, 0.05);
+    }
+
+    .option.correct-option {
+      border-color: var(--secondary-color);
+      background-color: rgba(76, 175, 80, 0.08);
+    }
+
+    .option.incorrect-option {
+      border-color: #f44336;
+      background-color: rgba(244, 67, 54, 0.05);
+    }
+
+    .option-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    /* 答案和解析 */
+    .answer-section {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    .answer-section.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-header {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .answer-header i {
+      margin-right: 10px;
+    }
+
+    .correct-answer {
+      color: var(--secondary-color);
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 17px;
+    }
+
+    .explanation {
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    /* 操作按钮 */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .check-btn {
+      background: var(--primary-color);
+      color: white;
+      flex: 2;
+    }
+
+    .check-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+    }
+
+    .show-answer-btn {
+      background: white;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      flex: 1;
+    }
+
+    .show-answer-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .next-btn {
+      background: var(--secondary-color);
+      color: white;
+      flex: 1;
+    }
+
+    .next-btn:hover {
+      background: #3d8b40;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    /* 统计区域 */
+    .stats-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      min-width: 150px;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-color);
+      margin-top: 8px;
+    }
+
+    .stat-item:nth-child(2) .stat-value {
+      color: var(--secondary-color);
+    }
+
+    .stat-item:nth-child(3) .stat-value {
+      color: var(--accent-color);
+    }
+
+    /* 进度条 */
+    .progress-container {
+      margin: 30px 0;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+      border-radius: 6px;
+      width: 0%;
+      transition: width 1s ease-out;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .chapter-header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .chapter-icon {
+        margin-top: 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .chapter-header {
+        padding: 20px;
+      }
+      
+      .chapter-title {
+        font-size: 26px;
+      }
+      
+      .chapter-subtitle {
+        font-size: 16px;
+      }
+      
+      .question-text {
+        font-size: 16px;
+      }
+    }
+
+    /* 动画效果 */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .question-card {
+      animation: slideInUp 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 背景图案 -->
+  <div class="bg-pattern"></div>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回课程主页
+    </a>
+
+    <!-- 章节标题 -->
+    <div class="chapter-header">
+      <div class="chapter-header-content">
+        <div>
+          <h1 class="chapter-title">第一章：Java简介</h1>
+          <p class="chapter-subtitle">Java发展历史、特点、JVM原理、JDK安装与环境配置</p>
+        </div>
+        <div class="chapter-icon">
+          <i class="fab fa-java"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 统计区域 -->
+    <div class="stats-container">
+      <div class="stat-item">
+        <span class="stat-value" id="total-questions">15</span>
+        <span class="stat-label">总题数</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="answered-count">0</span>
+        <span class="stat-label">已回答</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="correct-count">0</span>
+        <span class="stat-label">正确数</span>
+      </div>
+    </div>
+
+    <!-- 进度条 -->
+    <div class="progress-container">
+      <div class="progress-label">
+        <span>学习进度</span>
+        <span id="progress-percentage">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- 题目容器 -->
+    <div id="questions-container"></div>
+
+    <!-- 底部信息 -->
+    <div class="footer" style="text-align: center; padding: 30px; color: #757575; font-size: 14px; margin-top: 30px;">
+      <p>© 2023 Java程序设计课程学习系统</p>
+      <p style="font-size: 12px; margin-top: 10px; color: #aaa;">点击选项选择答案，点击"检查答案"验证结果</p>
+    </div>
+  </div>
+
+  <script>
+    // Java简介章节的题目数据
+    const questions = [
+      {
+        id: 1,
+        question: "Java语言最初是由哪家公司开发的？",
+        options: [
+          "A. Microsoft",
+          "B. Sun Microsystems",
+          "C. Oracle",
+          "D. IBM"
+        ],
+        correctAnswer: 1, // 对应索引，从0开始
+        explanation: "Java最初由Sun Microsystems公司的James Gosling等人于1995年开发。Sun公司于2010年被Oracle收购。"
+      },
+      {
+        id: 2,
+        question: "Java语言最显著的特点是什么？",
+        options: [
+          "A. 面向对象",
+          "B. 平台无关性",
+          "C. 多线程",
+          "D. 自动内存管理"
+        ],
+        correctAnswer: 1,
+        explanation: "Java最显著的特点是平台无关性，这得益于Java虚拟机(JVM)的设计，实现了'一次编写，到处运行'的理念。"
+      },
+      {
+        id: 3,
+        question: "Java源代码文件的后缀名是什么？",
+        options: [
+          "A. .class",
+          "B. .java",
+          "C. .exe",
+          "D. .jar"
+        ],
+        correctAnswer: 1,
+        explanation: "Java源代码文件使用.java作为后缀名，编译后生成.class字节码文件。"
+      },
+      {
+        id: 4,
+        question: "JDK、JRE和JVM的关系描述正确的是？",
+        options: [
+          "A. JRE = JVM + 类库",
+          "B. JDK = JRE + 开发工具",
+          "C. JVM是JRE的子集",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "三者关系为：JDK包含JRE，JRE包含JVM。JDK = JRE + 开发工具；JRE = JVM + 类库。"
+      },
+      {
+        id: 5,
+        question: "Java程序从编写到运行的完整过程是？",
+        options: [
+          "A. 编写 -> 编译 -> 解释/执行",
+          "B. 编写 -> 解释 -> 编译 -> 执行",
+          "C. 编译 -> 编写 -> 执行",
+          "D. 编写 -> 执行"
+        ],
+        correctAnswer: 0,
+        explanation: "Java程序首先编写.java源代码，然后通过javac编译成.class字节码文件，最后由JVM解释执行。"
+      },
+      {
+        id: 6,
+        question: "下列哪个不是Java的关键特性？",
+        options: [
+          "A. 简单性",
+          "B. 面向对象",
+          "C. 指针操作",
+          "D. 分布式"
+        ],
+        correctAnswer: 2,
+        explanation: "Java取消了指针操作，提供了更安全的内存访问机制，这是Java与C/C++的重要区别之一。"
+      },
+      {
+        id: 7,
+        question: "Java的垃圾回收机制的主要作用是？",
+        options: [
+          "A. 释放内存",
+          "B. 防止内存泄漏",
+          "C. 自动管理内存",
+          "D. 以上都是"
+        ],
+        correctAnswer: 3,
+        explanation: "Java的垃圾回收机制自动管理内存，回收不再使用的对象占用的内存，防止内存泄漏。"
+      },
+      {
+        id: 8,
+        question: "Java语言属于哪种编程语言类型？",
+        options: [
+          "A. 解释型语言",
+          "B. 编译型语言",
+          "C. 混合型语言",
+          "D. 脚本语言"
+        ],
+        correctAnswer: 2,
+        explanation: "Java是混合型语言，它首先被编译成字节码，然后由JVM解释执行，兼具编译型和解释型语言的特点。"
+      },
+      {
+        id: 9,
+        question: "下面关于Java平台无关性的描述，正确的是？",
+        options: [
+          "A. Java程序可以在任何操作系统上直接运行",
+          "B. Java程序编译后生成与平台无关的字节码",
+          "C. Java虚拟机(JVM)是平台相关的",
+          "D. B和C都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "Java程序编译后生成与平台无关的字节码，但JVM是平台相关的，不同平台需要安装相应的JVM。"
+      },
+      {
+        id: 10,
+        question: "Java的三大版本中，用于桌面应用程序开发的是？",
+        options: [
+          "A. Java SE",
+          "B. Java EE",
+          "C. Java ME",
+          "D. JavaFX"
+        ],
+        correctAnswer: 0,
+        explanation: "Java SE是标准版，用于桌面应用程序开发；Java EE是企业版，用于Web应用开发；Java ME是微型版，用于嵌入式设备。"
+      },
+      {
+        id: 11,
+        question: "下列哪个命令用于编译Java程序？",
+        options: [
+          "A. java",
+          "B. javac",
+          "C. javadoc",
+          "D. jar"
+        ],
+        correctAnswer: 1,
+        explanation: "javac是Java编译器命令，用于将.java源文件编译成.class字节码文件。"
+      },
+      {
+        id: 12,
+        question: "Java应用程序的入口方法是？",
+        options: [
+          "A. main()",
+          "B. init()",
+          "C. start()",
+          "D. run()"
+        ],
+        correctAnswer: 0,
+        explanation: "Java应用程序的入口方法是public static void main(String[] args)。"
+      },
+      {
+        id: 13,
+        question: "下列哪项不是Java的基本数据类型？",
+        options: [
+          "A. int",
+          "B. float",
+          "C. String",
+          "D. boolean"
+        ],
+        correctAnswer: 2,
+        explanation: "String是Java的类类型，不是基本数据类型。Java的基本数据类型有8种：byte、short、int、long、float、double、char、boolean。"
+      },
+      {
+        id: 14,
+        question: "下列哪个关于Java虚拟机(JVM)的描述是错误的？",
+        options: [
+          "A. JVM是Java平台无关性的基础",
+          "B. JVM负责解释执行字节码",
+          "C. JVM直接执行Java源代码",
+          "D. JVM提供了垃圾回收机制"
+        ],
+        correctAnswer: 2,
+        explanation: "JVM不直接执行Java源代码，而是执行编译后的字节码文件(.class文件)。"
+      },
+      {
+        id: 15,
+        question: "下列关于Java开发环境的说法，正确的是？",
+        options: [
+          "A. 只需要安装JRE就可以开发Java程序",
+          "B. 开发Java程序必须安装JDK",
+          "C. Eclipse和IntelliJ IDEA是常用的Java开发工具",
+          "D. B和C都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "开发Java程序需要安装JDK（包含JRE和开发工具），Eclipse和IntelliJ IDEA是常用的Java集成开发环境(IDE)。"
+      }
+    ];
+
+    // 页面状态变量
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let correctCount = 0;
+    let totalAnswered = 0;
+
+    // DOM元素
+    const questionsContainer = document.getElementById('questions-container');
+    const answeredCountElement = document.getElementById('answered-count');
+    const correctCountElement = document.getElementById('correct-count');
+    const progressFillElement = document.getElementById('progress-fill');
+    const progressPercentageElement = document.getElementById('progress-percentage');
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+      loadQuestion(currentQuestionIndex);
+      updateStats();
+      
+      // 从本地存储加载之前的学习进度
+      loadProgressFromStorage();
+    });
+
+    // 加载指定索引的题目
+    function loadQuestion(index) {
+      if (index < 0 || index >= questions.length) return;
+      
+      const question = questions[index];
+      currentQuestionIndex = index;
+      
+      // 构建题目HTML
+      const questionHTML = `
+        <div class="question-card" id="question-${question.id}">
+          <div class="question-number">第 ${question.id} 题 / 共 ${questions.length} 题</div>
+          <div class="question-text">${question.question}</div>
+          
+          <div class="options-container">
+            ${question.options.map((option, i) => {
+              const isSelected = userAnswers[index] === i;
+              const isCorrect = i === question.correctAnswer;
+              let optionClass = "option";
+              if (isSelected) optionClass += " selected";
+              if (userAnswers[index] !== null) {
+                if (isCorrect) optionClass += " correct-option";
+                else if (isSelected && !isCorrect) optionClass += " incorrect-option";
+              }
+              
+              return `
+                <div class="${optionClass}" data-index="${i}">
+                  <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                  <div class="option-text">${option}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          
+          <div class="answer-section ${userAnswers[index] !== null ? 'show' : ''}" id="answer-${question.id}">
+            <div class="answer-header">
+              <i class="fas fa-lightbulb"></i>
+              答案与解析
+            </div>
+            <div class="correct-answer">
+              正确答案：<strong>${String.fromCharCode(65 + question.correctAnswer)}</strong>
+            </div>
+            <div class="explanation">
+              ${question.explanation}
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="action-btn check-btn" onclick="checkAnswer()">
+              <i class="fas fa-check-circle"></i>
+              检查答案
+            </button>
+            <button class="action-btn show-answer-btn" onclick="toggleAnswer()">
+              <i class="fas fa-eye"></i>
+              ${userAnswers[currentQuestionIndex] !== null ? '隐藏答案' : '显示答案'}
+            </button>
+            ${currentQuestionIndex < questions.length - 1 ? `
+              <button class="action-btn next-btn" onclick="nextQuestion()">
+                下一题
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      
+      questionsContainer.innerHTML = questionHTML;
+      
+      // 添加选项点击事件
+      const optionElements = document.querySelectorAll('.option');
+      optionElements.forEach(option => {
+        option.addEventListener('click', function() {
+          const selectedIndex = parseInt(this.getAttribute('data-index'));
+          selectOption(selectedIndex);
+        });
+      });
+      
+      // 更新进度条
+      updateProgressBar();
+    }
+
+    // 选择选项
+    function selectOption(index) {
+      if (userAnswers[currentQuestionIndex] !== null) return; // 已经回答过的不再更改
+      
+      // 更新UI
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => option.classList.remove('selected'));
+      options[index].classList.add('selected');
+      
+      userAnswers[currentQuestionIndex] = index;
+    }
+
+    // 检查答案
+    function checkAnswer() {
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择一个答案！');
+        return;
+      }
+      
+      const question = questions[currentQuestionIndex];
+      const isCorrect = userAnswers[currentQuestionIndex] === question.correctAnswer;
+      
+      // 更新题目卡片的样式
+      const questionCard = document.querySelector('.question-card');
+      questionCard.classList.remove('correct', 'incorrect');
+      questionCard.classList.add(isCorrect ? 'correct' : 'incorrect');
+      
+      // 显示答案和解析
+      const answerSection = document.getElementById(`answer-${question.id}`);
+      answerSection.classList.add('show');
+      
+      // 更新选项样式
+      const options = document.querySelectorAll('.option');
+      options.forEach((option, i) => {
+        if (i === question.correctAnswer) {
+          option.classList.add('correct-option');
+        } else if (i === userAnswers[currentQuestionIndex] && i !== question.correctAnswer) {
+          option.classList.add('incorrect-option');
+        }
+        option.classList.remove('selected');
+      });
+      
+      // 更新统计数据
+      if (isCorrect) {
+        correctCount++;
+      }
+      totalAnswered++;
+      
+      updateStats();
+      updateProgressBar();
+      saveProgressToStorage();
+      
+      // 更新按钮文本
+      const showAnswerBtn = document.querySelector('.show-answer-btn');
+      showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+    }
+
+    // 显示/隐藏答案
+    function toggleAnswer() {
+      const question = questions[currentQuestionIndex];
+      const answerSection = document.getElementById(`answer-${question.id}`);
+      const showAnswerBtn = document.querySelector('.show-answer-btn');
+      
+      if (answerSection.classList.contains('show')) {
+        answerSection.classList.remove('show');
+        showAnswerBtn.innerHTML = '<i class="fas fa-eye"></i>显示答案';
+      } else {
+        answerSection.classList.add('show');
+        showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+      }
+    }
+
+    // 下一题
+    function nextQuestion() {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+      }
+    }
+
+    // 更新统计数据
+    function updateStats() {
+      answeredCountElement.textContent = totalAnswered;
+      correctCountElement.textContent = correctCount;
+      
+      // 计算正确率
+      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+      if (totalAnswered > 0) {
+        document.getElementById('total-questions').innerHTML = `${accuracy}%`;
+        document.getElementById('total-questions').style.color = accuracy >= 70 ? '#4CAF50' : (accuracy >= 50 ? '#FF9800' : '#f44336');
+      }
+    }
+
+    // 更新进度条
+    function updateProgressBar() {
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const progressPercentage = Math.round((answeredQuestions / questions.length) * 100);
+      
+      progressFillElement.style.width = `${progressPercentage}%`;
+      progressPercentageElement.textContent = `${progressPercentage}%`;
+    }
+
+    // 保存学习进度到本地存储
+    function saveProgressToStorage() {
+      const progress = {
+        userAnswers,
+        correctCount,
+        totalAnswered,
+        lastAccessed: new Date().toISOString()
+      };
+      
+      try {
+        localStorage.setItem('java_chapter1_progress', JSON.stringify(progress));
+        console.log('学习进度已保存');
+      } catch (e) {
+        console.log('无法保存学习进度');
+      }
+    }
+
+    // 从本地存储加载学习进度
+    function loadProgressFromStorage() {
+      try {
+        const savedProgress = localStorage.getItem('java_chapter1_progress');
+        if (savedProgress) {
+          const progress = JSON.parse(savedProgress);
+          userAnswers = progress.userAnswers;
+          correctCount = progress.correctCount;
+          totalAnswered = progress.totalAnswered;
+          
+          // 更新UI
+          updateStats();
+          updateProgressBar();
+          
+          console.log('学习进度已加载');
+        }
+      } catch (e) {
+        console.log('无法加载学习进度');
+      }
+    }
+
+    // 键盘快捷键支持
+    document.addEventListener('keydown', function(e) {
+      // 数字键1-4选择选项
+      if (e.key >= '1' && e.key <= '4') {
+        const index = parseInt(e.key) - 1;
+        if (index < questions[currentQuestionIndex].options.length) {
+          selectOption(index);
+        }
+      }
+      
+      // 空格键检查答案
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        checkAnswer();
+      }
+      
+      // 回车键显示/隐藏答案
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        toggleAnswer();
+      }
+      
+      // 左右箭头切换题目
+      if (e.key === 'ArrowRight') {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        }
+      }
+      
+      if (e.key === 'ArrowLeft') {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          loadQuestion(currentQuestionIndex);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

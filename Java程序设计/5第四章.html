@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第四章：面向对象高级知识 - Java程序设计课程</title>
+  <style>
+    :root {
+      --primary-color: #2196F3;
+      --primary-light: #64b5f6;
+      --primary-dark: #1976d2;
+      --secondary-color: #4CAF50;
+      --accent-color: #FF9800;
+      --light-color: #f5f5f5;
+      --dark-color: #212121;
+      --gray-color: #757575;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+      position: relative;
+    }
+
+    /* 背景装饰 */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(33, 150, 243, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(255, 152, 0, 0.05) 0%, transparent 20%);
+      z-index: -1;
+    }
+
+    /* 主容器 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* 返回按钮 */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 18px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      margin-bottom: 30px;
+      border: 2px solid transparent;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    /* 章节标题 */
+    .chapter-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+      background-size: cover;
+    }
+
+    .chapter-header-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .chapter-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .chapter-subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .chapter-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* 题目卡片 */
+    .question-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      margin-bottom: 25px;
+      border-left: 6px solid var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .question-card.correct {
+      border-left-color: var(--secondary-color);
+    }
+
+    .question-card.incorrect {
+      border-left-color: #f44336;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .question-number::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: currentColor;
+      border-radius: 50%;
+      margin-right: 10px;
+      opacity: 0.2;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    /* 代码块样式 */
+    .code-block {
+      background-color: #263238;
+      color: #f0f0f0;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 15px;
+      margin: 15px 0;
+      overflow-x: auto;
+      line-height: 1.5;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    .code-keyword {
+      color: #FF5370;
+      font-weight: bold;
+    }
+
+    .code-type {
+      color: #82AAFF;
+    }
+
+    .code-string {
+      color: #C3E88D;
+    }
+
+    .code-comment {
+      color: #6A9955;
+      font-style: italic;
+    }
+
+    .code-number {
+      color: #F78C6C;
+    }
+
+    /* 选项区域 */
+    .options-container {
+      margin-bottom: 25px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+
+    .option:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background-color: rgba(33, 150, 243, 0.05);
+    }
+
+    .option.correct-option {
+      border-color: var(--secondary-color);
+      background-color: rgba(76, 175, 80, 0.08);
+    }
+
+    .option.incorrect-option {
+      border-color: #f44336;
+      background-color: rgba(244, 67, 54, 0.05);
+    }
+
+    .option-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    /* 答案和解析 */
+    .answer-section {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    .answer-section.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-header {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .answer-header i {
+      margin-right: 10px;
+    }
+
+    .correct-answer {
+      color: var(--secondary-color);
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 17px;
+    }
+
+    .explanation {
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    /* 操作按钮 */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .check-btn {
+      background: var(--primary-color);
+      color: white;
+      flex: 2;
+    }
+
+    .check-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+    }
+
+    .show-answer-btn {
+      background: white;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      flex: 1;
+    }
+
+    .show-answer-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .next-btn {
+      background: var(--secondary-color);
+      color: white;
+      flex: 1;
+    }
+
+    .next-btn:hover {
+      background: #3d8b40;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    /* 统计区域 */
+    .stats-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      min-width: 150px;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-color);
+      margin-top: 8px;
+    }
+
+    .stat-item:nth-child(2) .stat-value {
+      color: var(--secondary-color);
+    }
+
+    .stat-item:nth-child(3) .stat-value {
+      color: var(--accent-color);
+    }
+
+    /* 进度条 */
+    .progress-container {
+      margin: 30px 0;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+      border-radius: 6px;
+      width: 0%;
+      transition: width 1s ease-out;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .chapter-header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .chapter-icon {
+        margin-top: 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .code-block {
+        font-size: 13px;
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .chapter-header {
+        padding: 20px;
+      }
+      
+      .chapter-title {
+        font-size: 26px;
+      }
+      
+      .chapter-subtitle {
+        font-size: 16px;
+      }
+      
+      .question-text {
+        font-size: 16px;
+      }
+    }
+
+    /* 动画效果 */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .question-card {
+      animation: slideInUp 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 背景图案 -->
+  <div class="bg-pattern"></div>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回课程主页
+    </a>
+
+    <!-- 章节标题 -->
+    <div class="chapter-header">
+      <div class="chapter-header-content">
+        <div>
+          <h1 class="chapter-title">第四章：面向对象高级知识</h1>
+          <p class="chapter-subtitle">继承性、复写、final关键字、多态性、抽象类、接口、Object类等高级特性</p>
+        </div>
+        <div class="chapter-icon">
+          <i class="fas fa-layer-group"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 统计区域 -->
+    <div class="stats-container">
+      <div class="stat-item">
+        <span class="stat-value" id="total-questions">15</span>
+        <span class="stat-label">总题数</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="answered-count">0</span>
+        <span class="stat-label">已回答</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="correct-count">0</span>
+        <span class="stat-label">正确数</span>
+      </div>
+    </div>
+
+    <!-- 进度条 -->
+    <div class="progress-container">
+      <div class="progress-label">
+        <span>学习进度</span>
+        <span id="progress-percentage">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- 题目容器 -->
+    <div id="questions-container"></div>
+
+    <!-- 底部信息 -->
+    <div class="footer" style="text-align: center; padding: 30px; color: #757575; font-size: 14px; margin-top: 30px;">
+      <p>© 2023 Java程序设计课程学习系统</p>
+      <p style="font-size: 12px; margin-top: 10px; color: #aaa;">点击选项选择答案，点击"检查答案"验证结果</p>
+    </div>
+  </div>
+
+  <script>
+    // 第四章：面向对象高级知识的题目数据
+    const questions = [
+      {
+        id: 1,
+        question: "关于Java继承中方法复写(Override)的规则，以下说法错误的是？",
+        options: [
+          "A. 复写的方法必须与被复写方法具有相同的方法名、参数列表和返回类型",
+          "B. 复写的方法不能缩小被复写方法的访问权限",
+          "C. 复写的方法不能抛出比被复写方法更多的异常",
+          "D. 静态方法可以被复写为非静态方法"
+        ],
+        correctAnswer: 3,
+        explanation: "静态方法不能被复写，静态方法属于类而不属于对象，子类可以定义与父类同名的静态方法，但这称为隐藏(hiding)而不是复写。静态方法只能被静态方法隐藏，不能改变其静态特性。"
+      },
+      {
+        id: 2,
+        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Parent</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"Parent display\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> staticDisplay() {<br>    System.out.println(<span class='code-string'>\"Parent static display\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Child</span> <span class='code-keyword'>extends</span> Parent {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"Child display\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> staticDisplay() {<br>    System.out.println(<span class='code-string'>\"Child static display\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Parent p = <span class='code-keyword'>new</span> Child();<br>    p.display();<br>    p.staticDisplay();<br>  }<br>}</div>",
+        options: [
+          "A. Child display<br>Parent static display",
+          "B. Child display<br>Child static display",
+          "C. Parent display<br>Parent static display",
+          "D. Parent display<br>Child static display"
+        ],
+        correctAnswer: 0,
+        explanation: "display()是实例方法，根据多态性，实际调用的是Child类的方法，输出\"Child display\"。staticDisplay()是静态方法，静态方法的调用取决于引用类型，而不是实际对象类型，所以调用Parent类的staticDisplay()，输出\"Parent static display\"。"
+      },
+      {
+        id: 3,
+        question: "关于final关键字的用法，以下说法正确的是？",
+        options: [
+          "A. final类不能被继承",
+          "B. final方法不能被重写",
+          "C. final变量一旦赋值就不能再修改",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "final关键字可以修饰类、方法和变量。final类不能被继承；final方法不能被重写；final变量（包括局部变量、成员变量）一旦被赋值就不能再修改，相当于常量。"
+      },
+      {
+        id: 4,
+        question: "以下关于抽象类和接口的说法，错误的是？",
+        options: [
+          "A. 抽象类可以包含构造方法，接口不能包含构造方法",
+          "B. 抽象类可以包含普通成员变量，接口中的变量默认是public static final的",
+          "C. 一个类只能继承一个抽象类，但可以实现多个接口",
+          "D. 抽象类和接口都可以被实例化"
+        ],
+        correctAnswer: 3,
+        explanation: "抽象类和接口都不能被实例化。抽象类需要被子类继承，接口需要被类实现。抽象类可以有构造方法（用于子类初始化），接口不能有构造方法。"
+      },
+      {
+        id: 5,
+        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    System.out.println(<span class='code-string'>\"A\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> <span class='code-keyword'>extends</span> A {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    System.out.println(<span class='code-string'>\"B\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test(<span class='code-keyword'>int</span> x) {<br>    System.out.println(<span class='code-string'>\"B with \"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    A obj = <span class='code-keyword'>new</span> B();<br>    obj.test();<br>    <span class='code-comment'>// obj.test(10); // 这行代码如果取消注释会怎样？</span><br>  }<br>}</div>",
+        options: [
+          "A. 输出B，然后编译错误",
+          "B. 输出B，然后输出B with 10",
+          "C. 输出A，然后输出B with 10",
+          "D. 输出A，然后编译错误"
+        ],
+        correctAnswer: 0,
+        explanation: "obj引用类型是A，实际对象是B。obj.test()调用的是B类的方法，输出B。obj.test(10)会编译错误，因为A类中没有test(int)方法，编译器根据引用类型A检查方法是否存在。如果要调用test(10)，需要将obj强制转换为B类型：((B)obj).test(10)。"
+      },
+      {
+        id: 6,
+        question: "关于Object类，以下说法正确的是？",
+        options: [
+          "A. Object类是Java中所有类的直接或间接父类",
+          "B. Object类中的equals()方法默认比较对象的引用是否相同",
+          "C. Object类中的toString()方法返回对象的字符串表示",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "Object类是Java中所有类的根类，所有类都直接或间接继承Object类。equals()方法默认实现是比较两个对象的引用是否相同（即==比较）。toString()方法返回对象的字符串表示，默认格式为：类名@哈希码。"
+      },
+      {
+        id: 7,
+        question: "以下关于接口的默认方法和静态方法的说法，正确的是？",
+        options: [
+          "A. Java 8开始，接口中可以包含默认方法(default method)",
+          "B. 接口中的默认方法可以有方法体",
+          "C. 接口中的静态方法可以直接通过接口名调用",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "从Java 8开始，接口中可以包含默认方法和静态方法。默认方法使用default关键字修饰，可以有方法体，实现类可以重写默认方法。静态方法使用static关键字修饰，可以有方法体，通过接口名直接调用。"
+      },
+      {
+        id: 8,
+        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>interface</span> <span class='code-type'>InterfaceA</span> {<br>  <span class='code-keyword'>default</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"InterfaceA show\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>interface</span> <span class='code-type'>InterfaceB</span> {<br>  <span class='code-keyword'>default</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"InterfaceB show\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>MyClass</span> <span class='code-keyword'>implements</span> InterfaceA, InterfaceB {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> show() {<br>    InterfaceA.<span class='code-keyword'>super</span>.show();<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    MyClass obj = <span class='code-keyword'>new</span> MyClass();<br>    obj.show();<br>  }<br>}</div>",
+        options: [
+          "A. InterfaceA show",
+          "B. InterfaceB show",
+          "C. 编译错误",
+          "D. 运行时报错"
+        ],
+        correctAnswer: 0,
+        explanation: "MyClass实现了InterfaceA和InterfaceB，两个接口都有默认方法show()，这会导致冲突。MyClass必须重写show()方法来消除冲突。在重写的方法中，通过InterfaceA.super.show()明确指定调用InterfaceA的默认方法，所以输出\"InterfaceA show\"。"
+      },
+      {
+        id: 9,
+        question: "关于instanceof运算符，以下说法正确的是？",
+        options: [
+          "A. instanceof用于检查对象是否是指定类或其子类的实例",
+          "B. instanceof也用于检查对象是否实现了指定接口",
+          "C. 如果对象为null，instanceof返回false",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "instanceof运算符用于检查对象是否是指定类或其子类的实例，或者是否实现了指定接口。如果对象为null，instanceof返回false。语法：对象 instanceof 类/接口。"
+      },
+      {
+        id: 10,
+        question: "以下关于继承中构造方法的调用顺序，正确的是？",
+        options: [
+          "A. 子类构造方法首先调用父类构造方法",
+          "B. 如果子类构造方法没有显式调用父类构造方法，编译器会自动添加super()调用",
+          "C. 构造方法调用必须位于构造方法的第一行",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "在Java继承中，子类构造方法总是首先调用父类构造方法。如果子类构造方法没有显式调用父类构造方法，编译器会自动添加super()调用（调用父类无参构造方法）。super()或this()调用必须位于构造方法的第一行。"
+      },
+      {
+        id: 11,
+        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Base</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>void</span> privateMethod() {<br>    System.out.println(<span class='code-string'>\"Base private\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> publicMethod() {<br>    System.out.println(<span class='code-string'>\"Base public\"</span>);<br>    privateMethod();<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Derived</span> <span class='code-keyword'>extends</span> Base {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>void</span> privateMethod() {<br>    System.out.println(<span class='code-string'>\"Derived private\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> publicMethod() {<br>    System.out.println(<span class='code-string'>\"Derived public\"</span>);<br>    <span class='code-keyword'>super</span>.publicMethod();<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Base obj = <span class='code-keyword'>new</span> Derived();<br>    obj.publicMethod();<br>  }<br>}</div>",
+        options: [
+          "A. Derived public<br>Base public<br>Base private",
+          "B. Derived public<br>Base public<br>Derived private",
+          "C. Base public<br>Base private",
+          "D. Base public<br>Derived private"
+        ],
+        correctAnswer: 0,
+        explanation: "obj引用类型是Base，实际对象是Derived。obj.publicMethod()调用Derived的publicMethod()，输出\"Derived public\"。然后Derived.publicMethod()调用super.publicMethod()，即Base的publicMethod()，输出\"Base public\"。Base.publicMethod()调用privateMethod()，由于private方法不具有多态性，根据当前类(Base)调用，输出\"Base private\"。"
+      },
+      {
+        id: 12,
+        question: "关于Java中的多态性，以下说法错误的是？",
+        options: [
+          "A. 多态性分为编译时多态和运行时多态",
+          "B. 方法重载是编译时多态的体现",
+          "C. 方法重写是运行时多态的体现",
+          "D. 多态性只能通过继承实现"
+        ],
+        correctAnswer: 3,
+        explanation: "多态性不仅可以通过继承实现，还可以通过接口实现。接口的多态性也是Java多态的重要体现。方法重载是编译时多态（静态绑定），方法重写是运行时多态（动态绑定）。"
+      },
+      {
+        id: 13,
+        question: "以下关于finalize()方法的说法，正确的是？",
+        options: [
+          "A. finalize()是Object类中定义的方法",
+          "B. 垃圾回收器在回收对象之前会调用finalize()方法",
+          "C. finalize()方法不能保证一定会被调用",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "finalize()是Object类中定义的一个protected方法。垃圾回收器在回收对象之前会调用finalize()方法，但finalize()方法的调用时机不确定，不能保证一定会被调用。从Java 9开始，finalize()方法已被标记为废弃(deprecated)。"
+      },
+      {
+        id: 14,
+        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Animal</span> {<br>  <span class='code-keyword'>public</span> Animal() {<br>    System.out.print(<span class='code-string'>\"Animal \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Dog</span> <span class='code-keyword'>extends</span> Animal {<br>  <span class='code-keyword'>public</span> Dog() {<br>    System.out.print(<span class='code-string'>\"Dog \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Poodle</span> <span class='code-keyword'>extends</span> Dog {<br>  <span class='code-keyword'>public</span> Poodle() {<br>    System.out.print(<span class='code-string'>\"Poodle \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Animal a = <span class='code-keyword'>new</span> Poodle();<br>  }<br>}</div>",
+        options: [
+          "A. Animal Dog Poodle",
+          "B. Poodle Dog Animal",
+          "C. Animal",
+          "D. Poodle"
+        ],
+        correctAnswer: 0,
+        explanation: "创建Poodle对象时，构造方法调用链：Poodle构造方法首先隐式调用父类Dog的无参构造方法，Dog构造方法首先隐式调用父类Animal的无参构造方法。所以执行顺序：Animal构造方法 -> Dog构造方法 -> Poodle构造方法，输出\"Animal Dog Poodle\"。"
+      },
+      {
+        id: 15,
+        question: "关于Java中的访问控制权限，从严格到宽松的顺序是？",
+        options: [
+          "A. private -> default -> protected -> public",
+          "B. default -> private -> protected -> public",
+          "C. private -> protected -> default -> public",
+          "D. protected -> private -> default -> public"
+        ],
+        correctAnswer: 0,
+        explanation: "Java访问控制权限从严格到宽松：private（仅本类）-> default/package-private（同包）-> protected（同包+子类）-> public（所有类）。private最严格，public最宽松。"
+      }
+    ];
+
+    // 页面状态变量
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let correctCount = 0;
+    let totalAnswered = 0;
+
+    // DOM元素
+    const questionsContainer = document.getElementById('questions-container');
+    const answeredCountElement = document.getElementById('answered-count');
+    const correctCountElement = document.getElementById('correct-count');
+    const progressFillElement = document.getElementById('progress-fill');
+    const progressPercentageElement = document.getElementById('progress-percentage');
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+      loadQuestion(currentQuestionIndex);
+      updateStats();
+      
+      // 从本地存储加载之前的学习进度
+      loadProgressFromStorage();
+    });
+
+    // 加载指定索引的题目
+    function loadQuestion(index) {
+      if (index < 0 || index >= questions.length) return;
+      
+      const question = questions[index];
+      currentQuestionIndex = index;
+      
+      // 构建题目HTML
+      const questionHTML = `
+        <div class="question-card" id="question-${question.id}">
+          <div class="question-number">第 ${question.id} 题 / 共 ${questions.length} 题</div>
+          <div class="question-text">${question.question}</div>
+          
+          <div class="options-container">
+            ${question.options.map((option, i) => {
+              const isSelected = userAnswers[index] === i;
+              const isCorrect = i === question.correctAnswer;
+              let optionClass = "option";
+              if (isSelected) optionClass += " selected";
+              if (userAnswers[index] !== null) {
+                if (isCorrect) optionClass += " correct-option";
+                else if (isSelected && !isCorrect) optionClass += " incorrect-option";
+              }
+              
+              return `
+                <div class="${optionClass}" data-index="${i}">
+                  <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                  <div class="option-text">${option}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          
+          <div class="answer-section ${userAnswers[index] !== null ? 'show' : ''}" id="answer-${question.id}">
+            <div class="answer-header">
+              <i class="fas fa-lightbulb"></i>
+              答案与解析
+            </div>
+            <div class="correct-answer">
+              正确答案：<strong>${String.fromCharCode(65 + question.correctAnswer)}</strong>
+            </div>
+            <div class="explanation">
+              ${question.explanation}
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="action-btn check-btn" onclick="checkAnswer()">
+              <i class="fas fa-check-circle"></i>
+              检查答案
+            </button>
+            <button class="action-btn show-answer-btn" onclick="toggleAnswer()">
+              <i class="fas fa-eye"></i>
+              ${userAnswers[currentQuestionIndex] !== null ? '隐藏答案' : '显示答案'}
+            </button>
+            ${currentQuestionIndex < questions.length - 1 ? `
+              <button class="action-btn next-btn" onclick="nextQuestion()">
+                下一题
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      
+      questionsContainer.innerHTML = questionHTML;
+      
+      // 添加选项点击事件
+      const optionElements = document.querySelectorAll('.option');
+      optionElements.forEach(option => {
+        option.addEventListener('click', function() {
+          const selectedIndex = parseInt(this.getAttribute('data-index'));
+          selectOption(selectedIndex);
+        });
+      });
+      
+      // 更新进度条
+      updateProgressBar();
+    }
+
+    // 选择选项
+    function selectOption(index) {
+      if (userAnswers[currentQuestionIndex] !== null) return; // 已经回答过的不再更改
+      
+      // 更新UI
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => option.classList.remove('selected'));
+      options[index].classList.add('selected');
+      
+      userAnswers[currentQuestionIndex] = index;
+    }
+
+    // 检查答案
+    function checkAnswer() {
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择一个答案！');
+        return;
+      }
+      
+      const question = questions[currentQuestionIndex];
+      const isCorrect = userAnswers[currentQuestionIndex] === question.correctAnswer;
+      
+      // 更新题目卡片的样式
+      const questionCard = document.querySelector('.question-card');
+      questionCard.classList.remove('correct', 'incorrect');
+      questionCard.classList.add(isCorrect ? 'correct' : 'incorrect');
+      
+      // 显示答案和解析
+      const answerSection = document.getElementById(`answer-${question.id}`);
+      answerSection.classList.add('show');
+      
+      // 更新选项样式
+      const options = document.querySelectorAll('.option');
+      options.forEach((option, i) => {
+        if (i === question.correctAnswer) {
+          option.classList.add('correct-option');
+        } else if (i === userAnswers[currentQuestionIndex] && i !== question.correctAnswer) {
+          option.classList.add('incorrect-option');
+        }
+        option.classList.remove('selected');
+      });
+      
+      // 更新统计数据
+      if (isCorrect) {
+        correctCount++;
+      }
+      totalAnswered++;
+      
+      updateStats();
+      updateProgressBar();
+      saveProgressToStorage();
+      
+      // 更新按钮文本
+      const showAnswerBtn = document.querySelector('.show-answer-btn');
+      showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+    }
+
+    // 显示/隐藏答案
+    function toggleAnswer() {
+      const question = questions[currentQuestionIndex];
+      const answerSection = document.getElementById(`answer-${question.id}`);
+      const showAnswerBtn = document.querySelector('.show-answer-btn');
+      
+      if (answerSection.classList.contains('show')) {
+        answerSection.classList.remove('show');
+        showAnswerBtn.innerHTML = '<i class="fas fa-eye"></i>显示答案';
+      } else {
+        answerSection.classList.add('show');
+        showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+      }
+    }
+
+    // 下一题
+    function nextQuestion() {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+      }
+    }
+
+    // 更新统计数据
+    function updateStats() {
+      answeredCountElement.textContent = totalAnswered;
+      correctCountElement.textContent = correctCount;
+      
+      // 计算正确率
+      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+      if (totalAnswered > 0) {
+        document.getElementById('total-questions').innerHTML = `${accuracy}%`;
+        document.getElementById('total-questions').style.color = accuracy >= 70 ? '#4CAF50' : (accuracy >= 50 ? '#FF9800' : '#f44336');
+      }
+    }
+
+    // 更新进度条
+    function updateProgressBar() {
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const progressPercentage = Math.round((answeredQuestions / questions.length) * 100);
+      
+      progressFillElement.style.width = `${progressPercentage}%`;
+      progressPercentageElement.textContent = `${progressPercentage}%`;
+    }
+
+    // 保存学习进度到本地存储
+    function saveProgressToStorage() {
+      const progress = {
+        userAnswers,
+        correctCount,
+        totalAnswered,
+        lastAccessed: new Date().toISOString()
+      };
+      
+      try {
+        localStorage.setItem('java_chapter4_progress', JSON.stringify(progress));
+        console.log('第四章学习进度已保存');
+      } catch (e) {
+        console.log('无法保存学习进度');
+      }
+    }
+
+    // 从本地存储加载学习进度
+    function loadProgressFromStorage() {
+      try {
+        const savedProgress = localStorage.getItem('java_chapter4_progress');
+        if (savedProgress) {
+          const progress = JSON.parse(savedProgress);
+          userAnswers = progress.userAnswers;
+          correctCount = progress.correctCount;
+          totalAnswered = progress.totalAnswered;
+          
+          // 更新UI
+          updateStats();
+          updateProgressBar();
+          
+          console.log('第四章学习进度已加载');
+        }
+      } catch (e) {
+        console.log('无法加载学习进度');
+      }
+    }
+
+    // 键盘快捷键支持
+    document.addEventListener('keydown', function(e) {
+      // 数字键1-4选择选项
+      if (e.key >= '1' && e.key <= '4') {
+        const index = parseInt(e.key) - 1;
+        if (index < questions[currentQuestionIndex].options.length) {
+          selectOption(index);
+        }
+      }
+      
+      // 空格键检查答案
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        checkAnswer();
+      }
+      
+      // 回车键显示/隐藏答案
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        toggleAnswer();
+      }
+      
+      // 左右箭头切换题目
+      if (e.key === 'ArrowRight') {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        }
+      }
+      
+      if (e.key === 'ArrowLeft') {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          loadQuestion(currentQuestionIndex);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

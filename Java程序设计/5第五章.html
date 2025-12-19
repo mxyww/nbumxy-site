@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第五章：包及访问控制权限 - Java程序设计课程</title>
+  <style>
+    :root {
+      --primary-color: #2196F3;
+      --primary-light: #64b5f6;
+      --primary-dark: #1976d2;
+      --secondary-color: #4CAF50;
+      --accent-color: #FF9800;
+      --light-color: #f5f5f5;
+      --dark-color: #212121;
+      --gray-color: #757575;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+      position: relative;
+    }
+
+    /* 背景装饰 */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(33, 150, 243, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(255, 152, 0, 0.05) 0%, transparent 20%);
+      z-index: -1;
+    }
+
+    /* 主容器 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* 返回按钮 */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 32px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 18px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      margin-bottom: 30px;
+      border: 2px solid transparent;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    /* 章节标题 */
+    .chapter-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+      background-size: cover;
+    }
+
+    .chapter-header-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .chapter-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .chapter-subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .chapter-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* 题目卡片 */
+    .question-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      margin-bottom: 25px;
+      border-left: 6px solid var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .question-card.correct {
+      border-left-color: var(--secondary-color);
+    }
+
+    .question-card.incorrect {
+      border-left-color: #f44336;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .question-number::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: currentColor;
+      border-radius: 50%;
+      margin-right: 10px;
+      opacity: 0.2;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    /* 代码块样式 */
+    .code-block {
+      background-color: #263238;
+      color: #f0f0f0;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 15px;
+      margin: 15px 0;
+      overflow-x: auto;
+      line-height: 1.5;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    .code-keyword {
+      color: #FF5370;
+      font-weight: bold;
+    }
+
+    .code-type {
+      color: #82AAFF;
+    }
+
+    .code-string {
+      color: #C3E88D;
+    }
+
+    .code-comment {
+      color: #6A9955;
+      font-style: italic;
+    }
+
+    .code-number {
+      color: #F78C6C;
+    }
+
+    /* 选项区域 */
+    .options-container {
+      margin-bottom: 25px;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      background-color: #f8f9fa;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+    }
+
+    .option:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background-color: rgba(33, 150, 243, 0.05);
+    }
+
+    .option.correct-option {
+      border-color: var(--secondary-color);
+      background-color: rgba(76, 175, 80, 0.08);
+    }
+
+    .option.incorrect-option {
+      border-color: #f44336;
+      background-color: rgba(244, 67, 54, 0.05);
+    }
+
+    .option-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      margin-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    /* 答案和解析 */
+    .answer-section {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    .answer-section.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .answer-header {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .answer-header i {
+      margin-right: 10px;
+    }
+
+    .correct-answer {
+      color: var(--secondary-color);
+      font-weight: 600;
+      margin-bottom: 15px;
+      font-size: 17px;
+    }
+
+    .explanation {
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent-color);
+    }
+
+    /* 操作按钮 */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .check-btn {
+      background: var(--primary-color);
+      color: white;
+      flex: 2;
+    }
+
+    .check-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+    }
+
+    .show-answer-btn {
+      background: white;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      flex: 1;
+    }
+
+    .show-answer-btn:hover {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .next-btn {
+      background: var(--secondary-color);
+      color: white;
+      flex: 1;
+    }
+
+    .next-btn:hover {
+      background: #3d8b40;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    }
+
+    /* 统计区域 */
+    .stats-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      min-width: 150px;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-color);
+      margin-top: 8px;
+    }
+
+    .stat-item:nth-child(2) .stat-value {
+      color: var(--secondary-color);
+    }
+
+    .stat-item:nth-child(3) .stat-value {
+      color: var(--accent-color);
+    }
+
+    /* 进度条 */
+    .progress-container {
+      margin: 30px 0;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: #e0e0e0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+      border-radius: 6px;
+      width: 0%;
+      transition: width 1s ease-out;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .chapter-header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .chapter-icon {
+        margin-top: 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .code-block {
+        font-size: 13px;
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .chapter-header {
+        padding: 20px;
+      }
+      
+      .chapter-title {
+        font-size: 26px;
+      }
+      
+      .chapter-subtitle {
+        font-size: 16px;
+      }
+      
+      .question-text {
+        font-size: 16px;
+      }
+    }
+
+    /* 动画效果 */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .question-card {
+      animation: slideInUp 0.5s ease-out;
+      animation-fill-mode: both;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 背景图案 -->
+  <div class="bg-pattern"></div>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- 返回按钮 -->
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回课程主页
+    </a>
+
+    <!-- 章节标题 -->
+    <div class="chapter-header">
+      <div class="chapter-header-content">
+        <div>
+          <h1 class="chapter-title">第五章：包及访问控制权限</h1>
+          <p class="chapter-subtitle">包的定义、导入、系统常见包、jar命令、访问控制权限、命名规范、单例/多例设计模式</p>
+        </div>
+        <div class="chapter-icon">
+          <i class="fas fa-folder"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 统计区域 -->
+    <div class="stats-container">
+      <div class="stat-item">
+        <span class="stat-value" id="total-questions">15</span>
+        <span class="stat-label">总题数</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="answered-count">0</span>
+        <span class="stat-label">已回答</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="correct-count">0</span>
+        <span class="stat-label">正确数</span>
+      </div>
+    </div>
+
+    <!-- 进度条 -->
+    <div class="progress-container">
+      <div class="progress-label">
+        <span>学习进度</span>
+        <span id="progress-percentage">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- 题目容器 -->
+    <div id="questions-container"></div>
+
+    <!-- 底部信息 -->
+    <div class="footer" style="text-align: center; padding: 30px; color: #757575; font-size: 14px; margin-top: 30px;">
+      <p>© 2023 Java程序设计课程学习系统</p>
+      <p style="font-size: 12px; margin-top: 10px; color: #aaa;">点击选项选择答案，点击"检查答案"验证结果</p>
+    </div>
+  </div>
+
+  <script>
+    // 第五章：包及访问控制权限的题目数据
+    const questions = [
+      {
+        id: 1,
+        question: "关于Java包(package)的作用，以下说法错误的是？",
+        options: [
+          "A. 避免命名冲突",
+          "B. 提供访问控制",
+          "C. 组织和管理类文件",
+          "D. 提高代码执行速度"
+        ],
+        correctAnswer: 3,
+        explanation: "包的主要作用是避免命名冲突、提供访问控制、组织和管理类文件，但并不会提高代码执行速度。包是逻辑上的组织方式，不影响代码的运行时性能。"
+      },
+      {
+        id: 2,
+        question: "以下关于包的定义和导入，正确的是？",
+        options: [
+          "A. 包声明语句必须是Java源文件的第一行非注释代码",
+          "B. import语句用于导入其他包中的类或整个包",
+          "C. 使用import static可以导入类的静态成员",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "包声明语句(package)必须是Java源文件的第一行非注释代码；import语句用于导入其他包中的类或整个包；import static语句（静态导入）可以导入类的静态成员（静态方法或静态变量）。"
+      },
+      {
+        id: 3,
+        question: "以下代码中，哪个import语句是正确的？<br><div class='code-block'><span class='code-keyword'>package</span> com.example.test;<br><br><span class='code-comment'>// 假设有以下包结构：</span><br><span class='code-comment'>// com.example.utils.StringUtil 类</span><br><span class='code-comment'>// com.example.utils.MathUtil 类</span></div>",
+        options: [
+          "A. import com.example.utils.*;",
+          "B. import com.example.utils.StringUtil;",
+          "C. import com.example.utils.*; 和 import com.example.utils.StringUtil; 都是正确的",
+          "D. 都不正确，因为当前包是com.example.test，不能导入com.example.utils包"
+        ],
+        correctAnswer: 2,
+        explanation: "import com.example.utils.*; 导入utils包下的所有类；import com.example.utils.StringUtil; 只导入StringUtil类。这两种方式都是正确的，可以根据需要选择。"
+      },
+      {
+        id: 4,
+        question: "以下哪个不是Java的核心包？",
+        options: [
+          "A. java.lang",
+          "B. java.util",
+          "C. java.io",
+          "D. java.database"
+        ],
+        correctAnswer: 3,
+        explanation: "java.lang包包含Java语言的核心类（如String、System、Math等）；java.util包包含实用工具类（如集合框架、日期时间等）；java.io包包含输入输出相关类。java.database不是Java标准包，数据库操作通常在java.sql包中。"
+      },
+      {
+        id: 5,
+        question: "关于jar命令，以下说法错误的是？",
+        options: [
+          "A. jar命令用于创建、查看和提取jar文件",
+          "B. jar文件是Java归档文件，采用ZIP格式压缩",
+          "C. jar文件可以包含类文件、资源文件和清单文件",
+          "D. jar命令不能创建可执行的jar文件"
+        ],
+        correctAnswer: 3,
+        explanation: "jar命令可以创建可执行的jar文件，需要在清单文件(manifest.mf)中指定Main-Class属性。jar文件是Java的标准归档格式，可以包含类文件、资源文件和清单文件。"
+      },
+      {
+        id: 6,
+        question: "以下关于Java访问控制权限的说法，正确的是？",
+        options: [
+          "A. private: 只能在当前类中访问",
+          "B. default(包访问权限): 只能在同一个包中访问",
+          "C. protected: 同一个包或不同包的子类中可以访问",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "private权限：只能在当前类中访问；default(包访问权限)：只能在同一个包中访问；protected权限：同一个包中或不同包的子类中可以访问；public权限：所有类都可以访问。"
+      },
+      {
+        id: 7,
+        question: "以下代码的编译结果是什么？<br><div class='code-block'><span class='code-comment'>// 文件: com/example/A.java</span><br><span class='code-keyword'>package</span> com.example;<br><br><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>int</span> privateVar = <span class='code-number'>1</span>;<br>  <span class='code-keyword'>int</span> defaultVar = <span class='code-number'>2</span>;<br>  <span class='code-keyword'>protected</span> <span class='code-keyword'>int</span> protectedVar = <span class='code-number'>3</span>;<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>int</span> publicVar = <span class='code-number'>4</span>;<br>}<br><br><span class='code-comment'>// 文件: com/example/B.java</span><br><span class='code-keyword'>package</span> com.example;<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> {<br>  <span class='code-keyword'>void</span> test() {<br>    A obj = <span class='code-keyword'>new</span> A();<br>    System.out.println(obj.defaultVar);<br>    System.out.println(obj.protectedVar);<br>    System.out.println(obj.publicVar);<br>    <span class='code-comment'>// System.out.println(obj.privateVar); // 这行代码如果取消注释会怎样？</span><br>  }<br>}</div>",
+        options: [
+          "A. 编译成功，输出2 3 4",
+          "B. 编译错误，不能访问protectedVar",
+          "C. 编译错误，不能访问defaultVar",
+          "D. 编译错误，不能访问privateVar"
+        ],
+        correctAnswer: 0,
+        explanation: "A和B在同一个包(com.example)中，B可以访问A的default、protected和public成员。如果取消注释访问privateVar的代码，会编译错误，因为private成员只能在A类内部访问。"
+      },
+      {
+        id: 8,
+        question: "以下关于Java命名规范的说法，正确的是？",
+        options: [
+          "A. 包名通常使用小写字母，采用反转域名格式",
+          "B. 类名使用驼峰命名法，首字母大写",
+          "C. 方法名和变量名使用驼峰命名法，首字母小写",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "Java命名规范：包名通常使用小写字母，采用反转域名格式（如com.example.project）；类名使用驼峰命名法，首字母大写；方法名和变量名使用驼峰命名法，首字母小写；常量名全部大写，单词间用下划线分隔。"
+      },
+      {
+        id: 9,
+        question: "以下哪个是单例设计模式的正确实现？",
+        options: [
+          "A. <div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>static</span> Singleton instance;<br>  <span class='code-keyword'>private</span> Singleton() {}<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton getInstance() {<br>    <span class='code-keyword'>if</span> (instance == <span class='code-keyword'>null</span>) {<br>      instance = <span class='code-keyword'>new</span> Singleton();<br>    }<br>    <span class='code-keyword'>return</span> instance;<br>  }<br>}</div>",
+          "B. <div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>static</span> <span class='code-keyword'>final</span> Singleton instance = <span class='code-keyword'>new</span> Singleton();<br>  <span class='code-keyword'>private</span> Singleton() {}<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton getInstance() {<br>    <span class='code-keyword'>return</span> instance;<br>  }<br>}</div>",
+          "C. <div class='code-keyword'>public</span> <span class='code-type'>class</span> Singleton {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton instance = <span class='code-keyword'>new</span> Singleton();<br>  <span class='code-keyword'>public</span> Singleton() {}<br>}</div>",
+          "D. 以上都是正确的单例实现"
+        ],
+        correctAnswer: 1,
+        explanation: "选项A是懒汉式单例，但在多线程环境下可能创建多个实例（线程不安全）。选项B是饿汉式单例，在类加载时就创建实例，线程安全。选项C不是单例，因为构造方法是public的，可以创建多个实例。所以只有选项B是正确的单例实现。"
+      },
+      {
+        id: 10,
+        question: "关于静态导入(import static)，以下说法正确的是？",
+        options: [
+          "A. 静态导入可以导入类的静态方法",
+          "B. 静态导入可以导入类的静态变量",
+          "C. 过度使用静态导入可能降低代码可读性",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "静态导入可以导入类的静态方法或静态变量，使用后可以直接使用静态成员而不需要类名。但过度使用静态导入可能使代码难以理解，不知道静态成员来自哪个类，降低代码可读性。"
+      },
+      {
+        id: 11,
+        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-comment'>// 文件: pkg1/ClassA.java</span><br><span class='code-keyword'>package</span> pkg1;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>ClassA</span> {<br>  <span class='code-keyword'>protected</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"ClassA in pkg1\"</span>);<br>  }<br>}<br><br><span class='code-comment'>// 文件: pkg2/ClassB.java</span><br><span class='code-keyword'>package</span> pkg2;<br><br><span class='code-keyword'>import</span> pkg1.ClassA;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>ClassB</span> <span class='code-keyword'>extends</span> ClassA {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    ClassA obj = <span class='code-keyword'>new</span> ClassA();<br>    <span class='code-comment'>// obj.show(); // 这行代码如果取消注释会怎样？</span><br>    <span class='code-keyword'>this</span>.show();<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    ClassB b = <span class='code-keyword'>new</span> ClassB();<br>    b.test();<br>  }<br>}</div>",
+        options: [
+          "A. 输出\"ClassA in pkg1\"",
+          "B. 编译错误，不能访问obj.show()",
+          "C. 运行时报错",
+          "D. 输出两次\"ClassA in pkg1\""
+        ],
+        correctAnswer: 1,
+        explanation: "ClassB继承ClassA，但不在同一个包中。通过this.show()可以访问继承的protected方法，因为this指向ClassB实例，ClassB继承了ClassA的protected方法。但是obj.show()会编译错误，因为obj是ClassA类型，在不同包中不能通过父类引用访问protected方法（除非通过子类引用）。"
+      },
+      {
+        id: 12,
+        question: "关于Java中的CLASSPATH，以下说法错误的是？",
+        options: [
+          "A. CLASSPATH指定JVM查找类文件的路径",
+          "B. 可以使用-classpath或-cp选项设置CLASSPATH",
+          "C. CLASSPATH默认包含当前目录(.)",
+          "D. CLASSPATH设置后，JVM不会在标准Java库中查找类"
+        ],
+        correctAnswer: 3,
+        explanation: "CLASSPATH指定JVM查找用户自定义类文件的路径，可以使用-classpath或-cp选项设置。CLASSPATH默认包含当前目录(.)。即使设置了CLASSPATH，JVM仍然会在标准Java库中查找类，标准Java库的优先级最高。"
+      },
+      {
+        id: 13,
+        question: "以下关于多例设计模式的说法，正确的是？",
+        options: [
+          "A. 多例模式是单例模式的扩展",
+          "B. 多例模式确保一个类有固定数量的实例",
+          "C. 多例模式的实例通常放在一个集合中管理",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "多例模式是单例模式的扩展，确保一个类有固定数量的实例（如3个、5个等）。这些实例通常放在一个集合（如Map）中管理，通过键来获取不同的实例。"
+      },
+      {
+        id: 14,
+        question: "以下代码中，哪个访问权限修饰符的使用是正确的？<br><div class='code-block'><span class='code-comment'>// 文件: pkg/MyClass.java</span><br><span class='code-keyword'>package</span> pkg;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>MyClass</span> {<br>  <span class='code-comment'>// 希望这个变量只能在当前类中访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>int</span> secret = <span class='code-number'>42</span>;<br><br>  <span class='code-comment'>// 希望这个方法可以在任何地方访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>void</span> publicMethod() { ... }<br><br>  <span class='code-comment'>// 希望这个方法可以在同一个包中访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>void</span> packageMethod() { ... }<br>}</div>",
+        options: [
+          "A. private, public, 无修饰符",
+          "B. private, public, protected",
+          "C. public, private, 无修饰符",
+          "D. protected, public, private"
+        ],
+        correctAnswer: 0,
+        explanation: "只能在当前类中访问使用private；在任何地方访问使用public；在同一个包中访问使用无修饰符（包访问权限）。所以正确答案是A：private, public, 无修饰符。"
+      },
+      {
+        id: 15,
+        question: "以下关于jar文件操作的命令，正确的是？",
+        options: [
+          "A. 创建jar文件: jar -cvf my.jar com/",
+          "B. 查看jar文件内容: jar -tvf my.jar",
+          "C. 提取jar文件: jar -xvf my.jar",
+          "D. 以上都正确"
+        ],
+        correctAnswer: 3,
+        explanation: "jar命令常用选项：-c创建jar文件，-v显示详细信息，-f指定jar文件名，-t列出jar文件内容，-x提取jar文件内容。所以：创建jar文件: jar -cvf my.jar com/；查看jar文件内容: jar -tvf my.jar；提取jar文件: jar -xvf my.jar。"
+      }
+    ];
+
+    // 页面状态变量
+    let currentQuestionIndex = 0;
+    let userAnswers = new Array(questions.length).fill(null);
+    let correctCount = 0;
+    let totalAnswered = 0;
+
+    // DOM元素
+    const questionsContainer = document.getElementById('questions-container');
+    const answeredCountElement = document.getElementById('answered-count');
+    const correctCountElement = document.getElementById('correct-count');
+    const progressFillElement = document.getElementById('progress-fill');
+    const progressPercentageElement = document.getElementById('progress-percentage');
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+      loadQuestion(currentQuestionIndex);
+      updateStats();
+      
+      // 从本地存储加载之前的学习进度
+      loadProgressFromStorage();
+    });
+
+    // 加载指定索引的题目
+    function loadQuestion(index) {
+      if (index < 0 || index >= questions.length) return;
+      
+      const question = questions[index];
+      currentQuestionIndex = index;
+      
+      // 构建题目HTML
+      const questionHTML = `
+        <div class="question-card" id="question-${question.id}">
+          <div class="question-number">第 ${question.id} 题 / 共 ${questions.length} 题</div>
+          <div class="question-text">${question.question}</div>
+          
+          <div class="options-container">
+            ${question.options.map((option, i) => {
+              const isSelected = userAnswers[index] === i;
+              const isCorrect = i === question.correctAnswer;
+              let optionClass = "option";
+              if (isSelected) optionClass += " selected";
+              if (userAnswers[index] !== null) {
+                if (isCorrect) optionClass += " correct-option";
+                else if (isSelected && !isCorrect) optionClass += " incorrect-option";
+              }
+              
+              return `
+                <div class="${optionClass}" data-index="${i}">
+                  <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                  <div class="option-text">${option}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+          
+          <div class="answer-section ${userAnswers[index] !== null ? 'show' : ''}" id="answer-${question.id}">
+            <div class="answer-header">
+              <i class="fas fa-lightbulb"></i>
+              答案与解析
+            </div>
+            <div class="correct-answer">
+              正确答案：<strong>${String.fromCharCode(65 + question.correctAnswer)}</strong>
+            </div>
+            <div class="explanation">
+              ${question.explanation}
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="action-btn check-btn" onclick="checkAnswer()">
+              <i class="fas fa-check-circle"></i>
+              检查答案
+            </button>
+            <button class="action-btn show-answer-btn" onclick="toggleAnswer()">
+              <i class="fas fa-eye"></i>
+              ${userAnswers[currentQuestionIndex] !== null ? '隐藏答案' : '显示答案'}
+            </button>
+            ${currentQuestionIndex < questions.length - 1 ? `
+              <button class="action-btn next-btn" onclick="nextQuestion()">
+                下一题
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      
+      questionsContainer.innerHTML = questionHTML;
+      
+      // 添加选项点击事件
+      const optionElements = document.querySelectorAll('.option');
+      optionElements.forEach(option => {
+        option.addEventListener('click', function() {
+          const selectedIndex = parseInt(this.getAttribute('data-index'));
+          selectOption(selectedIndex);
+        });
+      });
+      
+      // 更新进度条
+      updateProgressBar();
+    }
+
+    // 选择选项
+    function selectOption(index) {
+      if (userAnswers[currentQuestionIndex] !== null) return; // 已经回答过的不再更改
+      
+      // 更新UI
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => option.classList.remove('selected'));
+      options[index].classList.add('selected');
+      
+      userAnswers[currentQuestionIndex] = index;
+    }
+
+    // 检查答案
+    function checkAnswer() {
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择一个答案！');
+        return;
+      }
+      
+      const question = questions[currentQuestionIndex];
+      const isCorrect = userAnswers[currentQuestionIndex] === question.correctAnswer;
+      
+      // 更新题目卡片的样式
+      const questionCard = document.querySelector('.question-card');
+      questionCard.classList.remove('correct', 'incorrect');
+      questionCard.classList.add(isCorrect ? 'correct' : 'incorrect');
+      
+      // 显示答案和解析
+      const answerSection = document.getElementById(`answer-${question.id}`);
+      answerSection.classList.add('show');
+      
+      // 更新选项样式
+      const options = document.querySelectorAll('.option');
+      options.forEach((option, i) => {
+        if (i === question.correctAnswer) {
+          option.classList.add('correct-option');
+        } else if (i === userAnswers[currentQuestionIndex] && i !== question.correctAnswer) {
+          option.classList.add('incorrect-option');
+        }
+        option.classList.remove('selected');
+      });
+      
+      // 更新统计数据
+      if (isCorrect) {
+        correctCount++;
+      }
+      totalAnswered++;
+      
+      updateStats();
+      updateProgressBar();
+      saveProgressToStorage();
+      
+      // 更新按钮文本
+      const showAnswerBtn = document.querySelector('.show-answer-btn');
+      showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+    }
+
+    // 显示/隐藏答案
+    function toggleAnswer() {
+      const question = questions[currentQuestionIndex];
+      const answerSection = document.getElementById(`answer-${question.id}`);
+      const showAnswerBtn = document.querySelector('.show-answer-btn');
+      
+      if (answerSection.classList.contains('show')) {
+        answerSection.classList.remove('show');
+        showAnswerBtn.innerHTML = '<i class="fas fa-eye"></i>显示答案';
+      } else {
+        answerSection.classList.add('show');
+        showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+      }
+    }
+
+    // 下一题
+    function nextQuestion() {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+      }
+    }
+
+    // 更新统计数据
+    function updateStats() {
+      answeredCountElement.textContent = totalAnswered;
+      correctCountElement.textContent = correctCount;
+      
+      // 计算正确率
+      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+      if (totalAnswered > 0) {
+        document.getElementById('total-questions').innerHTML = `${accuracy}%`;
+        document.getElementById('total-questions').style.color = accuracy >= 70 ? '#4CAF50' : (accuracy >= 50 ? '#FF9800' : '#f44336');
+      }
+    }
+
+    // 更新进度条
+    function updateProgressBar() {
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const progressPercentage = Math.round((answeredQuestions / questions.length) * 100);
+      
+      progressFillElement.style.width = `${progressPercentage}%`;
+      progressPercentageElement.textContent = `${progressPercentage}%`;
+    }
+
+    // 保存学习进度到本地存储
+    function saveProgressToStorage() {
+      const progress = {
+        userAnswers,
+        correctCount,
+        totalAnswered,
+        lastAccessed: new Date().toISOString()
+      };
+      
+      try {
+        localStorage.setItem('java_chapter5_progress', JSON.stringify(progress));
+        console.log('第五章学习进度已保存');
+      } catch (e) {
+        console.log('无法保存学习进度');
+      }
+    }
+
+    // 从本地存储加载学习进度
+    function loadProgressFromStorage() {
+      try {
+        const savedProgress = localStorage.getItem('java_chapter5_progress');
+        if (savedProgress) {
+          const progress = JSON.parse(savedProgress);
+          userAnswers = progress.userAnswers;
+          correctCount = progress.correctCount;
+          totalAnswered = progress.totalAnswered;
+          
+          // 更新UI
+          updateStats();
+          updateProgressBar();
+          
+          console.log('第五章学习进度已加载');
+        }
+      } catch (e) {
+        console.log('无法加载学习进度');
+      }
+    }
+
+    // 键盘快捷键支持
+    document.addEventListener('keydown', function(e) {
+      // 数字键1-4选择选项
+      if (e.key >= '1' && e.key <= '4') {
+        const index = parseInt(e.key) - 1;
+        if (index < questions[currentQuestionIndex].options.length) {
+          selectOption(index);
+        }
+      }
+      
+      // 空格键检查答案
+      if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        checkAnswer();
+      }
+      
+      // 回车键显示/隐藏答案
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        toggleAnswer();
+      }
+      
+      // 左右箭头切换题目
+      if (e.key === 'ArrowRight') {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        }
+      }
+      
+      if (e.key === 'ArrowLeft') {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          loadQuestion(currentQuestionIndex);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
