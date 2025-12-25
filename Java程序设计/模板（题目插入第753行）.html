@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第三章：面向对象基本概念</title>
+  <title>第一章：随机事件与概率 - 练习题</title>
   <style>
     :root {
       --primary-color: #4361ee;
@@ -605,7 +605,7 @@
       <i class="fas fa-arrow-left"></i>
       返回首页
     </a>
-    <h1 class="page-title">Java程序设计课程</h1>
+    <h1 class="page-title">概率论与数理统计题库</h1>
   </div>
 
   <!-- 主容器 -->
@@ -715,7 +715,7 @@
   <!-- 完成页面（初始隐藏） -->
   <div class="completion-screen" id="completionScreen" style="display: none;">
     <div class="completion-icon">🎉</div>
-    <h2 class="completion-title">恭喜完成Java程序设计课程题库！</h2>
+    <h2 class="completion-title">恭喜完成概率论与数理统计题库！</h2>
     <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
     
     <div class="completion-stats">
@@ -750,188 +750,7 @@
      * 1. 在这里添加您的题目数据
      * 请按照以下格式添加题目：
      ************************************************************/
-    const questions = [
-      {
-        id: 1,
-        title: "关于类和对象的关系，以下说法正确的是？",
-        options: [
-          "A. 对象是类的实例",
-          "B. 类是对象的模板",
-          "C. 一个类可以创建多个对象",
-          "D. 以上都正确"
-        ],
-        answer: 3,
-        explanation: "类是对象的模板，定义了对象的属性和方法。对象是类的实例，一个类可以创建多个对象，每个对象都有相同的结构但不同的属性值。"
-      },
-      {
-        id: 2,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Person</span> {<br>  <span class='code-keyword'>String</span> name;<br>  <span class='code-keyword'>int</span> age;<br><br>  <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"姓名：\"</span> + name + <span class='code-string'>\"，年龄：\"</span> + age);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Person p = <span class='code-keyword'>new</span> Person();<br>    p.name = <span class='code-string'>\"张三\"</span>;<br>    p.age = <span class='code-number'>20</span>;<br>    p.display();<br>  }<br>}</div>",
-        options: [
-          "A. 姓名：null，年龄：0",
-          "B. 姓名：张三，年龄：20",
-          "C. 编译错误",
-          "D. 运行时报错"
-        ],
-        answer: 1,
-        explanation: "创建Person对象后，设置name为\"张三\"，age为20，然后调用display()方法输出，所以输出结果为\"姓名：张三，年龄：20\"。"
-      },
-      {
-        id: 3,
-        title: "关于封装，以下说法错误的是？",
-        options: [
-          "A. 封装就是将对象的属性和行为包装在一起",
-          "B. 封装可以提高代码的安全性",
-          "C. Java中通过private关键字实现封装",
-          "D. 封装后的类属性必须全部设置为private"
-        ],
-        answer: 3,
-        explanation: "封装并不要求所有属性都设置为private，而是根据实际需求决定。有些属性可能设置为protected或package-private更合适。封装的核心是隐藏实现细节，提供公共接口。"
-      },
-      {
-        id: 4,
-        title: "以下关于构造方法的说法，正确的是？",
-        options: [
-          "A. 构造方法名必须与类名相同",
-          "B. 构造方法没有返回类型，连void也不能有",
-          "C. 一个类可以有多个构造方法（重载）",
-          "D. 以上都正确"
-        ],
-        answer: 3,
-        explanation: "构造方法名必须与类名相同；构造方法没有返回类型，连void也不能有；可以通过方法重载提供多个构造方法，用于不同的初始化方式。"
-      },
-      {
-        id: 5,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Animal</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> sound() {<br>    System.out.println(<span class='code-string'>\"动物发出声音\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Dog</span> <span class='code-keyword'>extends</span> Animal {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> sound() {<br>    System.out.println(<span class='code-string'>\"汪汪汪\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Animal a = <span class='code-keyword'>new</span> Dog();<br>    a.sound();<br>  }<br>}</div>",
-        options: [
-          "A. 动物发出声音",
-          "B. 汪汪汪",
-          "C. 编译错误",
-          "D. 运行时报错"
-        ],
-        answer: 1,
-        explanation: "这是多态的典型例子。虽然声明的是Animal类型，但实际创建的是Dog对象。运行时调用的是Dog类中重写的sound()方法，所以输出\"汪汪汪\"。"
-      },
-      {
-        id: 6,
-        title: "关于继承，以下说法错误的是？",
-        options: [
-          "A. Java中使用extends关键字实现继承",
-          "B. 子类可以继承父类的非私有属性和方法",
-          "C. Java支持多重继承",
-          "D. 子类可以重写父类的方法"
-        ],
-        answer: 2,
-        explanation: "Java不支持多重继承（一个类继承多个父类），但可以通过接口实现多重继承的效果。Java只支持单继承，即一个类只能有一个直接父类。"
-      },
-      {
-        id: 7,
-        title: "以下关于this关键字的说法，正确的是？",
-        options: [
-          "A. this表示当前对象的引用",
-          "B. 在构造方法中，this()可以调用本类的其他构造方法",
-          "C. 当局部变量和成员变量同名时，可以用this区分",
-          "D. 以上都正确"
-        ],
-        answer: 3,
-        explanation: "this关键字表示当前对象的引用；在构造方法中可以使用this()调用本类的其他构造方法；当局部变量和成员变量同名时，使用this.变量名表示成员变量，不加this表示局部变量。"
-      },
-      {
-        id: 8,
-        title: "以下关于super关键字的说法，错误的是？",
-        options: [
-          "A. super表示父类对象的引用",
-          "B. super()可以调用父类的构造方法",
-          "C. super可以调用父类被子类重写的方法",
-          "D. super和this不能同时使用"
-        ],
-        answer: 3,
-        explanation: "super和this可以在同一个构造方法中使用，但必须位于第一行。实际上，在构造方法中，super()或this()调用必须是第一行语句，且二者不能同时出现。"
-      },
-      {
-        id: 9,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>int</span> x = <span class='code-number'>10</span>;<br>  <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"A: \"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> <span class='code-keyword'>extends</span> A {<br>  <span class='code-keyword'>int</span> x = <span class='code-number'>20</span>;<br>  <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"B: \"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    A obj = <span class='code-keyword'>new</span> B();<br>    System.out.println(obj.x);<br>    obj.show();<br>  }<br>}</div>",
-        options: [
-          "A. 10<br>B: 20",
-          "B. 20<br>B: 20",
-          "C. 10<br>A: 10",
-          "D. 20<br>A: 10"
-        ],
-        answer: 0,
-        explanation: "对于成员变量，引用类型决定访问哪个变量（编译时绑定），所以obj.x访问的是A类的x（10）。对于方法，实际对象类型决定调用哪个方法（运行时绑定），所以obj.show()调用的是B类的show()方法，输出B: 20。"
-      },
-      {
-        id: 10,
-        title: "关于抽象类和抽象方法，以下说法正确的是？",
-        options: [
-          "A. 抽象类不能实例化",
-          "B. 抽象方法只有声明，没有实现",
-          "C. 包含抽象方法的类必须是抽象类",
-          "D. 以上都正确"
-        ],
-        answer: 3,
-        explanation: "抽象类不能直接实例化，只能被继承；抽象方法只有声明没有实现（没有方法体）；如果一个类包含抽象方法，那么这个类必须是抽象类。"
-      },
-      {
-        id: 11,
-        title: "以下关于接口的说法，错误的是？",
-        options: [
-          "A. 接口中的方法默认是public abstract的",
-          "B. 接口中的变量默认是public static final的",
-          "C. 一个类可以实现多个接口",
-          "D. 接口可以包含构造方法"
-        ],
-        answer: 3,
-        explanation: "接口不能包含构造方法，因为接口不能被实例化。接口中的方法默认是public abstract的（Java 8以后可以有默认方法），变量默认是public static final的，一个类可以实现多个接口。"
-      },
-      {
-        id: 12,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Parent</span> {<br>  <span class='code-keyword'>public</span> Parent() {<br>    System.out.print(<span class='code-string'>\"A\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> Parent(<span class='code-keyword'>int</span> x) {<br>    System.out.print(<span class='code-string'>\"B\"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Child</span> <span class='code-keyword'>extends</span> Parent {<br>  <span class='code-keyword'>public</span> Child() {<br>    <span class='code-keyword'>super</span>(<span class='code-number'>5</span>);<br>    System.out.print(<span class='code-string'>\"C\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>new</span> Child();<br>  }<br>}</div>",
-        options: [
-          "A. AC",
-          "B. B5C",
-          "C. A5C",
-          "D. B5"
-        ],
-        answer: 1,
-        explanation: "创建Child对象时，首先调用Child的构造方法。在Child构造方法中，super(5)调用父类的Parent(int x)构造方法，输出\"B5\"，然后继续执行Child构造方法，输出\"C\"，所以最终输出\"B5C\"。"
-      },
-      {
-        id: 13,
-        title: "关于方法重载(Overload)和方法重写(Override)，以下说法正确的是？",
-        options: [
-          "A. 重载发生在同一个类中，重写发生在父子类之间",
-          "B. 重载要求方法名相同，参数列表不同；重写要求方法名和参数列表都相同",
-          "C. 重载与返回值类型无关，重写要求返回值类型兼容",
-          "D. 以上都正确"
-        ],
-        answer: 3,
-        explanation: "方法重载发生在同一个类中，方法名相同但参数列表不同；方法重写发生在父子类之间，方法名和参数列表都相同。重载与返回值类型无关，重写要求返回值类型兼容（相同或是子类）。"
-      },
-      {
-        id: 14,
-        title: "以下关于final关键字的说法，错误的是？",
-        options: [
-          "A. final修饰的类不能被继承",
-          "B. final修饰的方法不能被重写",
-          "C. final修饰的变量是常量，值不能改变",
-          "D. final不能修饰局部变量"
-        ],
-        answer: 3,
-        explanation: "final可以修饰局部变量，表示该局部变量的值一旦被赋值就不能再修改。final可以修饰类、方法¹和变量（包括局部变量、成员变量和静态变量）。"
-      },
-      {
-        id: 15,
-        title: "以下关于静态(static)成员的说法，正确的是？",
-        options: [
-          "A. 静态成员属于类，而不是属于对象",
-          "B. 静态方法中不能直接访问非静态成员",
-          "C. 静态成员在类加载时初始化",
-          "D. 以上都正确"
-        ],
-        answer: 3,
-        explanation: "静态成员属于类，所有对象共享；静态方法中不能直接访问非静态成员（因为非静态成员依赖于对象实例）；静态成员在类加载时初始化，且只初始化一次。"
-      }
-    ];
+   
     
     /************************************************************
      * 2. 初始化变量

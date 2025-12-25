@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第六章：异常的捕获及处理 - Java程序设计课程</title>
+  <title>第六章：异常的捕获及处理 - 练习题</title>
   <style>
     :root {
-      --primary-color: #2196F3;
-      --primary-light: #64b5f6;
-      --primary-dark: #1976d2;
-      --secondary-color: #4CAF50;
-      --accent-color: #FF9800;
-      --light-color: #f5f5f5;
-      --dark-color: #212121;
-      --gray-color: #757575;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+      --primary-color: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary-color: #7209b7;
+      --success-color: #06d6a0;
+      --error-color: #ef476f;
+      --warning-color: #ffd166;
+      --dark-color: #2b2d42;
+      --light-color: #f8f9fa;
+      --gray-color: #8d99ae;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
       --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
       --radius: 16px;
     }
@@ -28,1016 +29,1311 @@
 
     body {
       font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
       min-height: 100vh;
       color: var(--dark-color);
       padding: 20px;
-      position: relative;
     }
 
-    /* 背景装饰 */
-    .bg-pattern {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(33, 150, 243, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 50% 50%, rgba(255, 152, 0, 0.05) 0%, transparent 20%);
-      z-index: -1;
+    /* 头部导航 */
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     /* 主容器 */
     .container {
       max-width: 1000px;
       margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
     }
 
-    /* 返回按钮 */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 32px;
+    /* 左侧题目区域 */
+    .question-container {
       background: white;
-      color: var(--primary-color);
-      text-decoration: none;
       border-radius: var(--radius);
-      font-weight: 600;
-      font-size: 18px;
-      box-shadow: var(--shadow);
-      transition: var(--transition);
-      margin-bottom: 30px;
-      border: 2px solid transparent;
-    }
-
-    .back-btn:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-hover);
-      background: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
-    }
-
-    /* 章节标题 */
-    .chapter-header {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-      color: white;
-      padding: 30px;
-      border-radius: var(--radius);
-      margin-bottom: 30px;
+      padding: 40px;
       box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
     }
 
-    .chapter-header::before {
+    .question-container::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
-      background-size: cover;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
     }
 
-    .chapter-header-content {
-      position: relative;
-      z-index: 1;
+    /* 进度条 */
+    .progress-container {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .chapter-title {
-      font-size: 32px;
-      font-weight: 700;
       margin-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    .chapter-subtitle {
-      font-size: 18px;
-      opacity: 0.9;
-      font-weight: 400;
+    .progress-label {
+      font-size: 14px;
+      color: var(--gray-color);
     }
 
-    .chapter-icon {
-      width: 80px;
-      height: 80px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      backdrop-filter: blur(5px);
-      border: 2px solid rgba(255, 255, 255, 0.3);
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
     }
 
-    /* 题目卡片 */
-    .question-card {
-      background: white;
-      border-radius: var(--radius);
-      padding: 25px;
-      box-shadow: var(--shadow);
-      margin-bottom: 25px;
-      border-left: 6px solid var(--primary-color);
-      transition: var(--transition);
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
     }
 
-    .question-card.correct {
-      border-left-color: var(--secondary-color);
-    }
-
-    .question-card.incorrect {
-      border-left-color: #f44336;
+    /* 题目信息 */
+    .question-header {
+      margin-bottom: 30px;
     }
 
     .question-number {
       font-size: 14px;
       color: var(--primary-color);
       font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      line-height: 1.5;
       margin-bottom: 10px;
-      display: flex;
-      align-items: center;
     }
 
-    .question-number::before {
-      content: '';
+    .question-difficulty {
       display: inline-block;
-      width: 20px;
-      height: 20px;
-      background: currentColor;
-      border-radius: 50%;
-      margin-right: 10px;
-      opacity: 0.2;
-    }
-
-    .question-text {
-      font-size: 18px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
       font-weight: 600;
-      margin-bottom: 25px;
-      line-height: 1.5;
+      margin-top: 5px;
     }
 
-    /* 代码块样式 */
-    .code-block {
-      background-color: #263238;
-      color: #f0f0f0;
-      padding: 20px;
-      border-radius: 10px;
-      font-family: 'Courier New', monospace;
-      font-size: 15px;
-      margin: 15px 0;
-      overflow-x: auto;
-      line-height: 1.5;
-      border-left: 4px solid var(--accent-color);
+    .difficulty-easy {
+      background: rgba(6, 214, 160, 0.1);
+      color: #06d6a0;
     }
 
-    .code-keyword {
-      color: #FF5370;
-      font-weight: bold;
+    .difficulty-medium {
+      background: rgba(255, 209, 102, 0.1);
+      color: #ff9e00;
     }
 
-    .code-type {
-      color: #82AAFF;
-    }
-
-    .code-string {
-      color: #C3E88D;
-    }
-
-    .code-comment {
-      color: #6A9955;
-      font-style: italic;
-    }
-
-    .code-number {
-      color: #F78C6C;
+    .difficulty-hard {
+      background: rgba(239, 71, 111, 0.1);
+      color: #ef476f;
     }
 
     /* 选项区域 */
     .options-container {
-      margin-bottom: 25px;
+      margin: 30px 0;
     }
 
     .option {
-      display: flex;
-      align-items: flex-start;
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
       margin-bottom: 15px;
-      padding: 15px;
-      border-radius: 12px;
-      background-color: #f8f9fa;
       cursor: pointer;
       transition: var(--transition);
       border: 2px solid transparent;
+      display: flex;
+      align-items: center;
     }
 
     .option:hover {
-      background-color: #e9ecef;
-      transform: translateX(5px);
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     }
 
     .option.selected {
       border-color: var(--primary-color);
-      background-color: rgba(33, 150, 243, 0.05);
+      background: var(--primary-light);
     }
 
-    .option.correct-option {
-      border-color: var(--secondary-color);
-      background-color: rgba(76, 175, 80, 0.08);
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(6, 214, 160, 0.1);
     }
 
-    .option.incorrect-option {
-      border-color: #f44336;
-      background-color: rgba(244, 67, 54, 0.05);
+    .option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(239, 71, 111, 0.1);
     }
 
     .option-letter {
-      display: inline-flex;
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 30px;
-      height: 30px;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter {
+      border-color: var(--primary-color);
       background: var(--primary-color);
       color: white;
-      border-radius: 50%;
-      font-weight: 600;
-      margin-right: 15px;
-      flex-shrink: 0;
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--error-color);
+      color: white;
+      border-color: var(--error-color);
     }
 
     .option-text {
       flex: 1;
-      line-height: 1.5;
+      font-size: 16px;
     }
 
-    /* 答案和解析 */
-    .answer-section {
-      display: none;
-      margin-top: 20px;
+    /* 答案反馈 */
+    .feedback-container {
+      margin: 30px 0;
       padding: 20px;
-      background: #f8f9fa;
-      border-radius: 12px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
     }
 
-    .answer-section.show {
+    .feedback-container.show {
       display: block;
-      animation: fadeIn 0.5s ease-out;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .feedback-correct {
+      background: rgba(6, 214, 160, 0.1);
+      border-left: 4px solid var(--success-color);
     }
 
-    .answer-header {
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 10px;
+    .feedback-incorrect {
+      background: rgba(239, 71, 111, 0.1);
+      border-left: 4px solid var(--error-color);
+    }
+
+    .feedback-header {
       display: flex;
       align-items: center;
+      margin-bottom: 10px;
     }
 
-    .answer-header i {
-      margin-right: 10px;
-    }
-
-    .correct-answer {
-      color: var(--secondary-color);
-      font-weight: 600;
-      margin-bottom: 15px;
-      font-size: 17px;
-    }
-
-    .explanation {
-      color: var(--dark-color);
-      line-height: 1.6;
-      padding: 15px;
-      background: white;
-      border-radius: 8px;
-      border-left: 4px solid var(--accent-color);
-    }
-
-    /* 操作按钮 */
-    .action-buttons {
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       display: flex;
-      gap: 15px;
-      margin-top: 20px;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
     }
 
-    .action-btn {
-      padding: 12px 24px;
+    .feedback-correct .feedback-icon {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .feedback-incorrect .feedback-icon {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .feedback-explanation {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    /* 控制按钮 */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 32px;
       border: none;
-      border-radius: 12px;
-      font-weight: 600;
+      border-radius: var(--radius);
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
       transition: var(--transition);
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .check-btn {
+    .btn-primary {
       background: var(--primary-color);
       color: white;
-      flex: 2;
     }
 
-    .check-btn:hover {
-      background: var(--primary-dark);
+    .btn-primary:hover:not(:disabled) {
+      background: #3a56d4;
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
     }
 
-    .show-answer-btn {
-      background: white;
-      color: var(--primary-color);
-      border: 2px solid var(--primary-color);
-      flex: 1;
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
     }
 
-    .show-answer-btn:hover {
-      background: var(--primary-color);
-      color: white;
+    .btn-secondary:hover {
+      background: #e9ecef;
       transform: translateY(-3px);
     }
 
-    .next-btn {
-      background: var(--secondary-color);
-      color: white;
-      flex: 1;
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
     }
 
-    .next-btn:hover {
-      background: #3d8b40;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+    /* 右侧信息面板 */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
     }
 
-    /* 统计区域 */
-    .stats-container {
+    .stats-card, .hint-card, .navigation-card {
       background: white;
       border-radius: var(--radius);
       padding: 25px;
       box-shadow: var(--shadow);
-      margin-bottom: 30px;
+    }
+
+    .stats-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .hint-card {
+      border-top: 6px solid var(--warning-color);
+    }
+
+    .navigation-card {
+      border-top: 6px solid var(--success-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
       display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 20px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      font-size: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
     }
 
     .stat-item {
       text-align: center;
       padding: 15px;
-      min-width: 150px;
+      background: var(--light-color);
+      border-radius: var(--radius);
     }
 
     .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-color);
+      display: block;
+      margin-top: 5px;
+    }
+
+    .hint-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .question-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover {
+      background: #e9ecef;
+    }
+
+    .question-nav-item.active {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .question-nav-number {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .question-nav-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--light-color);
+    }
+
+    .question-nav-status.correct {
+      background: var(--success-color);
+    }
+
+    .question-nav-status.incorrect {
+      background: var(--error-color);
+    }
+
+    .question-nav-status.current {
+      background: var(--primary-color);
+    }
+
+    /* 完成页面 */
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon {
+      font-size: 80px;
+      color: var(--success-color);
+      margin-bottom: 20px;
+      animation: bounce 1s ease;
+    }
+
+    .completion-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .completion-subtitle {
+      font-size: 18px;
+      color: var(--gray-color);
+      margin-bottom: 40px;
+    }
+
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .completion-stat-item {
+      padding: 25px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      min-width: 150px;
+    }
+
+    .completion-stat-value {
       font-size: 36px;
       font-weight: 700;
       color: var(--primary-color);
       display: block;
-      line-height: 1;
     }
 
-    .stat-label {
-      font-size: 14px;
+    .completion-stat-label {
+      font-size: 16px;
       color: var(--gray-color);
       margin-top: 8px;
+      display: block;
     }
 
-    .stat-item:nth-child(2) .stat-value {
-      color: var(--secondary-color);
+    /* 动画 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .stat-item:nth-child(3) .stat-value {
-      color: var(--accent-color);
-    }
-
-    /* 进度条 */
-    .progress-container {
-      margin: 30px 0;
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    .progress-bar {
-      height: 12px;
-      background: #e0e0e0;
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-      border-radius: 6px;
-      width: 0%;
-      transition: width 1s ease-out;
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
     }
 
     /* 响应式设计 */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
+    }
+
     @media (max-width: 768px) {
-      .chapter-header-content {
+      .question-container {
+        padding: 25px;
+      }
+      
+      .controls {
         flex-direction: column;
-        text-align: center;
+        gap: 15px;
       }
       
-      .chapter-icon {
-        margin-top: 20px;
+      .btn {
+        width: 100%;
+        justify-content: center;
       }
       
-      .action-buttons {
-        flex-direction: column;
-      }
-      
-      .stats-container {
+      .completion-stats {
         flex-direction: column;
         align-items: center;
       }
-      
-      .code-block {
-        font-size: 13px;
-        padding: 15px;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .chapter-header {
-        padding: 20px;
-      }
-      
-      .chapter-title {
-        font-size: 26px;
-      }
-      
-      .chapter-subtitle {
-        font-size: 16px;
-      }
-      
-      .question-text {
-        font-size: 16px;
-      }
-    }
-
-    /* 动画效果 */
-    @keyframes slideInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .question-card {
-      animation: slideInUp 0.5s ease-out;
-      animation-fill-mode: both;
     }
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <!-- 背景图案 -->
-  <div class="bg-pattern"></div>
+  <!-- 头部导航 -->
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">Java程序设计课程题库</h1>
+  </div>
 
   <!-- 主容器 -->
   <div class="container">
-    <!-- 返回按钮 -->
-    <a href="index.html" class="back-btn">
-      <i class="fas fa-arrow-left"></i>
-      返回课程主页
-    </a>
-
-    <!-- 章节标题 -->
-    <div class="chapter-header">
-      <div class="chapter-header-content">
-        <div>
-          <h1 class="chapter-title">第六章：异常的捕获及处理</h1>
-          <p class="chapter-subtitle">异常处理流程、throw/throws关键字、try-catch-finally、RuntimeException、assert、自定义异常</p>
+    <!-- 左侧题目区域 -->
+    <div class="question-container">
+      <!-- 进度条 -->
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
         </div>
-        <div class="chapter-icon">
-          <i class="fas fa-exclamation-triangle"></i>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
         </div>
       </div>
+
+      <!-- 题目信息 -->
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <!-- 选项区域 -->
+      <div class="options-container" id="optionsContainer">
+        <!-- 选项将动态生成在这里 -->
+      </div>
+
+      <!-- 答案反馈 -->
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- 统计区域 -->
-    <div class="stats-container">
-      <div class="stat-item">
-        <span class="stat-value" id="total-questions">15</span>
-        <span class="stat-label">总题数</span>
+    <!-- 右侧信息面板 -->
+    <div class="sidebar">
+      <!-- 统计数据 -->
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-value" id="answered-count">0</span>
-        <span class="stat-label">已回答</span>
+
+      <!-- 提示卡片 -->
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>1. 点击选项选择答案</p>
+          <p>2. 系统会自动判断对错</p>
+          <p>3. 点击"下一题"继续答题</p>
+          <p>4. 右侧可查看答题进度</p>
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-value" id="correct-count">0</span>
-        <span class="stat-label">正确数</span>
+
+      <!-- 题目导航 -->
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav">
+          <!-- 题目导航将动态生成在这里 -->
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- 进度条 -->
-    <div class="progress-container">
-      <div class="progress-label">
-        <span>学习进度</span>
-        <span id="progress-percentage">0%</span>
+  <!-- 完成页面（初始隐藏） -->
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成Java程序设计课程题库！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
       </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill"></div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
       </div>
     </div>
-
-    <!-- 题目容器 -->
-    <div id="questions-container"></div>
-
-    <!-- 底部信息 -->
-    <div class="footer" style="text-align: center; padding: 30px; color: #757575; font-size: 14px; margin-top: 30px;">
-      <p>© 2023 Java程序设计课程学习系统</p>
-      <p style="font-size: 12px; margin-top: 10px; color: #aaa;">点击选项选择答案，点击"检查答案"验证结果</p>
+    
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
     </div>
   </div>
 
   <script>
-    // 第六章：异常的捕获及处理的题目数据
+    /************************************************************
+     * 1. 在这里添加您的题目数据
+     * 请按照以下格式添加题目：
+     ************************************************************/
     const questions = [
       {
         id: 1,
-        question: "关于Java异常的分类，以下说法正确的是？",
+        title: "关于Java异常的分类，以下说法正确的是？",
         options: [
           "A. Java异常分为Error和Exception两大类",
           "B. Exception分为RuntimeException和非RuntimeException",
           "C. Error表示严重错误，程序一般无法处理",
           "D. 以上都正确"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "Java异常体系：Throwable是所有异常和错误的父类，分为Error和Exception。Error表示严重错误（如OutOfMemoryError），程序一般无法处理。Exception分为RuntimeException（运行时异常/非受检异常）和其他Exception（受检异常）。"
       },
       {
         id: 2,
-        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      System.out.println(<span class='code-string'>\"Try block\"</span>);<br>      <span class='code-keyword'>int</span> result = <span class='code-number'>10</span> / <span class='code-number'>0</span>;<br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      System.out.println(<span class='code-string'>\"Catch block\"</span>);<br>      <span class='code-keyword'>return</span>;<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"Finally block\"</span>);<br>    }<br>    System.out.println(<span class='code-string'>\"After try-catch\"</span>);<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      System.out.println(<span class='code-string'>\"Try block\"</span>);<br>      <span class='code-keyword'>int</span> result = <span class='code-number'>10</span> / <span class='code-number'>0</span>;<br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      System.out.println(<span class='code-string'>\"Catch block\"</span>);<br>      <span class='code-keyword'>return</span>;<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"Finally block\"</span>);<br>    }<br>    System.out.println(<span class='code-string'>\"After try-catch\"</span>);<br>  }<br>}</div>",
         options: [
           "A. Try block<br>Catch block<br>Finally block<br>After try-catch",
           "B. Try block<br>Catch block<br>Finally block",
           "C. Try block<br>Catch block",
           "D. Try block<br>Finally block"
         ],
-        correctAnswer: 1,
+        answer: 1,
         explanation: "执行顺序：try块输出\"Try block\"，发生ArithmeticException，跳转到catch块输出\"Catch block\"，catch块中有return语句，但在return之前会执行finally块，输出\"Finally block\"，然后return，所以\"After try-catch\"不会输出。"
       },
       {
         id: 3,
-        question: "关于throw和throws的区别，以下说法错误的是？",
+        title: "关于throw和throws的区别，以下说法错误的是？",
         options: [
           "A. throw用于在方法内部抛出异常对象",
           "B. throws用于方法声明，表示该方法可能抛出的异常类型",
           "C. throw后面跟的是异常对象，throws后面跟的是异常类型",
           "D. 使用throw抛出的异常必须使用try-catch捕获"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "throw用于在方法内部抛出异常对象；throws用于方法声明，表示该方法可能抛出的异常类型，调用者需要处理。使用throw抛出的异常不一定必须使用try-catch捕获，也可以通过throws声明让调用者处理。"
       },
       {
         id: 4,
-        question: "以下关于try-catch-finally语句的说法，正确的是？",
+        title: "以下关于try-catch-finally语句的说法，正确的是？",
         options: [
           "A. try块必须至少有一个catch块或finally块",
           "B. finally块无论是否发生异常都会执行",
           "C. 可以有多个catch块，但异常类型应从具体到一般",
           "D. 以上都正确"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "try块必须至少有一个catch块或finally块；finally块无论是否发生异常都会执行（除非JVM退出）；多个catch块时，异常类型应从具体到一般（子类在前，父类在后），否则编译错误。"
       },
       {
         id: 5,
-        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      System.out.println(<span class='code-string'>\"Start\"</span>);<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> RuntimeException(<span class='code-string'>\"Error\"</span>);<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"Caught: \"</span> + e.getMessage());<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> RuntimeException(<span class='code-string'>\"New Error\"</span>);<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"Finally\"</span>);<br>    }<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      System.out.println(<span class='code-string'>\"Start\"</span>);<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> RuntimeException(<span class='code-string'>\"Error\"</span>);<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"Caught: \"</span> + e.getMessage());<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> RuntimeException(<span class='code-string'>\"New Error\"</span>);<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"Finally\"</span>);<br>    }<br>  }<br>}</div>",
         options: [
           "A. Start<br>Caught: Error<br>Finally",
           "B. Start<br>Caught: Error<br>Finally，然后抛出\"New Error\"异常",
           "C. Start<br>Finally",
           "D. 编译错误"
         ],
-        correctAnswer: 1,
+        answer: 1,
         explanation: "执行顺序：输出\"Start\"，抛出RuntimeException(\"Error\")，被catch捕获，输出\"Caught: Error\"，然后catch块中抛出新的RuntimeException(\"New Error\")，但在新异常传播之前，会执行finally块输出\"Finally\"，然后\"New Error\"异常传播到main方法，导致程序异常终止。"
       },
       {
         id: 6,
-        question: "关于RuntimeException，以下说法正确的是？",
+        title: "关于RuntimeException，以下说法正确的是？",
         options: [
           "A. RuntimeException是Exception的子类",
           "B. RuntimeException及其子类是非受检异常(unchecked exception)",
           "C. 常见的RuntimeException有NullPointerException、ArrayIndexOutOfBoundsException等",
           "D. 以上都正确"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "RuntimeException是Exception的子类，属于非受检异常(unchecked exception)，编译器不强制要求处理。常见的RuntimeException包括：NullPointerException、ArrayIndexOutOfBoundsException、ClassCastException、IllegalArgumentException等。"
       },
       {
         id: 7,
-        question: "以下关于异常处理的最佳实践，错误的是？",
+        title: "以下关于异常处理的最佳实践，错误的是？",
         options: [
           "A. 不要捕获异常后不做任何处理（空的catch块）",
           "B. 尽量捕获具体的异常，而不是捕获通用的Exception",
           "C. 在finally块中释放资源（如关闭文件、数据库连接）",
           "D. 应该尽可能多地使用异常来控制程序流程"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "异常应该用于处理意外情况，而不是控制正常的程序流程。使用异常控制流程会使代码难以理解和维护，而且异常处理的开销较大。异常应该用于处理真正的错误和异常情况。"
       },
       {
         id: 8,
-        question: "以下关于assert关键字的使用，正确的是？",
+        title: "以下关于assert关键字的使用，正确的是？",
         options: [
           "A. assert用于在程序中加入断言，检查程序逻辑的正确性",
           "B. assert语句在默认情况下是禁用的，需要通过-ea选项启用",
           "C. assert有两种形式：assert condition; 和 assert condition : message;",
           "D. 以上都正确"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "assert关键字用于在程序中加入断言，检查程序逻辑的正确性。默认情况下assert语句是禁用的，需要通过JVM参数-ea(enable assertions)启用。assert有两种形式：简单断言assert condition;和带消息的断言assert condition : message;。"
       },
       {
         id: 9,
-        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>MyException</span> <span class='code-keyword'>extends</span> Exception {<br>  <span class='code-keyword'>public</span> MyException(<span class='code-keyword'>String</span> message) {<br>    <span class='code-keyword'>super</span>(message);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> validate(<span class='code-keyword'>int</span> age) <span class='code-keyword'>throws</span> MyException {<br>    <span class='code-keyword'>if</span> (age < <span class='code-number'>18</span>) {<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> MyException(<span class='code-string'>\"年龄不足18岁\"</span>);<br>    }<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      validate(<span class='code-number'>16</span>);<br>      System.out.println(<span class='code-string'>\"验证通过\"</span>);<br>    } <span class='code-keyword'>catch</span> (MyException e) {<br>      System.out.println(<span class='code-string'>\"捕获异常: \"</span> + e.getMessage());<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"结束验证\"</span>);<br>    }<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>MyException</span> <span class='code-keyword'>extends</span> Exception {<br>  <span class='code-keyword'>public</span> MyException(<span class='code-keyword'>String</span> message) {<br>    <span class='code-keyword'>super</span>(message);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> validate(<span class='code-keyword'>int</span> age) <span class='code-keyword'>throws</span> MyException {<br>    <span class='code-keyword'>if</span> (age < <span class='code-number'>18</span>) {<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> MyException(<span class='code-string'>\"年龄不足18岁\"</span>);<br>    }<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      validate(<span class='code-number'>16</span>);<br>      System.out.println(<span class='code-string'>\"验证通过\"</span>);<br>    } <span class='code-keyword'>catch</span> (MyException e) {<br>      System.out.println(<span class='code-string'>\"捕获异常: \"</span> + e.getMessage());<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"结束验证\"</span>);<br>    }<br>  }<br>}</div>",
         options: [
           "A. 验证通过<br>结束验证",
           "B. 捕获异常: 年龄不足18岁<br>结束验证",
           "C. 捕获异常: 年龄不足18岁",
           "D. 编译错误"
         ],
-        correctAnswer: 1,
+        answer: 1,
         explanation: "validate(16)会抛出MyException异常，因为16<18。异常被catch块捕获，输出\"捕获异常: 年龄不足18岁\"，然后执行finally块输出\"结束验证\"。"
       },
       {
         id: 10,
-        question: "关于Java 7引入的多异常捕获，以下说法正确的是？",
+        title: "关于Java 7引入的多异常捕获，以下说法正确的是？",
         options: [
           "A. 可以使用一个catch块捕获多种类型的异常",
           "B. 语法：catch (ExceptionType1 | ExceptionType2 e)",
           "C. 多异常捕获中，异常变量e是final的，不能重新赋值",
           "D. 以上都正确"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "Java 7引入了多异常捕获机制，可以使用一个catch块捕获多种类型的异常，语法：catch (ExceptionType1 | ExceptionType2 e)。在多异常捕获中，异常变量e是隐式final的，不能重新赋值。"
       },
       {
         id: 11,
-        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      <span class='code-keyword'>int</span>[] arr = <span class='code-keyword'>new</span> <span class='code-keyword'>int</span>[<span class='code-number'>5</span>];<br>      arr[<span class='code-number'>10</span>] = <span class='code-number'>50</span>; <span class='code-comment'>// 数组越界</span><br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      System.out.println(<span class='code-string'>\"算术异常\"</span>);<br>    } <span class='code-keyword'>catch</span> (ArrayIndexOutOfBoundsException e) {<br>      System.out.println(<span class='code-string'>\"数组越界异常\"</span>);<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"其他异常\"</span>);<br>    }<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      <span class='code-keyword'>int</span>[] arr = <span class='code-keyword'>new</span> <span class='code-keyword'>int</span>[<span class='code-number'>5</span>];<br>      arr[<span class='code-number'>10</span>] = <span class='code-number'>50</span>; <span class='code-comment'>// 数组越界</span><br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      System.out.println(<span class='code-string'>\"算术异常\"</span>);<br>    } <span class='code-keyword'>catch</span> (ArrayIndexOutOfBoundsException e) {<br>      System.out.println(<span class='code-string'>\"数组越界异常\"</span>);<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"其他异常\"</span>);<br>    }<br>  }<br>}</div>",
         options: [
           "A. 算术异常",
           "B. 数组越界异常",
           "C. 其他异常",
           "D. 编译错误"
         ],
-        correctAnswer: 1,
+        answer: 1,
         explanation: "arr[10] = 50 会抛出ArrayIndexOutOfBoundsException异常，被第二个catch块捕获，输出\"数组越界异常\"。注意catch块的顺序：ArrayIndexOutOfBoundsException是Exception的子类，但它在Exception之前，所以会被正确捕获。"
       },
       {
         id: 12,
-        question: "关于try-with-resources语句，以下说法正确的是？",
+        title: "关于try-with-resources语句，以下说法正确的是？",
         options: [
           "A. try-with-resources是Java 7引入的特性",
           "B. 实现了AutoCloseable接口的资源可以在try-with-resources中使用",
           "C. try-with-resources可以自动关闭资源，不需要显式调用close()方法",
           "D. 以上都正确"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "try-with-resources是Java 7引入的特性，用于自动管理资源。实现了AutoCloseable接口的资源可以在try-with-resources中使用，资源会在try块结束后自动关闭，不需要显式调用close()方法，即使发生异常也会正确关闭。"
       },
       {
         id: 13,
-        question: "以下关于异常链的说法，错误的是？",
+        title: "以下关于异常链的说法，错误的是？",
         options: [
           "A. 异常链允许将一个异常包装为另一个异常",
           "B. Throwable类提供了initCause()和getCause()方法支持异常链",
           "C. 异常链可以保留原始异常信息，便于调试",
           "D. 异常链会导致原始异常被丢弃，只保留新异常"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "异常链允许将一个异常包装为另一个异常，通过Throwable的initCause()和getCause()方法实现。异常链可以保留原始异常信息，便于调试和追踪异常根源。新异常包装了原始异常，原始异常不会被丢弃，可以通过getCause()获取。"
       },
       {
         id: 14,
-        question: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      method1();<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"Main caught: \"</span> + e.getClass().getSimpleName());<br>      System.out.println(<span class='code-string'>\"Cause: \"</span> + e.getCause().getClass().getSimpleName());<br>    }<br>  }<br><br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> method1() <span class='code-keyword'>throws</span> Exception {<br>    <span class='code-keyword'>try</span> {<br>      method2();<br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> Exception(<span class='code-string'>\"Wrapper exception\"</span>, e);<br>    }<br>  }<br><br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> method2() {<br>    <span class='code-keyword'>int</span> result = <span class='code-number'>10</span> / <span class='code-number'>0</span>;<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      method1();<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"Main caught: \"</span> + e.getClass().getSimpleName());<br>      System.out.println(<span class='code-string'>\"Cause: \"</span> + e.getCause().getClass().getSimpleName());<br>    }<br>  }<br><br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> method1() <span class='code-keyword'>throws</span> Exception {<br>    <span class='code-keyword'>try</span> {<br>      method2();<br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> Exception(<span class='code-string'>\"Wrapper exception\"</span>, e);<br>    }<br>  }<br><br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> method2() {<br>    <span class='code-keyword'>int</span> result = <span class='code-number'>10</span> / <span class='code-number'>0</span>;<br>  }<br>}</div>",
         options: [
           "A. Main caught: Exception<br>Cause: ArithmeticException",
           "B. Main caught: ArithmeticException",
           "C. Main caught: Exception<br>Cause: null",
           "D. 编译错误"
         ],
-        correctAnswer: 0,
+        answer: 0,
         explanation: "method2()中10/0抛出ArithmeticException，method1()的catch块捕获后，包装为新的Exception并设置原始异常为cause，然后抛出。main方法捕获Exception，输出\"Main caught: Exception\"，通过getCause()获取原始异常ArithmeticException。"
       },
       {
         id: 15,
-        question: "以下关于自定义异常的说法，正确的是？",
+        title: "以下关于自定义异常的说法，正确的是？",
         options: [
           "A. 自定义异常通常继承Exception或RuntimeException",
           "B. 继承Exception创建受检异常，继承RuntimeException创建非受检异常",
           "C. 自定义异常可以提供多个构造方法，包括带消息和cause的构造方法",
           "D. 以上都正确"
         ],
-        correctAnswer: 3,
+        answer: 3,
         explanation: "自定义异常通常继承Exception或RuntimeException。继承Exception创建受检异常（必须处理），继承RuntimeException创建非受检异常。良好的自定义异常应该提供多个构造方法，包括无参构造、带消息构造、带cause构造、带消息和cause构造，以方便使用。"
       }
     ];
-
-    // 页面状态变量
+    
+    /************************************************************
+     * 2. 初始化变量
+     ************************************************************/
     let currentQuestionIndex = 0;
-    let userAnswers = new Array(questions.length).fill(null);
-    let correctCount = 0;
-    let totalAnswered = 0;
-
-    // DOM元素
-    const questionsContainer = document.getElementById('questions-container');
-    const answeredCountElement = document.getElementById('answered-count');
-    const correctCountElement = document.getElementById('correct-count');
-    const progressFillElement = document.getElementById('progress-fill');
-    const progressPercentageElement = document.getElementById('progress-percentage');
-
-    // 初始化页面
-    document.addEventListener('DOMContentLoaded', function() {
-      loadQuestion(currentQuestionIndex);
-      updateStats();
-      
-      // 从本地存储加载之前的学习进度
-      loadProgressFromStorage();
-    });
-
-    // 加载指定索引的题目
-    function loadQuestion(index) {
-      if (index < 0 || index >= questions.length) return;
-      
-      const question = questions[index];
-      currentQuestionIndex = index;
-      
-      // 构建题目HTML
-      const questionHTML = `
-        <div class="question-card" id="question-${question.id}">
-          <div class="question-number">第 ${question.id} 题 / 共 ${questions.length} 题</div>
-          <div class="question-text">${question.question}</div>
-          
-          <div class="options-container">
-            ${question.options.map((option, i) => {
-              const isSelected = userAnswers[index] === i;
-              const isCorrect = i === question.correctAnswer;
-              let optionClass = "option";
-              if (isSelected) optionClass += " selected";
-              if (userAnswers[index] !== null) {
-                if (isCorrect) optionClass += " correct-option";
-                else if (isSelected && !isCorrect) optionClass += " incorrect-option";
-              }
-              
-              return `
-                <div class="${optionClass}" data-index="${i}">
-                  <div class="option-letter">${String.fromCharCode(65 + i)}</div>
-                  <div class="option-text">${option}</div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-          
-          <div class="answer-section ${userAnswers[index] !== null ? 'show' : ''}" id="answer-${question.id}">
-            <div class="answer-header">
-              <i class="fas fa-lightbulb"></i>
-              答案与解析
-            </div>
-            <div class="correct-answer">
-              正确答案：<strong>${String.fromCharCode(65 + question.correctAnswer)}</strong>
-            </div>
-            <div class="explanation">
-              ${question.explanation}
-            </div>
-          </div>
-          
-          <div class="action-buttons">
-            <button class="action-btn check-btn" onclick="checkAnswer()">
-              <i class="fas fa-check-circle"></i>
-              检查答案
-            </button>
-            <button class="action-btn show-answer-btn" onclick="toggleAnswer()">
-              <i class="fas fa-eye"></i>
-              ${userAnswers[currentQuestionIndex] !== null ? '隐藏答案' : '显示答案'}
-            </button>
-            ${currentQuestionIndex < questions.length - 1 ? `
-              <button class="action-btn next-btn" onclick="nextQuestion()">
-                下一题
-                <i class="fas fa-arrow-right"></i>
-              </button>
-            ` : ''}
-          </div>
-        </div>
-      `;
-      
-      questionsContainer.innerHTML = questionHTML;
-      
-      // 添加选项点击事件
-      const optionElements = document.querySelectorAll('.option');
-      optionElements.forEach(option => {
-        option.addEventListener('click', function() {
-          const selectedIndex = parseInt(this.getAttribute('data-index'));
-          selectOption(selectedIndex);
-        });
-      });
-      
-      // 更新进度条
-      updateProgressBar();
-    }
-
-    // 选择选项
-    function selectOption(index) {
-      if (userAnswers[currentQuestionIndex] !== null) return; // 已经回答过的不再更改
-      
-      // 更新UI
-      const options = document.querySelectorAll('.option');
-      options.forEach(option => option.classList.remove('selected'));
-      options[index].classList.add('selected');
-      
-      userAnswers[currentQuestionIndex] = index;
-    }
-
-    // 检查答案
-    function checkAnswer() {
-      if (userAnswers[currentQuestionIndex] === null) {
-        alert('请先选择一个答案！');
+    let userAnswers = [];
+    let quizCompleted = false;
+    
+    /************************************************************
+     * 3. DOM元素引用
+     ************************************************************/
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+    
+    /************************************************************
+     * 4. 初始化函数
+     ************************************************************/
+    function init() {
+      if (questions.length === 0) {
+        // 如果没有题目，显示提示信息
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
         return;
       }
       
-      const question = questions[currentQuestionIndex];
-      const isCorrect = userAnswers[currentQuestionIndex] === question.correctAnswer;
+      // 初始化用户答案数组
+      userAnswers = new Array(questions.length).fill(null);
       
-      // 更新题目卡片的样式
-      const questionCard = document.querySelector('.question-card');
-      questionCard.classList.remove('correct', 'incorrect');
-      questionCard.classList.add(isCorrect ? 'correct' : 'incorrect');
-      
-      // 显示答案和解析
-      const answerSection = document.getElementById(`answer-${question.id}`);
-      answerSection.classList.add('show');
-      
-      // 更新选项样式
-      const options = document.querySelectorAll('.option');
-      options.forEach((option, i) => {
-        if (i === question.correctAnswer) {
-          option.classList.add('correct-option');
-        } else if (i === userAnswers[currentQuestionIndex] && i !== question.correctAnswer) {
-          option.classList.add('incorrect-option');
-        }
-        option.classList.remove('selected');
-      });
+      // 加载第一题
+      loadQuestion();
       
       // 更新统计数据
-      if (isCorrect) {
-        correctCount++;
-      }
-      totalAnswered++;
-      
       updateStats();
-      updateProgressBar();
-      saveProgressToStorage();
       
-      // 更新按钮文本
-      const showAnswerBtn = document.querySelector('.show-answer-btn');
-      showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+      // 生成题目导航
+      generateQuestionNav();
     }
-
-    // 显示/隐藏答案
-    function toggleAnswer() {
+    
+    /************************************************************
+     * 5. 加载题目函数
+     ************************************************************/
+    function loadQuestion() {
       const question = questions[currentQuestionIndex];
-      const answerSection = document.getElementById(`answer-${question.id}`);
-      const showAnswerBtn = document.querySelector('.show-answer-btn');
       
-      if (answerSection.classList.contains('show')) {
-        answerSection.classList.remove('show');
-        showAnswerBtn.innerHTML = '<i class="fas fa-eye"></i>显示答案';
+      // 更新题目信息
+      questionTitleEl.textContent = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      
+      // 更新难度显示
+      questionDifficultyEl.textContent = 
+        question.difficulty === 'easy' ? '简单难度' : 
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      
+      // 清空选项容器
+      optionsContainerEl.innerHTML = '';
+      
+      // 创建选项
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        // 如果用户已经回答过此题，显示答案状态
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) {
+            optionDiv.classList.add('correct');
+          } else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) {
+            optionDiv.classList.add('incorrect');
+          }
+          if (index === userAnswers[currentQuestionIndex]) {
+            optionDiv.classList.add('selected');
+          }
+        }
+        
+        // 添加选项字母
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index); // A, B, C, D
+        
+        // 添加选项文本
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.textContent = option;
+        
+        // 组装选项
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        
+        // 如果还未回答此题，添加点击事件
+        if (userAnswers[currentQuestionIndex] === null) {
+          optionDiv.onclick = () => selectAnswer(optionDiv, index);
+        }
+        
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      
+      // 更新反馈区域
+      if (userAnswers[currentQuestionIndex] !== null) {
+        showFeedback();
       } else {
-        answerSection.classList.add('show');
-        showAnswerBtn.innerHTML = '<i class="fas fa-eye-slash"></i>隐藏答案';
+        feedbackContainerEl.classList.remove('show');
+      }
+      
+      // 更新按钮状态
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      
+      // 更新进度条
+      updateProgress();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 6. 选择答案函数
+     ************************************************************/
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      
+      // 禁用所有选项的点击
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.onclick = null;
+      });
+      
+      // 标记用户选择的选项
+      optionElement.classList.add('selected');
+      
+      // 存储用户答案
+      userAnswers[currentQuestionIndex] = answerIndex;
+      
+      // 显示正确答案和错误答案
+      if (answerIndex === question.answer) {
+        optionElement.classList.add('correct');
+      } else {
+        optionElement.classList.add('incorrect');
+        
+        // 标记正确答案
+        const correctOption = options[question.answer];
+        correctOption.classList.add('correct');
+      }
+      
+      // 显示反馈
+      showFeedback();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 7. 显示反馈函数
+     ************************************************************/
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      
+      // 设置反馈内容
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      
+      // 设置反馈样式
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+    
+    /************************************************************
+     * 8. 上一题/下一题函数
+     ************************************************************/
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
       }
     }
-
-    // 下一题
+    
     function nextQuestion() {
+      // 如果当前题目未回答，不能进入下一题
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择答案');
+        return;
+      }
+      
       if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
-        loadQuestion(currentQuestionIndex);
+        loadQuestion();
+      } else {
+        // 如果是最后一题，显示完成页面
+        showCompletionScreen();
       }
     }
-
-    // 更新统计数据
+    
+    /************************************************************
+     * 9. 显示完成页面函数
+     ************************************************************/
+    function showCompletionScreen() {
+      // 隐藏主容器，显示完成页面
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      
+      // 计算最终统计数据
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      
+      // 更新完成页面统计
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      
+      quizCompleted = true;
+    }
+    
+    /************************************************************
+     * 10. 重新开始函数
+     ************************************************************/
+    function restartQuiz() {
+      // 重置状态
+      currentQuestionIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      quizCompleted = false;
+      
+      // 隐藏完成页面，显示主容器
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      
+      // 重新加载第一题
+      loadQuestion();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 11. 更新进度条函数
+     ************************************************************/
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    /************************************************************
+     * 12. 更新统计数据函数
+     ************************************************************/
     function updateStats() {
-      answeredCountElement.textContent = totalAnswered;
-      correctCountElement.textContent = correctCount;
-      
-      // 计算正确率
-      const accuracy = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
-      if (totalAnswered > 0) {
-        document.getElementById('total-questions').innerHTML = `${accuracy}%`;
-        document.getElementById('total-questions').style.color = accuracy >= 70 ? '#4CAF50' : (accuracy >= 50 ? '#FF9800' : '#f44336');
-      }
-    }
-
-    // 更新进度条
-    function updateProgressBar() {
+      const totalQuestions = questions.length;
       const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
-      const progressPercentage = Math.round((answeredQuestions / questions.length) * 100);
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
       
-      progressFillElement.style.width = `${progressPercentage}%`;
-      progressPercentageElement.textContent = `${progressPercentage}%`;
+      answeredCountEl.textContent = answeredQuestions;
+      correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`;
+      remainingCountEl.textContent = remainingQuestions;
     }
-
-    // 保存学习进度到本地存储
-    function saveProgressToStorage() {
-      const progress = {
-        userAnswers,
-        correctCount,
-        totalAnswered,
-        lastAccessed: new Date().toISOString()
-      };
+    
+    /************************************************************
+     * 13. 生成题目导航函数
+     ************************************************************/
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
       
-      try {
-        localStorage.setItem('java_chapter6_progress', JSON.stringify(progress));
-        console.log('第六章学习进度已保存');
-      } catch (e) {
-        console.log('无法保存学习进度');
-      }
-    }
-
-    // 从本地存储加载学习进度
-    function loadProgressFromStorage() {
-      try {
-        const savedProgress = localStorage.getItem('java_chapter6_progress');
-        if (savedProgress) {
-          const progress = JSON.parse(savedProgress);
-          userAnswers = progress.userAnswers;
-          correctCount = progress.correctCount;
-          totalAnswered = progress.totalAnswered;
-          
-          // 更新UI
-          updateStats();
-          updateProgressBar();
-          
-          console.log('第六章学习进度已加载');
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'question-nav-item';
+        
+        if (index === currentQuestionIndex) {
+          navItem.classList.add('active');
         }
-      } catch (e) {
-        console.log('无法加载学习进度');
-      }
+        
+        navItem.onclick = () => {
+          // 如果已完成答题，可以跳转到任何题目
+          // 如果未完成，只能跳转到已答题目或下一题
+          if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) {
+            currentQuestionIndex = index;
+            loadQuestion();
+          } else {
+            alert('请按顺序答题');
+          }
+        };
+        
+        const navNumber = document.createElement('div');
+        navNumber.className = 'question-nav-number';
+        navNumber.textContent = `第 ${index + 1} 题`;
+        
+        const navStatus = document.createElement('div');
+        navStatus.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          navStatus.classList.add('current');
+        }
+        
+        navItem.appendChild(navNumber);
+        navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
     }
-
-    // 键盘快捷键支持
+    
+    /************************************************************
+     * 14. 更新题目导航函数
+     ************************************************************/
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      
+      navItems.forEach((item, index) => {
+        // 更新活动状态
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+        
+        // 更新状态指示器
+        const statusIndicator = item.querySelector('.question-nav-status');
+        statusIndicator.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          statusIndicator.classList.add('current');
+        }
+      });
+    }
+    
+    /************************************************************
+     * 15. 键盘导航支持
+     ************************************************************/
     document.addEventListener('keydown', function(e) {
-      // 数字键1-4选择选项
-      if (e.key >= '1' && e.key <= '4') {
-        const index = parseInt(e.key) - 1;
-        if (index < questions[currentQuestionIndex].options.length) {
-          selectOption(index);
+      // 如果当前在完成页面，不处理键盘事件
+      if (completionScreenEl.style.display === 'block') return;
+      
+      // 数字键1-4选择答案
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) {
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        
+        if (optionIndex < options.length) {
+          options[optionIndex].click();
         }
       }
       
-      // 空格键检查答案
-      if (e.key === ' ' || e.key === 'Spacebar') {
-        e.preventDefault();
-        checkAnswer();
+      // 左箭头或A键：上一题
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) {
+        prevQuestion();
       }
       
-      // 回车键显示/隐藏答案
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        toggleAnswer();
-      }
-      
-      // 左右箭头切换题目
-      if (e.key === 'ArrowRight') {
+      // 右箭头或D键：下一题
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) {
         if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else if (userAnswers[currentQuestionIndex] !== null) {
           nextQuestion();
         }
       }
       
-      if (e.key === 'ArrowLeft') {
-        if (currentQuestionIndex > 0) {
-          currentQuestionIndex--;
-          loadQuestion(currentQuestionIndex);
+      // 空格键或回车键：如果已回答，进入下一题
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else {
+          nextQuestion();
         }
       }
     });
+    
+    /************************************************************
+     * 16. 页面加载时初始化
+     ************************************************************/
+    window.onload = init;
   </script>
 </body>
 </html>
