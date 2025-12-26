@@ -34,7 +34,30 @@
       color: var(--dark-color);
       padding: 20px;
     }
+    /* 代码块样式 - 添加在现有CSS中 */
+.code-block {
+  background: var(--light-color);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  margin: 10px 0;
+  border-left: 4px solid var(--primary-color);
+  overflow-x: auto;
+}
 
+.code-keyword {
+  color: #d73a49;
+  font-weight: bold;
+}
+
+.code-number {
+  color: #005cc5;
+}
+
+.code-string {
+  color: #032f62;
+}
     /* 头部导航 */
     .header {
       max-width: 1000px;
@@ -755,22 +778,22 @@
         id: 1,
         title: "关于Java继承中方法复写(Override)的规则，以下说法错误的是？",
         options: [
-          "A. 复写的方法必须与被复写方法具有相同的方法名、参数列表和返回类型",
-          "B. 复写的方法不能缩小被复写方法的访问权限",
-          "C. 复写的方法不能抛出比被复写方法更多的异常",
-          "D. 静态方法可以被复写为非静态方法"
+          "复写的方法必须与被复写方法具有相同的方法名、参数列表和返回类型",
+          "复写的方法不能缩小被复写方法的访问权限",
+          "复写的方法不能抛出比被复写方法更多的异常",
+          "静态方法可以被复写为非静态方法"
         ],
         answer: 3,
         explanation: "静态方法不能被复写，静态方法属于类而不属于对象，子类可以定义与父类同名的静态方法，但这称为隐藏(hiding)而不是复写。静态方法只能被静态方法隐藏，不能改变其静态特性。"
       },
       {
         id: 2,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Parent</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"Parent display\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> staticDisplay() {<br>    System.out.println(<span class='code-string'>\"Parent static display\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Child</span> <span class='code-keyword'>extends</span> Parent {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"Child display\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> staticDisplay() {<br>    System.out.println(<span class='code-string'>\"Child static display\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Parent p = <span class='code-keyword'>new</span> Child();<br>    p.display();<br>    p.staticDisplay();<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Parent</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"Parent display\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> staticDisplay() {<br>    System.out.println(<span class='code-string'>\"Parent static display\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Child</span> <span class='code-keyword'>extends</span> Parent {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"Child display\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> staticDisplay() {<br>    System.out.println(<span class='code-string'>\"Child static display\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Parent p = <span class='code-keyword'>new</span> Child();<br>    p.display();<br>    p.staticDisplay();<br>  }<br>}</div>",
         options: [
-          "A. Child display<br>Parent static display",
-          "B. Child display<br>Child static display",
-          "C. Parent display<br>Parent static display",
-          "D. Parent display<br>Child static display"
+          "Child display<br>Parent static display",
+          "Child display<br>Child static display",
+          "Parent display<br>Parent static display",
+          "Parent display<br>Child static display"
         ],
         answer: 0,
         explanation: "display()是实例方法，根据多态性，实际调用的是Child类的方法，输出\"Child display\"。staticDisplay()是静态方法，静态方法的调用取决于引用类型，而不是实际对象类型，所以调用Parent类的staticDisplay()，输出\"Parent static display\"。"
@@ -779,10 +802,10 @@
         id: 3,
         title: "关于final关键字的用法，以下说法正确的是？",
         options: [
-          "A. final类不能被继承",
-          "B. final方法不能被重写",
-          "C. final变量一旦赋值就不能再修改",
-          "D. 以上都正确"
+          "final类不能被继承",
+          "final方法不能被重写",
+          "final变量一旦赋值就不能再修改",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "final关键字可以修饰类、方法和变量。final类不能被继承；final方法不能被重写；final变量（包括局部变量、成员变量）一旦被赋值就不能再修改，相当于常量。"
@@ -791,22 +814,22 @@
         id: 4,
         title: "以下关于抽象类和接口的说法，错误的是？",
         options: [
-          "A. 抽象类可以包含构造方法，接口不能包含构造方法",
-          "B. 抽象类可以包含普通成员变量，接口中的变量默认是public static final的",
-          "C. 一个类只能继承一个抽象类，但可以实现多个接口",
-          "D. 抽象类和接口都可以被实例化"
+          "抽象类可以包含构造方法，接口不能包含构造方法",
+          "抽象类可以包含普通成员变量，接口中的变量默认是public static final的",
+          "一个类只能继承一个抽象类，但可以实现多个接口",
+          "抽象类和接口都可以被实例化"
         ],
         answer: 3,
         explanation: "抽象类和接口都不能被实例化。抽象类需要被子类继承，接口需要被类实现。抽象类可以有构造方法（用于子类初始化），接口不能有构造方法。"
       },
       {
         id: 5,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    System.out.println(<span class='code-string'>\"A\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> <span class='code-keyword'>extends</span> A {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    System.out.println(<span class='code-string'>\"B\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test(<span class='code-keyword'>int</span> x) {<br>    System.out.println(<span class='code-string'>\"B with \"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    A obj = <span class='code-keyword'>new</span> B();<br>    obj.test();<br>    <span class='code-comment'>// obj.test(10); // 这行代码如果取消注释会怎样？</span><br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    System.out.println(<span class='code-string'>\"A\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> <span class='code-keyword'>extends</span> A {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    System.out.println(<span class='code-string'>\"B\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test(<span class='code-keyword'>int</span> x) {<br>    System.out.println(<span class='code-string'>\"B with \"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    A obj = <span class='code-keyword'>new</span> B();<br>    obj.test();<br>    <span class='code-comment'>// obj.test(10); // 这行代码如果取消注释会怎样？</span><br>  }<br>}</div>",
         options: [
-          "A. 输出B，然后编译错误",
-          "B. 输出B，然后输出B with 10",
-          "C. 输出A，然后输出B with 10",
-          "D. 输出A，然后编译错误"
+          "输出B，然后编译错误",
+          "输出B，然后输出B with 10",
+          "输出A，然后输出B with 10",
+          "输出A，然后编译错误"
         ],
         answer: 0,
         explanation: "obj引用类型是A，实际对象是B。obj.test()调用的是B类的方法，输出B。obj.test(10)会编译错误，因为A类中没有test(int)方法，编译器根据引用类型A检查方法是否存在。如果要调用test(10)，需要将obj强制转换为B类型：((B)obj).test(10)。"
@@ -815,10 +838,10 @@
         id: 6,
         title: "关于Object类，以下说法正确的是？",
         options: [
-          "A. Object类是Java中所有类的直接或间接父类",
-          "B. Object类中的equals()方法默认比较对象的引用是否相同",
-          "C. Object类中的toString()方法返回对象的字符串表示",
-          "D. 以上都正确"
+          "Object类是Java中所有类的直接或间接父类",
+          "Object类中的equals()方法默认比较对象的引用是否相同",
+          "Object类中的toString()方法返回对象的字符串表示",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "Object类是Java中所有类的根类，所有类都直接或间接继承Object类。equals()方法默认实现是比较两个对象的引用是否相同（即==比较）。toString()方法返回对象的字符串表示，默认格式为：类名@哈希码。"
@@ -827,22 +850,22 @@
         id: 7,
         title: "以下关于接口的默认方法和静态方法的说法，正确的是？",
         options: [
-          "A. Java 8开始，接口中可以包含默认方法(default method)",
-          "B. 接口中的默认方法可以有方法体",
-          "C. 接口中的静态方法可以直接通过接口名调用",
-          "D. 以上都正确"
+          "Java 8开始，接口中可以包含默认方法(default method)",
+          "接口中的默认方法可以有方法体",
+          "接口中的静态方法可以直接通过接口名调用",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "从Java 8开始，接口中可以包含默认方法和静态方法。默认方法使用default关键字修饰，可以有方法体，实现类可以重写默认方法。静态方法使用static关键字修饰，可以有方法体，通过接口名直接调用。"
       },
       {
         id: 8,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>interface</span> <span class='code-type'>InterfaceA</span> {<br>  <span class='code-keyword'>default</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"InterfaceA show\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>interface</span> <span class='code-type'>InterfaceB</span> {<br>  <span class='code-keyword'>default</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"InterfaceB show\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>MyClass</span> <span class='code-keyword'>implements</span> InterfaceA, InterfaceB {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> show() {<br>    InterfaceA.<span class='code-keyword'>super</span>.show();<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    MyClass obj = <span class='code-keyword'>new</span> MyClass();<br>    obj.show();<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>interface</span> <span class='code-type'>InterfaceA</span> {<br>  <span class='code-keyword'>default</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"InterfaceA show\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>interface</span> <span class='code-type'>InterfaceB</span> {<br>  <span class='code-keyword'>default</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"InterfaceB show\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>MyClass</span> <span class='code-keyword'>implements</span> InterfaceA, InterfaceB {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> show() {<br>    InterfaceA.<span class='code-keyword'>super</span>.show();<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    MyClass obj = <span class='code-keyword'>new</span> MyClass();<br>    obj.show();<br>  }<br>}</div>",
         options: [
-          "A. InterfaceA show",
-          "B. InterfaceB show",
-          "C. 编译错误",
-          "D. 运行时报错"
+          "InterfaceA show",
+          "InterfaceB show",
+          "编译错误",
+          "运行时报错"
         ],
         answer: 0,
         explanation: "MyClass实现了InterfaceA和InterfaceB，两个接口都有默认方法show()，这会导致冲突。MyClass必须重写show()方法来消除冲突。在重写的方法中，通过InterfaceA.super.show()明确指定调用InterfaceA的默认方法，所以输出\"InterfaceA show\"。"
@@ -851,10 +874,10 @@
         id: 9,
         title: "关于instanceof运算符，以下说法正确的是？",
         options: [
-          "A. instanceof用于检查对象是否是指定类或其子类的实例",
-          "B. instanceof也用于检查对象是否实现了指定接口",
-          "C. 如果对象为null，instanceof返回false",
-          "D. 以上都正确"
+          "instanceof用于检查对象是否是指定类或其子类的实例",
+          "instanceof也用于检查对象是否实现了指定接口",
+          "如果对象为null，instanceof返回false",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "instanceof运算符用于检查对象是否是指定类或其子类的实例，或者是否实现了指定接口。如果对象为null，instanceof返回false。语法：对象 instanceof 类/接口。"
@@ -863,22 +886,22 @@
         id: 10,
         title: "以下关于继承中构造方法的调用顺序，正确的是？",
         options: [
-          "A. 子类构造方法首先调用父类构造方法",
-          "B. 如果子类构造方法没有显式调用父类构造方法，编译器会自动添加super()调用",
-          "C. 构造方法调用必须位于构造方法的第一行",
-          "D. 以上都正确"
+          "子类构造方法首先调用父类构造方法",
+          "如果子类构造方法没有显式调用父类构造方法，编译器会自动添加super()调用",
+          "构造方法调用必须位于构造方法的第一行",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "在Java继承中，子类构造方法总是首先调用父类构造方法。如果子类构造方法没有显式调用父类构造方法，编译器会自动添加super()调用（调用父类无参构造方法）。super()或this()调用必须位于构造方法的第一行。"
       },
       {
         id: 11,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Base</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>void</span> privateMethod() {<br>    System.out.println(<span class='code-string'>\"Base private\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> publicMethod() {<br>    System.out.println(<span class='code-string'>\"Base public\"</span>);<br>    privateMethod();<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Derived</span> <span class='code-keyword'>extends</span> Base {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>void</span> privateMethod() {<br>    System.out.println(<span class='code-string'>\"Derived private\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> publicMethod() {<br>    System.out.println(<span class='code-string'>\"Derived public\"</span>);<br>  &nbsp;<span class='code-keyword'>super</span>.publicMethod();<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Base obj = <span class='code-keyword'>new</span> Derived();<br>    obj.publicMethod();<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Base</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>void</span> privateMethod() {<br>    System.out.println(<span class='code-string'>\"Base private\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> publicMethod() {<br>    System.out.println(<span class='code-string'>\"Base public\"</span>);<br>    privateMethod();<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Derived</span> <span class='code-keyword'>extends</span> Base {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>void</span> privateMethod() {<br>    System.out.println(<span class='code-string'>\"Derived private\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> publicMethod() {<br>    System.out.println(<span class='code-string'>\"Derived public\"</span>);<br>   <span class='code-keyword'>super</span>.publicMethod();<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Base obj = <span class='code-keyword'>new</span> Derived();<br>    obj.publicMethod();<br>  }<br>}</div>",
         options: [
-          "A. Derived public<br>Base public<br>Base private",
-          "B. Derived public<br>Base public<br>Derived private",
-          "C. Base public<br>Base private",
-          "D. Base public<br>Derived private"
+          "Derived public<br>Base public<br>Base private",
+          "Derived public<br>Base public<br>Derived private",
+          "Base public<br>Base private",
+          "Base public<br>Derived private"
         ],
         answer: 0,
         explanation: "obj引用类型是Base，实际对象是Derived。obj.publicMethod()调用Derived的publicMethod()，输出\"Derived public\"。然后Derived.publicMethod()调用super.publicMethod()，即Base success的publicMethod()，输出\"Base public\"。Base.publicMethod()调用privateMethod()，由于private方法不具有多态性，根据当前类(Base)调用，输出\"Base private\"。"
@@ -887,10 +910,10 @@
         id: 12,
         title: "关于Java中的多态性，以下说法错误的是？",
         options: [
-          "A. 多态性分为编译时多态和运行时多态",
-          "B. 方法重载是编译时多态的体现",
-          "C. 方法重写是运行时多态的体现",
-          "D. 多态性只能通过继承实现"
+          "多态性分为编译时多态和运行时多态",
+          "方法重载是编译时多态的体现",
+          "方法重写是运行时多态的体现",
+          "多态性只能通过继承实现"
         ],
         answer: 3,
         explanation: "多态性不仅可以通过继承实现，还可以通过接口实现。接口的多态性也是Java多态的重要体现。方法重载是编译时多态（静态绑定），方法重写是运行时多态（动态绑定）。"
@@ -899,22 +922,22 @@
         id: 13,
         title: "以下关于finalize()方法的说法，正确的是？",
         options: [
-          "A. finalize()是Object类中定义的方法",
-          "B. 垃圾回收器在回收对象之前会调用finalize()方法",
-          "C. finalize()方法不能保证一定会被调用",
-          "D. 以上都正确"
+          "finalize()是Object类中定义的方法",
+          "垃圾回收器在回收对象之前会调用finalize()方法",
+          "finalize()方法不能保证一定会被调用",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "finalize()是Object类中定义的一个protected方法。垃圾回收器在回收对象之前会调用finalize()方法，但finalize()方法的调用时机不确定，不能保证一定会被调用。从Java 9开始，finalize()方法已被标记为废弃(deprecated)。"
       },
       {
         id: 14,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Animal</span> {<br>  <span class='code-keyword'>public</span> Animal() {<br>    System.out.print(<span class='code-string'>\"Animal \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Dog</span> <span class='code-keyword'>extends</span> Animal {<br>  <span class='code-keyword'>public</span> Dog() {<br>    System.out.print(<span class='code-string'>\"Dog \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Poodle</span> <span class='code-keyword'>extends</span> Dog {<br>  <span class='code-keyword'>public</span> Poodle() {<br>    System.out.print(<span class='code-string'>\"Poodle \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Animal a = <span class='code-keyword'>new</span> Poodle();<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Animal</span> {<br>  <span class='code-keyword'>public</span> Animal() {<br>    System.out.print(<span class='code-string'>\"Animal \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Dog</span> <span class='code-keyword'>extends</span> Animal {<br>  <span class='code-keyword'>public</span> Dog() {<br>    System.out.print(<span class='code-string'>\"Dog \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Poodle</span> <span class='code-keyword'>extends</span> Dog {<br>  <span class='code-keyword'>public</span> Poodle() {<br>    System.out.print(<span class='code-string'>\"Poodle \"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Animal a = <span class='code-keyword'>new</span> Poodle();<br>  }<br>}</div>",
         options: [
-          "A. Animal Dog Poodle",
-          "B. Poodle Dog Animal",
-          "C. Animal",
-          "D. Poodle"
+          "Animal Dog Poodle",
+          "Poodle Dog Animal",
+          "Animal",
+          "Poodle"
         ],
         answer: 0,
         explanation: "创建Poodle对象时，构造方法调用链：Poodle构造方法首先隐式调用父类Dog的无参构造方法，Dog构造方法首先隐式调用父类Animal的无参构造方法。所以执行顺序：Animal构造方法 -> Dog构造方法 -> Poodle构造方法，输出\"Animal Dog Poodle\"。"
@@ -923,10 +946,10 @@
         id: 15,
         title: "关于Java中的访问控制权限，从严格到宽松的顺序是？",
         options: [
-          "A. private -> default -> protected -> public",
-          "B. default -> private -> protected -> public",
-          "C. private -> protected -> default -> public",
-          "D. protected -> private -> default -> public"
+          "private -> default -> protected -> public",
+          "default -> private -> protected -> public",
+          "private -> protected -> default -> public",
+          "protected -> private -> default -> public"
         ],
         answer: 0,
         explanation: "Java访问控制权限从严格到宽松：private（仅本类）-> default/package-private（同包）-> protected（同包+子类）-> public（所有类）。private最严格，public最宽松。"
@@ -998,7 +1021,7 @@
       const question = questions[currentQuestionIndex];
       
       // 更新题目信息
-      questionTitleEl.textContent = question.title;
+      questionTitleEl.innerHTML = question.title;
       questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
       
       // 更新难度显示
@@ -1035,7 +1058,7 @@
         // 添加选项文本
         const optionText = document.createElement('div');
         optionText.className = 'option-text';
-        optionText.textContent = option;
+        optionText.innerHTML = option;
         
         // 组装选项
         optionDiv.appendChild(optionLetter);

@@ -34,6 +34,31 @@
       color: var(--dark-color);
       padding: 20px;
     }
+    
+/* 代码块样式 - 添加在现有CSS中 */
+.code-block {
+  background: var(--light-color);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  margin: 10px 0;
+  border-left: 4px solid var(--primary-color);
+  overflow-x: auto;
+}
+
+.code-keyword {
+  color: #d73a49;
+  font-weight: bold;
+}
+
+.code-number {
+  color: #005cc5;
+}
+
+.code-string {
+  color: #032f62;
+}
 
     /* 头部导航 */
     .header {
@@ -755,10 +780,10 @@
         id: 1,
         title: "关于Java包(package)的作用，以下说法错误的是？",
         options: [
-          "A. 避免命名冲突",
-          "B. 提供访问控制",
-          "C. 组织和管理类文件",
-          "D. 提高代码执行速度"
+          "避免命名冲突",
+          "提供访问控制",
+          "组织和管理类文件",
+          "提高代码执行速度"
         ],
         answer: 3,
         explanation: "包的主要作用是避免命名冲突、提供访问控制、组织和管理类文件，但并不会提高代码执行速度。包是逻辑上的组织方式，不影响代码的运行时性能。"
@@ -767,10 +792,10 @@
         id: 2,
         title: "以下关于包的定义和导入，正确的是？",
         options: [
-          "A. 包声明语句必须是Java源文件的第一行非注释代码",
-          "B. import语句用于导入其他包中的类或整个包",
-          "C. 使用import static可以导入类的静态成员",
-          "D. 以上都正确"
+          "包声明语句必须是Java源文件的第一行非注释代码",
+          "import语句用于导入其他包中的类或整个包",
+          "使用import static can 导入类的静态成员",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "包声明语句(package)必须是Java源文件的第一行非注释代码；import语句用于导入其他包中的类或整个包；import static语句（静态导入）可以导入类的静态成员（静态方法或静态变量）。"
@@ -779,10 +804,10 @@
         id: 3,
         title: "以下代码中，哪个import语句是正确的？<br><div class='code-block'><span class='code-keyword'>package</span> com.example.test;<br><br><span class='code-comment'>// 假设有以下包结构：</span><br><span class='code-comment'>// com.example.utils.StringUtil 类</span><br><span class='code-comment'>// com.example.utils.MathUtil 类</span></div>",
         options: [
-          "A. import com.example.utils.*;",
-          "B. import com.example.utils.StringUtil;",
-          "C. import com.example.utils.*; 和 import com.example.utils.StringUtil; 都是正确的",
-          "D. 都不正确，因为当前包是com.example.test，不能导入com.example.utils包"
+          "import com.example.utils.*;",
+          "import com.example.utils.StringUtil;",
+          "import com.example.utils.*; 和 import com.example.utils.StringUtil; 都是正确的",
+          "都不正确，因为当前包是com.example.test，不能导入com.example.utils包"
         ],
         answer: 2,
         explanation: "import com.example.utils.*; 导入utils包下的所有类；import com.example.utils.StringUtil; 只导入StringUtil类。这两种方式都是正确的，可以根据需要选择。"
@@ -791,10 +816,10 @@
         id: 4,
         title: "以下哪个不是Java的核心包？",
         options: [
-          "A. java.lang",
-          "B. java.util",
-          "C. java.io",
-          "D. java.database"
+          "java.lang",
+          "java.util",
+          "java.io",
+          "java.database"
         ],
         answer: 3,
         explanation: "java.lang包包含Java语言的核心类（如String、System、Math等）；java.util包包含实用工具类（如集合框架、日期时间等）；java.io包包含输入输出相关类。java.database不是Java标准包，数据库操作通常在java.sql包中。"
@@ -803,10 +828,10 @@
         id: 5,
         title: "关于jar命令，以下说法错误的是？",
         options: [
-          "A. jar命令用于创建、查看和提取jar文件",
-          "B. jar文件是Java归档文件，采用ZIP格式压缩",
-          "C. jar文件可以包含类文件、资源文件和清单文件",
-          "D. jar命令不能创建可执行的jar文件"
+          "jar命令用于创建、查看和提取jar文件",
+          "jar文件是Java归档文件，采用ZIP格式压缩",
+          "jar文件可以包含类文件、资源文件和清单文件",
+          "jar命令不能创建可执行的jar文件"
         ],
         answer: 3,
         explanation: "jar命令可以创建可执行的jar文件，需要在清单文件(manifest.mf)中指定Main-Class属性。jar文件是Java的标准归档格式，可以包含类文件、资源文件和清单文件。"
@@ -815,22 +840,22 @@
         id: 6,
         title: "以下关于Java访问控制权限的说法，正确的是？",
         options: [
-          "A. private: 只能在当前类中访问",
-          "B. default(包访问权限): 只能在同一个包中访问",
-          "C. protected: 同一个包或不同包的子类中可以访问",
-          "D. 以上都正确"
+          "private: 只能在当前类中访问",
+          "default(包访问权限): 只能在同一个包中访问",
+          "protected: 同一个包或不同包的子类中可以访问",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "private权限：只能在当前类中访问；default(包访问权限)：只能在同一个包中访问；protected权限：同一个包中或不同包的子类中可以访问；public权限：所有类都可以访问。"
       },
       {
         id: 7,
-        title: "以下代码的编译结果是什么？<br><div class='code-block'><span class='code-comment'>// 文件: com/example/A.java</span><br><span class='code-keyword'>package</span> com.example;<br><br><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>int</span> privateVar = <span class='code-number'>1</span>;<br>  <span class='code-keyword'>int</span> defaultVar = <span class='code-number'>2</span>;<br>  <span class='code-keyword'>protected</span> <span class='code-keyword'>int</span> protectedVar = <span class='code-number'>3</span>;<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>int</span> publicVar = <span class='code-number'>4</span>;<br>}<br><br><span class='code-comment'>// 文件: com/example/B.java</span><br><span class='code-keyword'>package</span> com.example;<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> {<br>  <span class='code-keyword'>void</span> test() {<br>    A obj = <span class='code-keyword'>new</span> A();<br>    System.out.println(obj.defaultVar);<br>    System.out.println(obj.protectedVar);<br>    System.out.println(obj.publicVar);<br>    <span class='code-comment'>// System.out.println(obj.privateVar); // 这行代码如果取消注释会怎样？</span><br>  }<br>}</div>",
+        title: "以下代码的编译结果是什么？<br><div class='code-block'><span class='code-comment'>// 文件: com/example/A.java</span><br><span class='code-keyword'>package</span> com.example;<br><br><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>int</span> privateVar = <span class='code-number'>1</span>;<br>  <span class='code-keyword'>int</span> defaultVar = <span class='code-number'>2</span>;<br>  <span class='code-keyword'>protected</span> <span class='code-keyword'>int</span> protectedVar = <span class='code-number'>3</span>;<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>int</span> publicVar = <span class='code-number'>4</span>;<br>}<br><br><span class='code-comment'>// 文件: com/example/B.java</span><br><span class='code-keyword'>package</span> com.example;<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> {<br>  <span class='code-keyword'>void</span> test() {<br>    A obj = <span class='code-keyword'>new</span> A();<br>    System.out.println(obj.defaultVar);<br>    System.out.println(obj.protectedVar);<br>    System.out.println(obj.publicVar);<br>    <span class='code-comment'>// System.out.println(obj.privateVar); // 这行代码如果取消注释会怎样？</span><br>  }<br>}</div>",
         options: [
-          "A. 编译成功，输出2 3 4",
-          "B. 编译错误，不能访问protectedVar",
-          "C. 编译错误，不能访问defaultVar",
-          "D. 编译错误，不能访问privateVar"
+          "编译成功，输出2 3 4",
+          "编译错误，不能访问protectedVar",
+          "编译错误，不能访问defaultVar",
+          "编译错误，不能访问privateVar"
         ],
         answer: 0,
         explanation: "A和B在同一个包(com.example)中，B可以访问A的default、protected和public成员。如果取消注释访问privateVar的代码，会编译错误，因为private成员只能在A类内部访问。"
@@ -839,10 +864,10 @@
         id: 8,
         title: "以下关于Java命名规范的说法，正确的是？",
         options: [
-          "A. 包名通常使用小写字母，采用反转域名格式",
-          "B. 类名使用驼峰命名法，首字母大写",
-          "C. 方法名和变量名使用驼峰命名法，首字母小写",
-          "D. 以上都正确"
+          "包名通常使用小写字母，采用反转域名格式",
+          "类名使用驼峰命名法，首字母大写",
+          "方法名和变量名使用驼峰命名法，首字母小写",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "Java命名规范：包名通常使用小写字母，采用反转域名格式（如com.example.project）；类名使用驼峰命名法，首字母大写；方法名和变量名使用驼峰命名法，首字母小写；常量名全部大写，单词间用下划线分隔。"
@@ -851,10 +876,10 @@
         id: 9,
         title: "以下哪个是单例设计模式的正确实现？",
         options: [
-          "A. <div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>static</span> Singleton instance;<br>  <span class='code-keyword'>private</span> Singleton() {}<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton getInstance() {<br>    <span class='code-keyword'>if</span> (instance == <span class='code-keyword'>null</span>) {<br>      instance = <span class='code-keyword'>new</span> Singleton();<br>    }<br>    <span class='code-keyword'>return</span> instance;<br>  }<br>}</div>",
-          "B. <div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>static</span> <span class='code-keyword'>final</span> Singleton instance = <span class='code-keyword'>new</span> Singleton();<br>  <span class='code-keyword'>private</span> Singleton() {}<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton getInstance() {<br>    <span class='code-keyword'>return</span> instance;<br>  }<br>}</div>",
-          "C. <div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton instance = <span class='code-keyword'>new</span> Singleton();<br>  <span class='code-keyword'>public</span> Singleton() {}<br>}</div>",
-          "D. 以上都是正确的单例实现"
+          "<div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>static</span> Singleton instance;<br>  <span class='code-keyword'>private</span> Singleton() {}<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton getInstance() {<br>    <span class='code-keyword'>if</span> (instance == <span class='code-keyword'>null</span>) {<br>      instance = <span class='code-keyword'>new</span> Singleton();<br>    }<br>    <span class='code-keyword'>return</span> instance;<br>  }<br>}</div>",
+          "<div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>private</span> <span class='code-keyword'>static</span> <span class='code-keyword'>final</span> Singleton instance = <span class='code-keyword'>new</span> Singleton();<br>  <span class='code-keyword'>private</span> Singleton() {}<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton getInstance() {<br>    <span class='code-keyword'>return</span> instance;<br>  }<br>}</div>",
+          "<div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Singleton</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> Singleton instance = <span class='code-keyword'>new</span> Singleton();<br>  <span class='code-keyword'>public</span> Singleton() {}<br>}</div>",
+          "以上都是正确的单例实现"
         ],
         answer: 1,
         explanation: "选项A是懒汉式单例，但在多线程环境下可能创建多个实例（线程不安全）。选项B是饿汉式单例，在类加载时就创建实例，线程安全。选项C不是单例，因为构造方法是public的，可以创建多个实例。所以只有选项B是正确的单例实现。"
@@ -863,22 +888,22 @@
         id: 10,
         title: "关于静态导入(import static)，以下说法正确的是？",
         options: [
-          "A. 静态导入可以导入类的静态方法",
-          "B. 静态导入可以导入类的静态变量",
-          "C. 过度使用静态导入可能降低代码可读性",
-          "D. 以上都正确"
+          "静态导入可以导入类的静态方法",
+          "静态导入可以导入类的静态变量",
+          "过度使用静态导入可能降低代码可读性",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "静态导入可以导入类的静态方法或静态变量，使用后可以直接使用静态成员而不需要类名。但过度使用静态导入可能使代码难以理解，不知道静态成员来自哪个类，降低代码可读性。"
       },
       {
         id: 11,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-comment'>// 文件: pkg1/ClassA.java</span><br><span class='code-keyword'>package</span> pkg1;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>ClassA</span> {<br>  <span class='code-keyword'>protected</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"ClassA in pkg1\"</span>);<br>  }<br>}<br><br><span class='code-comment'>// 文件: pkg2/ClassB.java</span><br><span class='code-keyword'>package</span> pkg2;<br><br><span class='code-keyword'>import</span> pkg1.ClassA;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>ClassB</span> <span class='code-keyword'>extends</span> ClassA {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    ClassA obj = <span class='code-keyword'>new</span> ClassA();<br>    <span class='code-comment'>// obj.show(); // 这行代码如果取消注释会怎样？</span><br>    <span class='code-keyword'>this</span>.show();<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    ClassB b = <span class='code-keyword'>new</span> ClassB();<br>    b.test();<br>  }<br>}</div>",
+        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-comment'>// 文件: pkg1/ClassA.java</span><br><span class='code-keyword'>package</span> pkg1;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>ClassA</span> {<br>  <span class='code-keyword'>protected</span> <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"ClassA in pkg1\"</span>);<br>  }<br>}<br><br><span class='code-comment'>// 文件: pkg2/ClassB.java</span><br><span class='code-keyword'>package</span> pkg2;<br><br><span class='code-keyword'>import</span> pkg1.ClassA;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>ClassB</span> <span class='code-keyword'>extends</span> ClassA {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> test() {<br>    ClassA obj = <span class='code-keyword'>new</span> ClassA();<br>    <span class='code-comment'>// obj.show(); // 这行代码如果取消注释会怎样？</span><br>    <span class='code-keyword'>this</span>.show();<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    ClassB b = <span class='code-keyword'>new</span> ClassB();<br>    b.test();<br>  }<br>}</div>",
         options: [
-          "A. 输出\"ClassA in pkg1\"",
-          "B. 编译错误，不能访问obj.show()",
-          "C. 运行时报错",
-          "D. 输出两次\"ClassA in pkg1\""
+          "输出\"ClassA in pkg1\"",
+          "编译错误，不能访问obj.show()",
+          "运行时报错",
+          "输出两次\"ClassA in pkg1\""
         ],
         answer: 1,
         explanation: "ClassB继承ClassA，但不在同一个包中。通过this.show()可以访问继承的protected方法，因为this指向ClassB实例，ClassB继承了ClassA的protected方法。但是obj.show()会编译错误，因为obj是ClassA类型，在不同包中不能通过父类引用访问protected方法（除非通过子类引用）。"
@@ -887,10 +912,10 @@
         id: 12,
         title: "关于Java中的CLASSPATH，以下说法错误的是？",
         options: [
-          "A. CLASSPATH指定JVM查找类文件的路径",
-          "B. 可以使用-classpath or -cp选项设置CLASSPATH",
-          "C. CLASSPATH默认包含当前目录(.)",
-          "D. CLASSPATH设置后，JVM不会在标准Java库中查找类"
+          "CLASSPATH指定JVM查找类文件的路径",
+          "可以使用-classpath or -cp选项设置CLASSPATH",
+          "CLASSPATH默认包含当前目录(.)",
+          "CLASSPATH设置后，JVM不会在标准Java库中查找类"
         ],
         answer: 3,
         explanation: "CLASSPATH指定JVM查找用户自定义类文件的路径，可以使用-classpath或-cp选项设置。CLASSPATH默认包含当前目录(.)。即使设置了CLASSPATH，JVM仍然会在标准Java库中查找类，标准Java库的优先级最高。"
@@ -899,22 +924,22 @@
         id: 13,
         title: "以下关于多例设计模式的说法，正确的是？",
         options: [
-          "A. 多例模式是单例模式的扩展",
-          "B. 多例模式确保一个类有固定数量的实例",
-          "C. 多例模式的实例通常放在一个集合中管理",
-          "D. 以上都正确"
+          "多例模式是单例模式的扩展",
+          "多例模式确保一个类有固定数量的实例",
+          "多例模式的实例通常放在一个集合中管理",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "多例模式是单例模式的扩展，确保一个类有固定数量的实例（如3个、5个等）。这些实例通常放在一个集合（如Map）中管理，通过键来获取不同的实例。"
       },
       {
         id: 14,
-        title: "以下代码中，哪个访问权限修饰符的使用是正确的？<br><div class='code-block'><span class='code-comment'>// 文件: pkg/MyClass.java</span><br><span class='code-keyword'>package</span> pkg;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>MyClass</span> {<br>  <span class='code-comment'>// 希望这个变量只能在当前类中访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>int</span> secret = <span class='code-number'>42</span>;<br><br>  <span class='code-comment'>// 希望这个方法可以在任何地方访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>void</span> publicMethod() { ... }<br><br>  <span class='code-comment'>// 希望这个方法可以在同一个包中访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>void</span> packageMethod() { ... }<br>}</div>",
+        title: "以下代码中，哪个访问权限修饰符的使用是正确的？<br><div class='code-block'><span class='code-comment'>// 文件: pkg/MyClass.java</span><br><span class='code-keyword'>package</span> pkg;<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>MyClass</span> {<br>  <span class='code-comment'>// 希望这个变量只能在当前类中访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>int</span> secret = <span class='code-number'>42</span>;<br><br>  <span class='code-comment'>// 希望这个方法可以在任何地方访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>void</span> publicMethod() { ... }<br><br>  <span class='code-comment'>// 希望这个方法可以在同一个包中访问</span><br>  <span class='code-placeholder'>_______</span> <span class='code-keyword'>void</span> packageMethod() { ... }<br>}</div>",
         options: [
-          "A. private, public, 无修饰符",
-          "B. private, public, protected",
-          "C. public, private, 无修饰符",
-          "D. protected, public, private"
+          "private, public, 无修饰符",
+          "private, public, protected",
+          "public, private, 无修饰符",
+          "protected, public, private"
         ],
         answer: 0,
         explanation: "只能在当前类中访问使用private；在任何地方访问使用public；在同一个包中访问使用无修饰符（包访问权限）。所以正确答案是A：private, public, 无修饰符。"
@@ -923,10 +948,10 @@
         id: 15,
         title: "以下关于jar文件操作的命令，正确的是？",
         options: [
-          "A. 创建jar文件: jar -cvf my.jar com/",
-          "B. 查看jar文件内容: jar -tvf my.jar",
-          "C. 提取jar文件: jar -xvf my.jar",
-          "D. 以上都正确"
+          "创建jar文件: jar -cvf my.jar com/",
+          "查看jar文件内容: jar -tvf my.jar",
+          "提取jar文件: jar -xvf my.jar",
+          "以上都正确"
         ],
         answer: 3,
         explanation: "jar命令常用选项：-c创建jar文件，-v显示详细信息，-f指定jar文件名，-t列出jar文件内容，-x提取jar文件内容。所以：创建jar文件: jar -cvf my.jar com/；查看jar文件内容: jar -tvf my.jar；提取jar文件: jar -xvf my.jar。"
@@ -998,7 +1023,7 @@
       const question = questions[currentQuestionIndex];
       
       // 更新题目信息
-      questionTitleEl.textContent = question.title;
+      questionTitleEl.innerHTML = question.title;
       questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
       
       // 更新难度显示
@@ -1035,7 +1060,7 @@
         // 添加选项文本
         const optionText = document.createElement('div');
         optionText.className = 'option-text';
-        optionText.textContent = option;
+        optionText.innerHTML = option;
         
         // 组装选项
         optionDiv.appendChild(optionLetter);

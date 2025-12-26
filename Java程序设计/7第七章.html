@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第三章：面向对象基本概念</title>
+  <title>第六章：异常的捕获及处理 - 练习题</title>
   <style>
     :root {
       --primary-color: #4361ee;
@@ -34,7 +34,30 @@
       color: var(--dark-color);
       padding: 20px;
     }
+/* 代码块样式 - 添加在现有CSS中 */
+.code-block {
+  background: var(--light-color);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  margin: 10px 0;
+  border-left: 4px solid var(--primary-color);
+  overflow-x: auto;
+}
 
+.code-keyword {
+  color: #d73a49;
+  font-weight: bold;
+}
+
+.code-number {
+  color: #005cc5;
+}
+
+.code-string {
+  color: #032f62;
+}
     /* 头部导航 */
     .header {
       max-width: 1000px;
@@ -117,31 +140,6 @@
       font-size: 14px;
       color: var(--gray-color);
     }
-    
-    /* 代码块样式 - 添加在现有CSS中 */
-.code-block {
-  background: var(--light-color);
-  border-radius: 8px;
-  padding: 15px;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 14px;
-  margin: 10px 0;
-  border-left: 4px solid var(--primary-color);
-  overflow-x: auto;
-}
-
-.code-keyword {
-  color: #d73a49;
-  font-weight: bold;
-}
-
-.code-number {
-  color: #005cc5;
-}
-
-.code-string {
-  color: #032f62;
-}
 
     .progress-bar {
       height: 8px;
@@ -630,7 +628,7 @@
       <i class="fas fa-arrow-left"></i>
       返回首页
     </a>
-    <h1 class="page-title">Java程序设计课程</h1>
+    <h1 class="page-title">Java程序设计课程题库</h1>
   </div>
 
   <!-- 主容器 -->
@@ -776,187 +774,247 @@
      * 请按照以下格式添加题目：
      ************************************************************/
     const questions = [
-      {
-        id: 1,
-        title: "关于类和对象的关系，以下说法正确的是？",
-        options: [
-          "对象是类的实例",
-          "类是对象的模板",
-          "一个类可以创建多个对象",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "类是对象的模板，定义了对象的属性和方法。对象是类的实例，一个类可以创建多个对象，每个对象都有相同的结构但不同的属性值。"
-      },
-      {
-        id: 2,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Person</span> {<br>  <span class='code-keyword'>String</span> name;<br>  <span class='code-keyword'>int</span> age;<br><br>  <span class='code-keyword'>void</span> display() {<br>    System.out.println(<span class='code-string'>\"姓名：\"</span> + name + <span class='code-string'>\"，年龄：\"</span> + age);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Person p = <span class='code-keyword'>new</span> Person();<br>    p.name = <span class='code-string'>\"张三\"</span>;<br>    p.age = <span class='code-number'>20</span>;<br>    p.display();<br>  }<br>}</div>",
-        options: [
-          "姓名：null，年龄：0",
-          "姓名：张三，年龄：20",
-          "编译错误",
-          "运行时报错"
-        ],
-        answer: 1,
-        explanation: "创建Person对象后，设置name为\"张三\"，age为20，然后调用display()方法输出，所以输出结果为\"姓名：张三，年龄：20\"。"
-      },
-      {
-        id: 3,
-        title: "关于封装，以下说法错误的是？",
-        options: [
-          "封装就是将对象的属性和行为包装在一起",
-          "封装可以提高代码的安全性",
-          "Java中通过private关键字实现封装",
-          "封装后的类属性必须全部设置为private"
-        ],
-        answer: 3,
-        explanation: "封装并不要求所有属性都设置为private，而是根据实际需求决定。有些属性可能设置为protected或package-private更合适。封装的核心是隐藏实现细节，提供公共接口。"
-      },
-      {
-        id: 4,
-        title: "以下关于构造方法的说法，正确的是？",
-        options: [
-          "构造方法名必须与类名相同",
-          "构造方法没有返回类型，连void也不能有",
-          "一个类可以有多个构造方法（重载）",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "构造方法名必须与类名相同；构造方法没有返回类型，连void也不能有；可以通过方法重载提供多个构造方法，用于不同的初始化方式。"
-      },
-      {
-        id: 5,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Animal</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> sound() {<br>    System.out.println(<span class='code-string'>\"动物发出声音\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Dog</span> <span class='code-keyword'>extends</span> Animal {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>void</span> sound() {<br>    System.out.println(<span class='code-string'>\"汪汪汪\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    Animal a = <span class='code-keyword'>new</span> Dog();<br>    a.sound();<br>  }<br>}</div>",
-        options: [
-          "动物发出声音",
-          "汪汪汪",
-          "编译错误",
-          "运行时报错"
-        ],
-        answer: 1,
-        explanation: "这是多态的典型例子。虽然声明的是Animal类型，但实际创建的是Dog对象。运行时调用的是Dog类中重写的sound()方法，所以输出\"汪汪汪\"。"
-      },
-      {
-        id: 6,
-        title: "关于继承，以下说法错误的是？",
-        options: [
-          "Java中使用extends关键字实现继承",
-          "子类可以继承父类的非私有属性和方法",
-          "Java支持多重继承",
-          "子类可以重写父类的方法"
-        ],
-        answer: 2,
-        explanation: "Java不支持多重继承（一个类继承多个父类），但可以通过接口实现多重继承的效果。Java只支持单继承，即一个类只能有一个直接父类。"
-      },
-      {
-        id: 7,
-        title: "以下关于this关键字的说法，正确的是？",
-        options: [
-          "this表示当前对象的引用",
-          "在构造方法中，this()可以调用本类的其他构造方法",
-          "当局部变量和成员变量同名时，可以用this区分",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "this关键字表示当前对象的引用；在构造方法中可以使用this()调用本类的其他构造方法；当局部变量和成员变量同名时，使用this.变量名表示成员变量，不加this表示局部变量。"
-      },
-      {
-        id: 8,
-        title: "以下关于super关键字的说法，错误的是？",
-        options: [
-          "super表示父类对象的引用",
-          "super()可以调用父类的构造方法",
-          "super can call methods of the superclass that are overridden by the subclass.",
-          "super和this不能同时使用"
-        ],
-        answer: 3,
-        explanation: "super和this可以在同一个构造方法中使用，但必须位于第一行。实际上，在构造方法中，super()或this()调用必须是第一行语句，且二者不能同时出现。"
-      },
-      {
-        id: 9,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>A</span> {<br>  <span class='code-keyword'>int</span> x = <span class='code-number'>10</span>;<br>  <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"A: \"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>B</span> <span class='code-keyword'>extends</span> A {<br>  <span class='code-keyword'>int</span> x = <span class='code-number'>20</span>;<br>  <span class='code-keyword'>void</span> show() {<br>    System.out.println(<span class='code-string'>\"B: \"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    A obj = <span class='code-keyword'>new</span> B();<br>    System.out.println(obj.x);<br>    obj.show();<br>  }<br>}</div>",
-        options: [
-          "10<br>B: 20",
-          "20<br>B: 20",
-          "10<br>A: 10",
-          "20<br>A: 10"
-        ],
-        answer: 0,
-        explanation: "对于成员变量，引用类型决定访问哪个变量（编译时绑定），所以obj.x访问的是A类的x（10）。对于方法，实际对象类型决定调用哪个方法（运行时绑定），所以obj.show()调用的是B类的show()方法，输出B: 20。"
-      },
-      {
-        id: 10,
-        title: "关于抽象类和抽象方法，以下说法正确的是？",
-        options: [
-          "抽象类不能实例化",
-          "抽象方法只有声明，没有实现",
-          "包含抽象方法的类必须是抽象类",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "抽象类不能直接实例化，只能被继承；抽象方法只有声明没有实现（没有方法体）；如果一个类包含抽象方法，那么这个类必须是抽象类。"
-      },
-      {
-        id: 11,
-        title: "以下关于接口的说法，错误的是？",
-        options: [
-          "接口中的方法默认是public abstract的",
-          "接口中的变量默认是public static final的",
-          "一个类可以实现多个接口",
-          "接口可以包含构造方法"
-        ],
-        answer: 3,
-        explanation: "接口不能包含构造方法，因为接口不能被实例化。接口中的方法默认是public abstract的（Java 8以后可以有默认方法），变量默认是public static final的，一个类可以实现多个接口。"
-      },
-      {
-        id: 12,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>Parent</span> {<br>  <span class='code-keyword'>public</span> Parent() {<br>    System.out.print(<span class='code-string'>\"A\"</span>);<br>  }<br><br>  <span class='code-keyword'>public</span> Parent(<span class='code-keyword'>int</span> x) {<br>    System.out.print(<span class='code-string'>\"B\"</span> + x);<br>  }<br>}<br><br><span class='code-keyword'>class</span> <span class='code-type'>Child</span> <span class='code-keyword'>extends</span> Parent {<br>  <span class='code-keyword'>public</span> Child() {<br>    <span class='code-keyword'>super</span>(<span class='code-number'>5</span>);<br>    System.out.print(<span class='code-string'>\"C\"</span>);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>new</span> Child();<br>  }<br>}</div>",
-        options: [
-          "AC",
-          "B5C",
-          "A5C",
-          "B5"
-        ],
-        answer: 1,
-        explanation: "创建Child对象时，首先调用Child的构造方法。在Child构造方法中，super(5)调用父类的Parent(int x)构造方法，输出\"B5\"，然后继续执行Child构造方法，输出\"C\"，所以最终输出\"B5C\"。"
-      },
-      {
-        id: 13,
-        title: "关于方法重载(Overload)和方法重写(Override)，以下说法正确的是？",
-        options: [
-          "重载发生在同一个类中，重写发生在父子类之间",
-          "重载要求方法名相同，参数列表不同；重写要求方法名和参数列表都相同",
-          "重载与返回值类型无关，重写要求返回值类型兼容",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "方法重载发生在同一个类中，方法名相同但参数列表不同；方法重写发生在父子类之间，方法名和参数列表都相同。重载与返回值类型无关，重写要求返回值类型兼容（相同或是子类）。"
-      },
-      {
-        id: 14,
-        title: "以下关于final关键字的说法，错误的是？",
-        options: [
-          "final修饰的类不能被继承",
-          "final修饰的方法不能被重写",
-          "final修饰的变量是常量，值不能改变",
-          "final不能修饰局部变量"
-        ],
-        answer: 3,
-        explanation: "final可以修饰局部变量，表示该局部变量的值一旦被赋值就不能再修改。final可以修饰类、方法和变量（包括局部变量、成员变量和静态变量）。"
-      },
-      {
-        id: 15,
-        title: "以下关于静态(static)成员的说法，正确的是？",
-        options: [
-          "静态成员属于类，而不是属于对象",
-          "静态方法中不能直接访问非静态成员",
-          "静态成员在类加载时初始化",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "静态成员属于类，所有对象共享；静态方法中不能直接访问非静态成员（因为非静态成员依赖于对象实例）；静态成员在类加载时初始化，且只初始化一次。"
-      }
-    ];
+  {
+    id: 1,
+    title: "关于 Eclipse 工作空间（Workspace），以下说法正确的是？",
+    options: [
+      "工作空间是存储项目和配置的根目录",
+      "一个 Eclipse 实例一次只能打开一个工作空间",
+      "可以在启动 Eclipse 时选择不同的工作空间",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 工作空间：1. 存储项目文件、元数据和配置；2. 每次启动只能使用一个工作空间；3. 启动时可以选择或切换工作空间；4. 不同工作空间的项目和配置相互独立。"
+  },
+  {
+    id: 2,
+    title: "在 Eclipse 中，以下哪个快捷键用于快速修复错误或警告？",
+    options: [
+      "Ctrl + 1",
+      "Ctrl + Shift + F",
+      "Ctrl + Shift + O",
+      "Ctrl + Space"
+    ],
+    answer: 0,
+    explanation: "Eclipse 常用快捷键：Ctrl + 1（快速修复）、Ctrl + Shift + F（格式化代码）、Ctrl + Shift + O（组织导入，导入缺失的包）、Ctrl + Space（内容辅助/代码提示）。"
+  },
+  {
+    id: 3,
+    title: "关于 Eclipse 的透视图（Perspective），以下说法错误的是？",
+    options: [
+      "透视图定义了视图、编辑器和菜单的布局",
+      "Java 透视图和 Debug 透视图是常用的两种透视图",
+      "透视图切换后，项目的结构会改变",
+      "可以通过 Window → Perspective → Open Perspective 切换透视图"
+    ],
+    answer: 2,
+    explanation: "透视图是 Eclipse 界面的布局配置，切换透视图只改变视图布局和可见工具，不会改变项目结构。其他选项正确：Java 透视图用于编码，Debug 透视图用于调试；透视图可以通过菜单或工具栏切换。"
+  },
+  {
+    id: 4,
+    title: "在 Eclipse 中调试 Java 程序时，以下说法正确的是？",
+    options: [
+      "断点可以让程序在指定位置暂停执行",
+      "F5 键可以单步跳入（Step Into）方法内部",
+      "F6 键可以单步跳过（Step Over）当前行",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 调试功能：1. 断点用于暂停程序执行；2. F5（Step Into）：进入当前方法内部；3. F6（Step Over）：执行当前行，不进入方法；4. F7（Step Return）：从当前方法返回；5. F8（Resume）：继续执行到下一个断点。"
+  },
+  {
+    id: 5,
+    title: "以下 Eclipse 视图（View）中，哪个用于查看和修改变量值？",
+    options: [
+      "Package Explorer",
+      "Console",
+      "Variables",
+      "Outline"
+    ],
+    answer: 2,
+    explanation: "Eclipse 常用视图：1. Variables（变量视图）：调试时查看和修改变量值；2. Package Explorer（包资源管理器）：显示项目结构；3. Console（控制台）：显示程序输出；4. Outline（大纲）：显示当前类的结构。"
+  },
+  {
+    id: 6,
+    title: "关于 Eclipse 的重构（Refactor）功能，以下说法正确的是？",
+    options: [
+      "重命名（Rename）可以同时修改类名和所有引用",
+      "提取方法（Extract Method）可以将选中的代码块提取为新方法",
+      "内联（Inline）可以将方法调用替换为方法体",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 重构功能：1. 重命名（Alt+Shift+R）：智能重命名类、方法、变量等，自动更新所有引用；2. 提取方法（Alt+Shift+M）：将代码片段提取为独立方法；3. 内联（Alt+Shift+I）：将方法调用替换为方法体；4. 其他：提取接口、提取常量等。"
+  },
+  {
+    id: 7,
+    title: "在 Eclipse 中，以下哪个快捷键用于组织导入语句（导入缺失的包）？",
+    options: [
+      "Ctrl + Shift + O",
+      "Ctrl + Shift + F",
+      "Ctrl + /",
+      "Ctrl + D"
+    ],
+    answer: 0,
+    explanation: "Eclipse 常用快捷键：Ctrl + Shift + O（组织导入，自动导入缺失的包并删除未使用的导入）、Ctrl + Shift + F（格式化代码）、Ctrl + /（注释/取消注释行）、Ctrl + D（删除当前行）。"
+  },
+  {
+    id: 8,
+    title: "关于 Eclipse 的项目构建，以下说法正确的是？",
+    options: [
+      "Eclipse 默认启用自动构建（Build Automatically）",
+      "可以通过 Project → Clean 清理项目并重新构建",
+      "构建错误会在 Problems 视图中显示",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 构建：1. 默认启用自动构建，保存文件时自动编译；2. Project → Clean：清理已编译的 class 文件并重新构建；3. 构建错误和警告显示在 Problems 视图；4. 可以禁用自动构建，手动通过 Project → Build Project 构建。"
+  },
+  {
+    id: 9,
+    title: "在 Eclipse 中，如何快速查找类文件？",
+    options: [
+      "使用 Ctrl + Shift + R 打开资源查找对话框",
+      "使用 Ctrl + Shift + T 打开类型查找对话框",
+      "在 Package Explorer 中使用过滤功能",
+      "以上都可以"
+    ],
+    answer: 3,
+    explanation: "Eclipse 查找功能：1. Ctrl + Shift + R（Open Resource）：查找工作空间中的任何文件；2. Ctrl + Shift + T（Open Type）：查找 Java 类、接口等类型；3. Package Explorer 的过滤功能可以筛选显示的文件。"
+  },
+  {
+    id: 10,
+    title: "关于 Eclipse 的代码模板（Code Templates），以下说法正确的是？",
+    options: [
+      "可以通过输入缩写加 Ctrl + Space 快速生成代码",
+      "sysout 加 Ctrl + Space 可以生成 System.out.println()",
+      "for 加 Ctrl + Space 可以生成 for 循环模板",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 代码模板：预定义的代码片段，通过缩写+Ctrl+Space 快速生成。常用模板：sysout → System.out.println()；for → for 循环；foreach → 增强 for 循环；main → public static void main 方法。可以在 Window → Preferences → Java → Editor → Templates 中管理。"
+  },
+  {
+    id: 11,
+    title: "在 Eclipse 中调试时，以下哪种断点不是标准类型？",
+    options: [
+      "行断点（Line Breakpoint）",
+      "方法断点（Method Breakpoint）",
+      "异常断点（Exception Breakpoint）",
+      "循环断点（Loop Breakpoint）"
+    ],
+    answer: 3,
+    explanation: "Eclipse 断点类型：1. 行断点：在指定行暂停；2. 方法断点：在方法进入/退出时暂停；3. 异常断点：在抛出指定异常时暂停；4. 监视点（Watchpoint）：字段访问/修改时暂停；5. 条件断点：满足条件时暂停。没有专门的'循环断点'，但可以在循环内设置条件断点实现类似功能。"
+  },
+  {
+    id: 12,
+    title: "关于 Eclipse 的版本控制集成，以下说法正确的是？",
+    options: [
+      "Eclipse 集成了 Git、SVN 等版本控制系统",
+      "可以通过 Team 菜单进行版本控制操作",
+      "EGit 是 Eclipse 的 Git 集成插件",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 版本控制：1. 内置 Git 支持（EGit 插件）；2. 支持 SVN、CVS 等（需安装相应插件）；3. Team 菜单提供版本控制操作（提交、更新、推送等）；4. Git 仓库视图显示分支、提交历史等信息。"
+  },
+  {
+    id: 13,
+    title: "在 Eclipse 中，以下哪个快捷键用于显示方法的快速大纲？",
+    options: [
+      "Ctrl + O",
+      "Ctrl + T",
+      "Ctrl + F3",
+      "Ctrl + Shift + T"
+    ],
+    answer: 0,
+    explanation: "Eclipse 导航快捷键：1. Ctrl + O（Quick Outline）：显示当前类的快速大纲，包括方法和字段；2. Ctrl + T（Quick Type Hierarchy）：显示类型的快速层次结构；3. Ctrl + F3（Open Declaration）：打开选中元素的声明；4. Ctrl + Shift + T（Open Type）：打开类型查找对话框。"
+  },
+  {
+    id: 14,
+    title: "关于 Eclipse 的代码格式化，以下说法错误的是？",
+    options: [
+      "可以使用 Ctrl + Shift + F 格式化选中的代码或整个文件",
+      "格式化规则可以在 Preferences → Java → Code Style → Formatter 中配置",
+      "格式化时不能保留原有的代码风格",
+      "可以创建和导入自定义格式化配置文件"
+    ],
+    answer: 2,
+    explanation: "Eclipse 代码格式化：1. Ctrl + Shift + F 格式化代码；2. 可以配置格式化规则（缩进、换行、空格等）；3. 可以创建、导出、导入格式化配置文件（如团队统一风格）；4. 格式化会按照配置的规则调整代码风格，可以配置为保留部分原有格式。"
+  },
+  {
+    id: 15,
+    title: "在 Eclipse 中，如何查看一个类的方法调用层次？",
+    options: [
+      "右键类 → References → Workspace",
+      "右键方法 → Open Call Hierarchy（或 Ctrl+Alt+H）",
+      "使用 Outline 视图查看类结构",
+      "以上都可以"
+    ],
+    answer: 1,
+    explanation: "Eclipse 调用层次分析：1. 右键方法 → Open Call Hierarchy（或 Ctrl+Alt+H）：打开调用层次视图，显示该方法被哪些方法调用（Caller）以及调用了哪些方法（Callee）；2. 右键类 → References：查找引用该类的地方；3. Outline 视图只显示类结构，不显示调用关系。"
+  },
+  {
+    id: 16,
+    title: "关于 Eclipse 的运行配置（Run Configuration），以下说法正确的是？",
+    options: [
+      "可以为同一个程序创建多个不同的运行配置",
+      "可以配置程序参数、VM 参数、类路径等",
+      "调试配置（Debug Configuration）与运行配置类似",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 运行配置：1. Run → Run Configurations：创建和管理运行配置；2. 可以配置 Main 类、参数、JRE、类路径等；3. 可以为同一程序创建多个配置（不同参数）；4. Debug Configurations 类似，用于调试配置；5. 可以导出/导入配置。"
+  },
+  {
+    id: 17,
+    title: "在 Eclipse 中，如何快速生成 getter 和 setter 方法？",
+    options: [
+      "右键 → Source → Generate Getters and Setters",
+      "使用快捷键 Alt + Shift + S，然后选择 R",
+      "在编辑器中输入 get 或 set 后按 Ctrl + Space",
+      "以上都可以"
+    ],
+    answer: 3,
+    explanation: "Eclipse 生成代码功能：1. 右键 → Source → Generate Getters and Setters；2. 快捷键 Alt + Shift + S 打开源代码菜单，选择 Generate Getters and Setters；3. 使用代码模板：输入 get 或 set 后按 Ctrl+Space 选择；4. 可以批量选择字段生成。"
+  },
+  {
+    id: 18,
+    title: "关于 Eclipse 的问题视图（Problems View），以下说法错误的是？",
+    options: [
+      "显示编译错误、警告和信息",
+      "可以按严重性（错误、警告）过滤问题",
+      "双击问题可以定位到代码中的相应位置",
+      "问题视图只能显示当前项目的问题"
+    ],
+    answer: 3,
+    explanation: "Problems 视图：1. 显示工作空间中所有项目的编译问题；2. 可以按项目、类型、严重性过滤；3. 双击问题项可以跳转到对应代码位置；4. 还可以显示其他工具（如Javadoc、任务标签）产生的问题。"
+  },
+  {
+    id: 19,
+    title: "在 Eclipse 中，以下哪个快捷键用于在编辑器中查找文本？",
+    options: [
+      "Ctrl + F",
+      "Ctrl + H",
+      "Ctrl + J",
+      "Ctrl + K"
+    ],
+    answer: 0,
+    explanation: "Eclipse 查找快捷键：1. Ctrl + F：在当前编辑器中查找/替换；2. Ctrl + H：打开搜索对话框（全局搜索）；3. Ctrl + K：查找下一个（与上次查找相同）；4. Ctrl + J：增量查找（输入时实时查找）。"
+  },
+  {
+    id: 20,
+    title: "关于 Eclipse 的任务标签（Task Tags），以下说法正确的是？",
+    options: [
+      "TODO、FIXME 是默认的任务标签",
+      "可以在代码注释中使用任务标签标记待办事项",
+      "任务标签会在 Tasks 视图中显示",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Eclipse 任务标签：1. 默认标签：TODO、FIXME、XXX；2. 在注释中使用：// TODO 需要完成的功能；3. Tasks 视图显示所有任务标签；4. 可以在 Preferences → Java → Compiler → Task Tags 中添加/修改标签。"
+  }
+];
     
     /************************************************************
      * 2. 初始化变量
@@ -1129,7 +1187,6 @@
       
       // 更新导航状态
       updateQuestionNav();
-      
     }
     
     /************************************************************
