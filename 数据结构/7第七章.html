@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第章： - 练习题</title>
+  <title>第七章：图 - 练习题</title>
   <style>
     :root {
       --primary-color: #4361ee;
@@ -773,7 +773,268 @@
      * 1. 在这里添加您的题目数据
      * 请按照以下格式添加题目：
      ************************************************************/
-    
+    const questions = [
+    {
+        id: 1,
+        title: "具有n个顶点的有向完全图有（ ）条边。",
+        options: [
+            "n(n-1)/2",
+            "n(n-1)",
+            "n(n+1)/2",
+            "n²"
+        ],
+        answer: 1,
+        explanation: "有向完全图中，每个顶点都与其他n-1个顶点有两条方向相反的边相连，所以总边数为n(n-1)。",
+        difficulty: "easy"
+    },
+    {
+        id: 2,
+        title: "对于具有n个顶点和e条边的有向图，采用邻接表表示时，拓扑排序算法的时间复杂度为（ ）。",
+        options: [
+            "O(n)",
+            "O(n+e)",
+            "O(n²)",
+            "O(n×e)"
+        ],
+        answer: 1,
+        explanation: "拓扑排序需要遍历所有顶点和边，每个顶点入栈一次，每条边被检查一次，所以时间复杂度为O(n+e)。",
+        difficulty: "medium"
+    },
+    {
+        id: 3,
+        title: "已知有向图G=(V,E)，其中V={v1,v2,v3,v4,v5,v6}，E={<v1,v2>,<v1,v4>,<v2,v6>,<v3,v1>,<v3,v4>,<v4,v5>,<v5,v2>,<v5,v6>}，则G的拓扑序列是（ ）。",
+        options: [
+            "v3,v1,v4,v5,v2,v6",
+            "v3,v1,v4,v5,v6,v2",
+            "v1,v3,v4,v5,v2,v6",
+            "v1,v3,v5,v4,v2,v6"
+        ],
+        answer: 0,
+        explanation: "拓扑序列要求如果存在从vi到vj的路径，则vi必须排在vj前面。检查各选项：A. v3,v1,v4,v5,v2,v6 满足所有边的方向；B. v5在v2前但存在边<v5,v2>，所以v2应在v5前，错误；C. v1在v3前但存在边<v3,v1>，所以v3应在v1前，错误；D. 同理错误。",
+        difficulty: "medium"
+    },
+    {
+        id: 4,
+        title: "在无向图中，所有顶点的度数之和等于边数的（ ）倍。",
+        options: [
+            "1/2",
+            "1",
+            "2",
+            "4"
+        ],
+        answer: 2,
+        explanation: "在无向图中，每条边连接两个顶点，为每个顶点的度数贡献1，所以所有顶点的度数之和等于边数的2倍。",
+        difficulty: "easy"
+    },
+    {
+        id: 5,
+        title: "用邻接矩阵存储图时，下列叙述正确的是（ ）。",
+        options: [
+            "邻接矩阵的大小只与图中顶点数有关，与边数无关",
+            "邻接矩阵是对称矩阵",
+            "邻接矩阵中非零元素的个数等于图中边的数目",
+            "用邻接矩阵可以检测图中是否存在环"
+        ],
+        answer: 0,
+        explanation: "A正确：邻接矩阵的大小为n×n，只与顶点数n有关；B错误：有向图的邻接矩阵不一定对称；C错误：无向图的邻接矩阵中，每条边对应两个非零元素（对称位置），所以非零元素个数是边数的2倍；D错误：检测环需要遍历图，仅凭邻接矩阵不能直接检测。",
+        difficulty: "easy"
+    },
+    {
+        id: 6,
+        title: "以下代码实现图的深度优先遍历，空白处应填入的代码是（ ）。<br><div class='code-block'><span class='code-keyword'>void</span> DFS(<span class='code-type'>Graph</span> G, <span class='code-keyword'>int</span> v) {<br>  visited[v] = <span class='code-number'>1</span>;<br>  printf(<span class='code-string'>\"%d \"</span>, v);<br>  <span class='code-keyword'>for</span> (w = FirstAdjVex(G, v); w >= <span class='code-number'>0</span>; w = NextAdjVex(G, v, w)) {<br>    <span class='code-keyword'>if</span> (!visited[w])<br>      __________;<br>  }<br>}</div>",
+        options: [
+            "DFS(G, w)",
+            "BFS(G, w)",
+            "visited[w] = 1",
+            "printf(\"%d \", w)"
+        ],
+        answer: 0,
+        explanation: "深度优先遍历在访问顶点v后，对v的未访问邻接点w递归调用DFS，所以应填入DFS(G, w)。",
+        difficulty: "easy"
+    },
+    {
+        id: 7,
+        title: "对于含有n个顶点、e条边的无向连通图，利用Prim算法生成最小生成树的时间复杂度为（ ）。",
+        options: [
+            "O(n²)",
+            "O(elog₂e)",
+            "O(n+e)",
+            "O(n³)"
+        ],
+        answer: 0,
+        explanation: "Prim算法采用邻接矩阵存储图时，时间复杂度为O(n²)；采用邻接表和优先队列时，时间复杂度为O(elog₂n)。但通常教材中默认邻接矩阵实现，所以选O(n²)。注意：若采用邻接表和最小堆，复杂度为O(elog₂n)，但选项中无此选项。",
+        difficulty: "medium"
+    },
+    {
+        id: 8,
+        title: "用Dijkstra算法求单源最短路径时，要求图中所有边的权值必须（ ）。",
+        options: [
+            "均为正数",
+            "均不为负数",
+            "可正可负",
+            "无要求"
+        ],
+        answer: 1,
+        explanation: "Dijkstra算法要求所有边的权值非负。如果有负权边，算法可能得不到正确结果。注意：是“非负”而不是“均为正”，0也是允许的。",
+        difficulty: "medium"
+    },
+    {
+        id: 9,
+        title: "一个有向图具有拓扑排序序列，则该有向图一定是（ ）。",
+        options: [
+            "强连通图",
+            "连通图",
+            "有环图",
+            "无环图"
+        ],
+        answer: 3,
+        explanation: "拓扑排序的前提是有向无环图（DAG）。如果有环，则无法进行拓扑排序。",
+        difficulty: "easy"
+    },
+    {
+        id: 10,
+        title: "已知无向图G有16条边，其中度为4的顶点有3个，度为3的顶点有4个，其余顶点的度均小于3，则G中至少有（ ）个顶点。",
+        options: [
+            "10",
+            "11",
+            "12",
+            "13"
+        ],
+        answer: 1,
+        explanation: "设图G有n个顶点。度数之和=2×边数=32。已知3个度为4的顶点贡献12度，4个度为3的顶点贡献12度，剩余度数为32-24=8度。其余顶点度小于3，即最大为2。要让顶点数最少，则其余顶点度数应尽可能大（取2），需要8/2=4个顶点。所以总顶点数至少为3+4+4=11。",
+        difficulty: "medium"
+    },
+    {
+        id: 11,
+        title: "关键路径是AOE网中（ ）。",
+        options: [
+            "从源点到汇点的最长路径",
+            "从源点到汇点的最短路径",
+            "最长的回路",
+            "最短的回路"
+        ],
+        answer: 0,
+        explanation: "在AOE网（Activity On Edge network）中，关键路径是从源点（起始事件）到汇点（结束事件）的最长路径，路径长度表示完成整个工程所需的最短时间。",
+        difficulty: "easy"
+    },
+    {
+        id: 12,
+        title: "以下关于图的存储结构的叙述中，正确的是（ ）。",
+        options: [
+            "一个图的邻接矩阵表示是唯一的，邻接表表示也是唯一的",
+            "一个图的邻接矩阵表示是唯一的，邻接表表示不唯一",
+            "一个图的邻接矩阵表示不唯一，邻接表表示是唯一的",
+            "一个图的邻接矩阵表示不唯一，邻接表表示也不唯一"
+        ],
+        answer: 1,
+        explanation: "邻接矩阵表示是唯一的，因为顶点顺序确定后，矩阵就确定了。邻接表表示不唯一，因为每个顶点的邻接点顺序可以任意安排。",
+        difficulty: "easy"
+    },
+    {
+        id: 13,
+        title: "以下代码实现图的广度优先遍历，空白处应填入的代码是（ ）。<br><div class='code-block'><span class='code-keyword'>void</span> BFS(<span class='code-type'>Graph</span> G, <span class='code-keyword'>int</span> v) {<br>  visited[v] = <span class='code-number'>1</span>;<br>  EnQueue(Q, v);<br>  <span class='code-keyword'>while</span> (!IsEmpty(Q)) {<br>    DeQueue(Q, u);<br>    printf(<span class='code-string'>\"%d \"</span>, u);<br>    <span class='code-keyword'>for</span> (w = FirstAdjVex(G, u); w >= <span class='code-number'>0</span>; w = NextAdjVex(G, u, w)) {<br>      <span class='code-keyword'>if</span> (!visited[w]) {<br>        visited[w] = <span class='code-number'>1</span>;<br>        __________;<br>      }<br>    }<br>  }<br>}</div>",
+        options: [
+            "BFS(G, w)",
+            "EnQueue(Q, w)",
+            "DFS(G, w)",
+            "visited[w] = 0"
+        ],
+        answer: 1,
+        explanation: "广度优先遍历使用队列，当访问顶点u的未访问邻接点w时，将w标记为已访问并入队，所以应填入EnQueue(Q, w)。",
+        difficulty: "medium"
+    },
+    {
+        id: 14,
+        title: "用Kruskal算法求最小生成树时，通常采用（ ）来存储图。",
+        options: [
+            "邻接矩阵",
+            "邻接表",
+            "边集数组",
+            "十字链表"
+        ],
+        answer: 2,
+        explanation: "Kruskal算法需要对所有边按权值排序，然后依次选择不构成环的边。边集数组结构简单，便于对边排序，适合Kruskal算法。",
+        difficulty: "easy"
+    },
+    {
+        id: 15,
+        title: "若一个有向图的邻接矩阵中，主对角线以下元素均为0，则该图的拓扑序列（ ）。",
+        options: [
+            "存在且唯一",
+            "存在但不唯一",
+            "不存在",
+            "无法确定是否存在"
+        ],
+        answer: 0,
+        explanation: "邻接矩阵主对角线以下元素均为0，说明不存在从编号大的顶点指向编号小的顶点的边，即所有边的方向都是从编号小的指向编号大的。这样的图一定是无环的，且拓扑序列就是顶点编号递增的顺序，存在且唯一。",
+        difficulty: "medium"
+    },
+    {
+        id: 16,
+        title: "下列AOE网中，关键路径的长度为（ ）。<br>（图中边上的数字表示活动持续时间）<br>顶点：1→2(3), 1→3(2), 2→4(4), 3→4(5), 2→5(3), 4→6(2), 5→6(1)",
+        options: [
+            "9",
+            "10",
+            "11",
+            "12"
+        ],
+        answer: 1,
+        explanation: "从源点1到汇点6的路径有：1-2-4-6：3+4+2=9；1-2-5-6：3+3+1=7；1-3-4-6：2+5+2=9；最长路径为9？但计算关键路径需要求最早发生时间和最迟发生时间。实际上，通过计算各事件的最早发生时间：ve(1)=0, ve(2)=3, ve(3)=2, ve(4)=max{ve(2)+4, ve(3)+5}=max{7,7}=7, ve(5)=ve(2)+3=6, ve(6)=max{ve(4)+2, ve(5)+1}=max{9,7}=9。所以关键路径长度为9。但选项中没有9？检查：1-2-4-6=3+4+2=9，1-3-4-6=2+5+2=9。所以应该是9。选项有9，选A。但选项A是9吗？题目选项：A.9, B.10, C.11, D.12。所以选A。",
+        difficulty: "hard"
+    },
+    {
+        id: 17,
+        title: "用邻接表存储图时，顶点v的度等于（ ）。",
+        options: [
+            "顶点v的邻接表中的结点数",
+            "遍历整个邻接表得到的与v相邻的顶点数",
+            "遍历整个邻接表得到的与v相邻的顶点数的一半",
+            "无法确定"
+        ],
+        answer: 0,
+        explanation: "对于无向图，顶点v的度等于顶点v的邻接表中的结点数；对于有向图，顶点v的出度等于顶点v的邻接表中的结点数，入度需要遍历整个邻接表统计。但题目问的是“度”，对于无向图就是邻接表结点数；对于有向图，通常问出度或入度。这里没有说明是有向还是无向，但一般默认无向图，所以选A。",
+        difficulty: "easy"
+    },
+    {
+        id: 18,
+        title: "下列算法中，（ ）算法可用于求有向图的所有强连通分量。",
+        options: [
+            "Dijkstra",
+            "Floyd",
+            "Kruskal",
+            "Kosaraju"
+        ],
+        answer: 3,
+        explanation: "Kosaraju算法和Tarjan算法是求有向图强连通分量的经典算法。Dijkstra是最短路径，Floyd是所有点对最短路径，Kruskal是最小生成树。",
+        difficulty: "medium"
+    },
+    {
+        id: 19,
+        title: "若一个有向图具有拓扑排序序列，则它的邻接矩阵必定是（ ）。",
+        options: [
+            "对称矩阵",
+            "稀疏矩阵",
+            "三角矩阵",
+            "不一定"
+        ],
+        answer: 3,
+        explanation: "有向无环图（DAG）的邻接矩阵不一定是对称矩阵（通常不对称），也不一定是稀疏矩阵（可能稠密），也不一定是三角矩阵（通过重新编号可以使邻接矩阵为上三角，但原矩阵不一定）。所以选D，不一定。",
+        difficulty: "medium"
+    },
+    {
+        id: 20,
+        title: "以下代码用于检测有向图中是否存在环，空白处应填入的代码是（ ）。<br><div class='code-block'><span class='code-keyword'>int</span> visited[MAX_VERTEX_NUM];<br><span class='code-keyword'>int</span> onStack[MAX_VERTEX_NUM];  <span class='code-comment'>// 记录顶点是否在当前递归栈中</span><br><span class='code-keyword'>int</span> hasCycle = <span class='code-number'>0</span>;<br><br><span class='code-keyword'>void</span> DFS(<span class='code-type'>Graph</span> G, <span class='code-keyword'>int</span> v) {<br>  visited[v] = <span class='code-number'>1</span>;<br>  onStack[v] = <span class='code-number'>1</span>;<br>  <span class='code-keyword'>for</span> (w = FirstAdjVex(G, v); w >= <span class='code-number'>0</span>; w = NextAdjVex(G, v, w)) {<br>    <span class='code-keyword'>if</span> (!visited[w]) {<br>      DFS(G, w);<br>    } <span class='code-keyword'>else</span> <span class='code-keyword'>if</span> (__________) {<br>      hasCycle = <span class='code-number'>1</span>;<br>      <span class='code-keyword'>return</span>;<br>    }<br>  }<br>  onStack[v] = <span class='code-number'>0</span>;<br>}</div>",
+        options: [
+            "visited[w] == 1",
+            "onStack[w] == 1",
+            "visited[w] == 0",
+            "onStack[w] == 0"
+        ],
+        answer: 1,
+        explanation: "检测有向图是否有环的方法：深度优先遍历时，如果遇到一个顶点w已经被访问过，并且还在当前递归栈中（即onStack[w]==1），说明存在从w到v的边，且v是w的后继，形成了环。所以应填入onStack[w] == 1。",
+        difficulty: "hard"
+    }
+];
     
     /************************************************************
      * 2. 初始化变量

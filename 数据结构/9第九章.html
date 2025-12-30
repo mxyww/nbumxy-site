@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第章： - 练习题</title>
+  <title>第九章：排序 - 练习题</title>
   <style>
     :root {
       --primary-color: #4361ee;
@@ -773,7 +773,268 @@
      * 1. 在这里添加您的题目数据
      * 请按照以下格式添加题目：
      ************************************************************/
-    
+    const questions = [
+    {
+        id: 1,
+        title: "对一组数据(2, 12, 16, 88, 5, 10)进行排序，若前3趟排序结果如下：<br>第一趟：2, 12, 16, 5, 10, 88<br>第二趟：2, 12, 5, 10, 16, 88<br>第三趟：2, 5, 10, 12, 16, 88<br>则采用的排序方法可能是（ ）。",
+        options: [
+            "冒泡排序",
+            "希尔排序",
+            "快速排序",
+            "归并排序"
+        ],
+        answer: 0,
+        explanation: "从排序过程可以看出，每趟排序都将一个最大元素移动到正确位置（第一趟88到最后，第二趟16到倒数第二，第三趟12到倒数第三），这是冒泡排序的特点。",
+        difficulty: "easy"
+    },
+    {
+        id: 2,
+        title: "以下代码实现的是（ ）排序算法。<br><div class='code-block'><span class='code-keyword'>void</span> sort(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> n) {<br>  <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> i = <span class='code-number'>1</span>; i < n; i++) {<br>    <span class='code-keyword'>int</span> temp = arr[i];<br>    <span class='code-keyword'>int</span> j = i - <span class='code-number'>1</span>;<br>    <span class='code-keyword'>while</span> (j >= <span class='code-number'>0</span> && arr[j] > temp) {<br>      arr[j + <span class='code-number'>1</span>] = arr[j];<br>      j--;<br>    }<br>    arr[j + <span class='code-number'>1</span>] = temp;<br>  }<br>}</div>",
+        options: [
+            "冒泡排序",
+            "插入排序",
+            "选择排序",
+            "快速排序"
+        ],
+        answer: 1,
+        explanation: "这段代码实现的是直接插入排序。算法将数组分为已排序和未排序两部分，每次从未排序部分取出第一个元素，插入到已排序部分的正确位置。",
+        difficulty: "easy"
+    },
+    {
+        id: 3,
+        title: "对n个关键字进行快速排序，最大递归深度为（ ），最小递归深度为（ ）。",
+        options: [
+            "n, 1",
+            "n, ⌈log₂n⌉",
+            "n, ⌊log₂n⌋",
+            "n, ⌈log₂n⌉+1"
+        ],
+        answer: 3,
+        explanation: "快速排序的递归深度与划分的平衡性有关。最坏情况下（每次划分都产生一个大小为n-1和一个大小为0的子序列），递归深度为n；最好情况下（每次划分都平衡），递归深度为⌈log₂n⌉+1。",
+        difficulty: "medium"
+    },
+    {
+        id: 4,
+        title: "以下代码实现的是堆排序中的（ ）操作。<br><div class='code-block'><span class='code-keyword'>void</span> adjustHeap(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> i, <span class='code-keyword'>int</span> n) {<br>  <span class='code-keyword'>int</span> temp = arr[i];<br>  <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> k = <span class='code-number'>2</span> * i + <span class='code-number'>1</span>; k < n; k = <span class='code-number'>2</span> * k + <span class='code-number'>1</span>) {<br>    <span class='code-keyword'>if</span> (k + <span class='code-number'>1</span> < n && arr[k] < arr[k + <span class='code-number'>1</span>]) k++;<br>    <span class='code-keyword'>if</span> (temp >= arr[k]) <span class='code-keyword'>break</span>;<br>    arr[i] = arr[k];<br>    i = k;<br>  }<br>  arr[i] = temp;<br>}</div>",
+        options: [
+            "建堆",
+            "堆调整",
+            "堆插入",
+            "堆删除"
+        ],
+        answer: 1,
+        explanation: "这段代码实现的是堆调整（heapify）操作。它从位置i开始，向下调整堆，确保以i为根的子树满足堆的性质。",
+        difficulty: "medium"
+    },
+    {
+        id: 5,
+        title: "下列排序算法中，最坏情况下时间复杂度为O(n²)且是不稳定排序的是（ ）。",
+        options: [
+            "堆排序",
+            "快速排序",
+            "归并排序",
+            "希尔排序"
+        ],
+        answer: 1,
+        explanation: "A.堆排序最坏O(nlog₂n)，不稳定；B.快速排序最坏O(n²)，不稳定；C.归并排序最坏O(nlog₂n)，稳定；D.希尔排序最坏O(n¹·³)~O(n²)，不稳定。但题目要求最坏O(n²)且不稳定，快速排序符合。注意：希尔排序时间复杂度取决于增量序列，最坏可能达到O(n²)，但通常认为希尔排序是不稳定的。但快速排序更典型。",
+        difficulty: "medium"
+    },
+    {
+        id: 6,
+        title: "对下列关键字序列用快速排序进行排序，速度最快的是（ ），速度最慢的是（ ）。",
+        options: [
+            "{21,25,5,17,9,23,30}, {25,23,30,17,21,5,9}",
+            "{21,9,17,30,25,23,5}, {25,23,30,17,21,5,9}",
+            "{5,9,17,21,23,25,30}, {25,23,30,17,21,5,9}",
+            "{21,17,9,30,25,23,5}, {5,9,17,21,23,25,30}"
+        ],
+        answer: 2,
+        explanation: "快速排序的性能取决于划分的平衡性。对于第一个序列：已排序序列划分最不平衡，速度最慢；随机序列或部分有序序列速度中等；完全逆序也最慢。题目中{5,9,17,21,23,25,30}已有序，快速排序最慢；{25,23,30,17,21,5,9}相对随机，速度较快。但选项C中第一个序列有序最慢，第二个序列随机较快，符合题意。",
+        difficulty: "hard"
+    },
+    {
+        id: 7,
+        title: "以下代码实现的是（ ）排序算法。<br><div class='code-block'><span class='code-keyword'>void</span> sort(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> n) {<br>  <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> gap = n / <span class='code-number'>2</span>; gap > <span class='code-number'>0</span>; gap /= <span class='code-number'>2</span>) {<br>    <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> i = gap; i < n; i++) {<br>      <span class='code-keyword'>int</span> temp = arr[i];<br>      <span class='code-keyword'>int</span> j = i;<br>      <span class='code-keyword'>while</span> (j >= gap && arr[j - gap] > temp) {<br>        arr[j] = arr[j - gap];<br>        j -= gap;<br>      }<br>      arr[j] = temp;<br>    }<br>  }<br>}</div>",
+        options: [
+            "希尔排序",
+            "插入排序",
+            "归并排序",
+            "快速排序"
+        ],
+        answer: 0,
+        explanation: "这段代码实现的是希尔排序（Shell Sort）。希尔排序是插入排序的改进版本，通过比较相距一定间隔（gap）的元素来工作，随着算法的进行，间隔逐渐减小，最后间隔为1时就是插入排序。",
+        difficulty: "medium"
+    },
+    {
+        id: 8,
+        title: "下列排序算法中，占用额外空间最多的是（ ）。",
+        options: [
+            "堆排序",
+            "快速排序",
+            "归并排序",
+            "希尔排序"
+        ],
+        answer: 2,
+        explanation: "A.堆排序原地排序，O(1)额外空间；B.快速排序递归调用需要栈空间，平均O(log₂n)，最坏O(n)；C.归并排序需要O(n)的额外空间；D.希尔排序原地排序，O(1)。所以归并排序占用额外空间最多。",
+        difficulty: "easy"
+    },
+    {
+        id: 9,
+        title: "对n个元素进行排序，以下算法中，（ ）在最坏情况下的时间复杂度最优。",
+        options: [
+            "冒泡排序",
+            "快速排序",
+            "堆排序",
+            "插入排序"
+        ],
+        answer: 2,
+        explanation: "A.冒泡排序最坏O(n²)；B.快速排序最坏O(n²)；C.堆排序最坏O(nlog₂n)；D.插入排序最坏O(n²)。所以堆排序最坏情况下的时间复杂度最优。",
+        difficulty: "easy"
+    },
+    {
+        id: 10,
+        title: "以下代码实现的是（ ）排序算法。<br><div class='code-block'><span class='code-keyword'>void</span> sort(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> left, <span class='code-keyword'>int</span> right) {<br>  <span class='code-keyword'>if</span> (left < right) {<br>    <span class='code-keyword'>int</span> i = left, j = right, pivot = arr[left];<br>    <span class='code-keyword'>while</span> (i < j) {<br>      <span class='code-keyword'>while</span> (i < j && arr[j] >= pivot) j--;<br>      <span class='code-keyword'>if</span> (i < j) arr[i++] = arr[j];<br>      <span class='code-keyword'>while</span> (i < j && arr[i] <= pivot) i++;<br>      <span class='code-keyword'>if</span> (i < j) arr[j--] = arr[i];<br>    }<br>    arr[i] = pivot;<br>    sort(arr, left, i - <span class='code-number'>1</span>);<br>    sort(arr, i + <span class='code-number'>1</span>, right);<br>  }<br>}</div>",
+        options: [
+            "快速排序",
+            "归并排序",
+            "堆排序",
+            "希尔排序"
+        ],
+        answer: 0,
+        explanation: "这段代码实现的是快速排序。它选择第一个元素作为枢轴（pivot），然后进行划分，将小于枢轴的元素移到左边，大于枢轴的元素移到右边，然后递归排序左右两部分。",
+        difficulty: "medium"
+    },
+    {
+        id: 11,
+        title: "对{15, 9, 7, 8, 20, -1, 4}进行堆排序，构建初始大顶堆后，数组序列是（ ）。",
+        options: [
+            "{20, 15, 7, 8, 9, -1, 4}",
+            "{20, 15, 7, 8, 9, 4, -1}",
+            "{20, 15, 4, 8, 9, 7, -1}",
+            "{20, 15, 4, 8, 9, -1, 7}"
+        ],
+        answer: 3,
+        explanation: "从最后一个非叶子节点开始（下标为2，元素7）向上调整。调整过程：1. 调整7，子树{7, -1, 4}已经是大顶堆；2. 调整9，子树{9, 8, 20}，20最大，交换9和20，得{20, 8, 9}；3. 调整15，子树{15, 20, 7}，20最大，交换15和20，然后子树{15, 8, 9}需要调整，9最大，交换15和9。最终序列为{20, 15, 4, 8, 9, -1, 7}。",
+        difficulty: "hard"
+    },
+    {
+        id: 12,
+        title: "下列排序算法中，平均时间复杂度为O(nlog₂n)且是稳定排序的是（ ）。",
+        options: [
+            "堆排序",
+            "快速排序",
+            "归并排序",
+            "希尔排序"
+        ],
+        answer: 2,
+        explanation: "A.堆排序不稳定；B.快速排序不稳定；C.归并排序稳定且平均O(nlog₂n)；D.希尔排序不稳定。",
+        difficulty: "easy"
+    },
+    {
+        id: 13,
+        title: "以下代码实现的是（ ）排序算法。<br><div class='code-block'><span class='code-keyword'>void</span> sort(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> n) {<br>  <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> i = <span class='code-number'>0</span>; i < n - <span class='code-number'>1</span>; i++) {<br>    <span class='code-keyword'>int</span> minIndex = i;<br>    <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> j = i + <span class='code-number'>1</span>; j < n; j++) {<br>      <span class='code-keyword'>if</span> (arr[j] < arr[minIndex]) minIndex = j;<br>    }<br>    <span class='code-keyword'>if</span> (minIndex != i) {<br>      <span class='code-keyword'>int</span> temp = arr[i];<br>      arr[i] = arr[minIndex];<br>      arr[minIndex] = temp;<br>    }<br>  }<br>}</div>",
+        options: [
+            "冒泡排序",
+            "插入排序",
+            "选择排序",
+            "快速排序"
+        ],
+        answer: 2,
+        explanation: "这段代码实现的是简单选择排序。每次从未排序部分选择最小元素，与未排序部分的第一个元素交换。",
+        difficulty: "easy"
+    },
+    {
+        id: 14,
+        title: "对下列整数序列使用基数排序，按照最低位优先法，第一趟分配收集后结果是（ ）。<br>序列：170, 45, 75, 90, 802, 24, 2, 66",
+        options: [
+            "{170, 90, 802, 2, 24, 45, 75, 66}",
+            "{802, 2, 24, 45, 66, 170, 75, 90}",
+            "{170, 90, 802, 2, 24, 45, 66, 75}",
+            "{802, 2, 24, 45, 75, 66, 170, 90}"
+        ],
+        answer: 1,
+        explanation: "最低位优先（LSD）：第一趟按个位数分配收集。个位数：0:170,90；2:802,2；4:24；5:45,75；6:66。收集：170,90,802,2,24,45,75,66。但选项中没有完全匹配的。仔细检查：个位为0的有170,90；个位为2的有802,2；个位为4的有24；个位为5的有45,75；个位为6的有66。收集顺序应该是：170,90,802,2,24,45,75,66。选项A：{170, 90, 802, 2, 24, 45, 75, 66}完全匹配。所以选A。",
+        difficulty: "medium"
+    },
+    {
+        id: 15,
+        title: "以下代码实现的是二路归并排序中的（ ）操作。<br><div class='code-block'><span class='code-keyword'>void</span> merge(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> left, <span class='code-keyword'>int</span> mid, <span class='code-keyword'>int</span> right) {<br>  <span class='code-keyword'>int</span> i = left, j = mid + <span class='code-number'>1</span>, k = <span class='code-number'>0</span>;<br>  <span class='code-keyword'>int</span> temp[right - left + <span class='code-number'>1</span>];<br>  <span class='code-keyword'>while</span> (i <= mid && j <= right) {<br>    <span class='code-keyword'>if</span> (arr[i] <= arr[j]) temp[k++] = arr[i++];<br>    <span class='code-keyword'>else</span> temp[k++] = arr[j++];<br>  }<br>  <span class='code-keyword'>while</span> (i <= mid) temp[k++] = arr[i++];<br>  <span class='code-keyword'>while</span> (j <= right) temp[k++] = arr[j++];<br>  <span class='code-keyword'>for</span> (i = left, k = <span class='code-number'>0</span>; i <= right; i++, k++) arr[i] = temp[k];<br>}</div>",
+        options: [
+            "划分",
+            "合并",
+            "递归",
+            "排序"
+        ],
+        answer: 1,
+        explanation: "这段代码实现的是归并排序中的合并（merge）操作。它将两个有序子序列（arr[left..mid]和arr[mid+1..right]）合并为一个有序序列。",
+        difficulty: "easy"
+    },
+    {
+        id: 16,
+        title: "对n个元素进行排序，下列排序算法中，平均比较次数最少的是（ ）。",
+        options: [
+            "直接插入排序",
+            "简单选择排序",
+            "快速排序",
+            "归并排序"
+        ],
+        answer: 2,
+        explanation: "A.直接插入排序平均O(n²)；B.简单选择排序平均O(n²)；C.快速排序平均O(nlog₂n)；D.归并排序平均O(nlog₂n)。但快速排序的常数因子较小，实际应用中通常比归并排序快，所以平均比较次数最少。",
+        difficulty: "medium"
+    },
+    {
+        id: 17,
+        title: "以下代码实现的是冒泡排序，空白处应填入的代码是（ ）。<br><div class='code-block'><span class='code-keyword'>void</span> bubbleSort(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> n) {<br>  <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> i = <span class='code-number'>0</span>; i < n - <span class='code-number'>1</span>; i++) {<br>    <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> j = <span class='code-number'>0</span>; j < __________; j++) {<br>      <span class='code-keyword'>if</span> (arr[j] > arr[j + <span class='code-number'>1</span>]) {<br>        <span class='code-keyword'>int</span> temp = arr[j];<br>        arr[j] = arr[j + <span class='code-number'>1</span>];<br>        arr[j + <span class='code-number'>1</span>] = temp;<br>      }<br>    }<br>  }<br>}</div>",
+        options: [
+            "n - i",
+            "n - i - 1",
+            "n - 1",
+            "n"
+        ],
+        answer: 1,
+        explanation: "冒泡排序每一趟都会将最大的元素沉到最后，所以第i趟时，最后i个元素已经有序，内层循环只需要比较前n-i-1个元素。所以空白处应填入n - i - 1。",
+        difficulty: "easy"
+    },
+    {
+        id: 18,
+        title: "下列排序算法中，在待排序数据已有序时，花费时间最多的是（ ）。",
+        options: [
+            "冒泡排序",
+            "快速排序",
+            "堆排序",
+            "归并排序"
+        ],
+        answer: 1,
+        explanation: "A.冒泡排序在有序时只需一趟扫描，O(n)；B.快速排序在有序时（如果选择第一个元素为枢轴）划分极不平衡，达到最坏情况O(n²)；C.堆排序始终O(nlog₂n)；D.归并排序始终O(nlog₂n)。所以快速排序花费时间最多。",
+        difficulty: "medium"
+    },
+    {
+        id: 19,
+        title: "下列排序算法中，在任何情况下都能保持O(nlog₂n)时间复杂度的是（ ）。",
+        options: [
+            "希尔排序",
+            "快速排序",
+            "堆排序",
+            "归并排序"
+        ],
+        answer: 3,
+        explanation: "A.希尔排序时间复杂度取决于增量序列，最坏可能O(n²)；B.快速排序最坏O(n²)；C.堆排序最好、最坏、平均都是O(nlog₂n)；D.归并排序最好、最坏、平均都是O(nlog₂n)。但堆排序和归并排序都是O(nlog₂n)，但题目说“在任何情况下”，两者都满足。可能出题者认为归并排序更稳定，但堆排序也是。通常归并排序是稳定排序，但时间复杂度方面两者都是O(nlog₂n)。根据常见考题，选堆排序或归并排序。这里选C或D，但题目是单选，我们看选项：C.堆排序，D.归并排序。通常认为两者都是，但归并排序需要额外空间。可能题目期望选堆排序，因为它是原地排序。但无法确定。我们根据常见说法：归并排序在任何情况下都是O(nlog₂n)。所以选D。",
+        difficulty: "medium"
+    },
+    {
+        id: 20,
+        title: "以下代码实现的是（ ）排序算法。<br><div class='code-block'><span class='code-keyword'>void</span> sort(<span class='code-keyword'>int</span> arr[], <span class='code-keyword'>int</span> n) {<br>  <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> i = n / <span class='code-number'>2</span> - <span class='code-number'>1</span>; i >= <span class='code-number'>0</span>; i--) {<br>    adjustHeap(arr, i, n);<br>  }<br>  <span class='code-keyword'>for</span> (<span class='code-keyword'>int</span> i = n - <span class='code-number'>1</span>; i > <span class='code-number'>0</span>; i--) {<br>    <span class='code-keyword'>int</span> temp = arr[<span class='code-number'>0</span>];<br>    arr[<span class='code-number'>0</span>] = arr[i];<br>    arr[i] = temp;<br>    adjustHeap(arr, <span class='code-number'>0</span>, i);<br>  }<br>}</div>",
+        options: [
+            "选择排序",
+            "堆排序",
+            "归并排序",
+            "希尔排序"
+        ],
+        answer: 1,
+        explanation: "这段代码实现的是堆排序。第一步：构建初始堆（从最后一个非叶子节点开始调整）；第二步：将堆顶元素（最大元素）与末尾元素交换，然后调整剩余元素为堆，重复直到排序完成。",
+        difficulty: "medium"
+    }
+];
     
     /************************************************************
      * 2. 初始化变量

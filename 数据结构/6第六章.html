@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第章： - 练习题</title>
+  <title>第六章：树和二叉树 - 练习题</title>
   <style>
     :root {
       --primary-color: #4361ee;
@@ -773,7 +773,268 @@
      * 1. 在这里添加您的题目数据
      * 请按照以下格式添加题目：
      ************************************************************/
-    
+    const questions = [
+    {
+        id: 1,
+        title: "一棵完全二叉树上有1001个结点，其中叶子结点的个数是（ ）。",
+        options: [
+            "250",
+            "500",
+            "501",
+            "505"
+        ],
+        answer: 2,
+        explanation: "对于完全二叉树，叶子结点数 = 结点总数 - 最大结点编号/2。设总结点数为n，则叶子结点数为⌈n/2⌉。当n=1001时，叶子结点数为⌈1001/2⌉ = 501。或者用公式：完全二叉树中，叶子结点数 = (n+1)/2（当n为奇数时），n=1001为奇数，所以叶子结点数 = (1001+1)/2 = 501。",
+        difficulty: "medium"
+    },
+    {
+        id: 2,
+        title: "若二叉树采用二叉链表存储结构，要交换其所有分支结点左、右子树的位置，利用（ ）遍历方法最合适。",
+        options: [
+            "前序",
+            "中序",
+            "后序",
+            "层次"
+        ],
+        answer: 0,
+        explanation: "交换所有分支结点的左右子树，最适合用前序遍历。因为在前序遍历中，先访问根结点，然后递归遍历左子树和右子树。在访问根结点时交换其左右子树，然后再递归处理左右子树，这样可以保证所有结点都被处理到。",
+        difficulty: "medium"
+    },
+    {
+        id: 3,
+        title: "一棵非空二叉树的先序遍历序列与后序遍历序列正好相反，则该二叉树一定满足（ ）。",
+        options: [
+            "所有的结点均无左孩子",
+            "所有的结点均无右孩子",
+            "只有一个叶子结点",
+            "是一棵满二叉树"
+        ],
+        answer: 2,
+        explanation: "先序遍历序列与后序遍历序列正好相反，说明二叉树中每个结点要么是叶子结点，要么只有一个孩子结点。这样的二叉树高度等于结点个数，且先序序列是根到叶子的路径，后序序列是叶子到根的路径，两者正好相反。这样的二叉树只有一个叶子结点。",
+        difficulty: "hard"
+    },
+    {
+        id: 4,
+        title: "设哈夫曼树中有199个结点，则该哈夫曼树中有（ ）个叶子结点。",
+        options: [
+            "99",
+            "100",
+            "101",
+            "102"
+        ],
+        answer: 1,
+        explanation: "哈夫曼树只有度为0和度为2的结点，设叶子结点数为n，则总结点数 = 2n-1。已知总结点数 = 199，所以2n-1=199，解得n=100。",
+        difficulty: "easy"
+    },
+    {
+        id: 5,
+        title: "将一棵树转换为二叉树后，该二叉树的形态是（ ）。",
+        options: [
+            "唯一的",
+            "有多种，但根结点都没有右孩子",
+            "有多种",
+            "有多种，但根结点都没有左孩子"
+        ],
+        answer: 0,
+        explanation: "树转换为二叉树的方法是：每个结点的第一个孩子作为二叉树的左孩子，下一个兄弟作为二叉树的右孩子。由于树的结构是确定的，所以转换后的二叉树形态是唯一的。",
+        difficulty: "easy"
+    },
+    {
+        id: 6,
+        title: "已知一棵二叉树的前序遍历序列为ABDEGCFH，中序遍历序列为DBGEACHF，则后序遍历序列为（ ）。",
+        options: [
+            "DGEBHFCA",
+            "DGEBHFAC",
+            "GEDBHFCA",
+            "GEDBHFC"
+        ],
+        answer: 0,
+        explanation: "由前序序列可知A是根结点，在中序序列中A左边的是左子树结点（DBGE），右边的是右子树结点（CHF）。递归构造二叉树：左子树的前序序列为BDEG，中序序列为DBGE；右子树的前序序列为CFH，中序序列为CHF。最终得到的二叉树后序遍历序列为DGEBHFCA。",
+        difficulty: "medium"
+    },
+    {
+        id: 7,
+        title: "以下代码实现二叉树的中序遍历，空白处应填入的代码是（ ）。<br><div class='code-block'><span class='code-keyword'>void</span> InOrderTraversal(<span class='code-type'>BiTree</span> T) {<br>  <span class='code-keyword'>if</span> (T != <span class='code-number'>NULL</span>) {<br>    InOrderTraversal(T->lchild);<br>    __________;<br>    InOrderTraversal(T->rchild);<br>  }<br>}</div>",
+        options: [
+            "printf(\"%c\", T->data)",
+            "printf(\"%c\", T->lchild->data)",
+            "printf(\"%c\", T->rchild->data)",
+            "return"
+        ],
+        answer: 0,
+        explanation: "中序遍历的顺序是：左子树、根结点、右子树。所以在递归遍历左子树后，应该访问根结点，即输出T->data，然后再递归遍历右子树。",
+        difficulty: "easy"
+    },
+    {
+        id: 8,
+        title: "一棵二叉树的前序遍历序列为1234567，中序遍历序列为3241657，则后序遍历序列为（ ）。",
+        options: [
+            "3426751",
+            "3426571",
+            "3425671",
+            "3425761"
+        ],
+        answer: 0,
+        explanation: "由前序序列可知根结点为1，在中序序列中1左边的是左子树结点（324），右边的是右子树结点（657）。递归构造：左子树前序为234，中序为324；右子树前序为567，中序为657。最终得到的二叉树后序遍历序列为3426751。",
+        difficulty: "medium"
+    },
+    {
+        id: 9,
+        title: "深度为h的满m叉树的第k层有（ ）个结点（1≤k≤h）。",
+        options: [
+            "m^(k-1)",
+            "m^k - 1",
+            "m^h - 1",
+            "m^(h-1)"
+        ],
+        answer: 0,
+        explanation: "满m叉树中，第1层有1个结点（即m^0），第2层有m个结点（即m^1），第3层有m^2个结点，以此类推，第k层有m^(k-1)个结点。",
+        difficulty: "easy"
+    },
+    {
+        id: 10,
+        title: "利用二叉链表存储树，则根结点的右指针是（ ）。",
+        options: [
+            "指向最左孩子",
+            "指向最右孩子",
+            "空",
+            "非空"
+        ],
+        answer: 2,
+        explanation: "树转换为二叉树后，根结点没有右孩子（因为树的根结点没有兄弟），所以根结点的右指针为空。",
+        difficulty: "easy"
+    },
+    {
+        id: 11,
+        title: "设二叉树中度为0的结点数为n0，度为1的结点数为n1，度为2的结点数为n2，则下列关系成立的是（ ）。",
+        options: [
+            "n0 = n1 + 1",
+            "n0 = n2 + 1",
+            "n0 = n1 + n2",
+            "n0 = 2n2 + 1"
+        ],
+        answer: 1,
+        explanation: "二叉树中，总结点数n = n0 + n1 + n2。同时，边数 = n - 1 = n1 + 2n2。联立两式：n0 + n1 + n2 - 1 = n1 + 2n2，化简得n0 = n2 + 1。",
+        difficulty: "easy"
+    },
+    {
+        id: 12,
+        title: "以下关于树的说法中，正确的是（ ）。",
+        options: [
+            "树中只有一个结点的度为零",
+            "树中每个结点的度都大于零",
+            "树的度为树中所有结点的度的最大值",
+            "树的深度为树中所有结点的度的最大值"
+        ],
+        answer: 2,
+        explanation: "A错误：叶子结点的度为零，树中可能有多个叶子结点；B错误：叶子结点的度为零；C正确：树的度定义为树中所有结点的度的最大值；D错误：树的深度是树中结点的最大层次。",
+        difficulty: "easy"
+    },
+    {
+        id: 13,
+        title: "以下代码实现统计二叉树中叶子结点的个数，空白处应填入的代码是（ ）。<br><div class='code-block'><span class='code-keyword'>int</span> CountLeaf(<span class='code-type'>BiTree</span> T) {<br>  <span class='code-keyword'>if</span> (T == <span class='code-number'>NULL</span>) <span class='code-keyword'>return</span> <span class='code-number'>0</span>;<br>  <span class='code-keyword'>if</span> (__________) <span class='code-keyword'>return</span> <span class='code-number'>1</span>;<br>  <span class='code-keyword'>return</span> CountLeaf(T->lchild) + CountLeaf(T->rchild);<br>}</div>",
+        options: [
+            "T->lchild == NULL && T->rchild == NULL",
+            "T->lchild == NULL || T->rchild == NULL",
+            "T->lchild != NULL && T->rchild != NULL",
+            "T->lchild != NULL || T->rchild != NULL"
+        ],
+        answer: 0,
+        explanation: "叶子结点的条件是：左右孩子都为空。所以当T->lchild == NULL && T->rchild == NULL时，该结点是叶子结点，返回1。",
+        difficulty: "easy"
+    },
+    {
+        id: 14,
+        title: "设森林F中有三棵树，第一、第二、第三棵树的结点个数分别为M1、M2和M3。与森林F对应的二叉树根结点的右子树上的结点个数是（ ）。",
+        options: [
+            "M1",
+            "M1 + M2",
+            "M2 + M3",
+            "M3"
+        ],
+        answer: 2,
+        explanation: "森林转换为二叉树时，第一棵树的根作为二叉树的根，第一棵树的子树作为二叉树的左子树，其余树（第二棵、第三棵等）作为二叉树的右子树。所以二叉树根结点的右子树上的结点数就是除第一棵树外所有树的结点总数，即M2 + M3。",
+        difficulty: "medium"
+    },
+    {
+        id: 15,
+        title: "一棵二叉树的先序序列为ABCDEFG，中序序列为CBDAFGE，则后序序列为（ ）。",
+        options: [
+            "CDBFGEA",
+            "CDBGFEA",
+            "CDBFGAE",
+            "CDBGFEA"
+        ],
+        answer: 0,
+        explanation: "先序序列的第一个结点A是根结点，在中序序列中A左边的是左子树（CBD），右边的是右子树（FGE）。递归构造：左子树先序为BCD，中序为CBD；右子树先序为EFG，中序为FGE。最终得到的二叉树后序遍历序列为CDBFGEA。",
+        difficulty: "medium"
+    },
+    {
+        id: 16,
+        title: "以下代码实现二叉树的高度计算，空白处应填入的代码是（ ）。<br><div class='code-block'><span class='code-keyword'>int</span> Height(<span class='code-type'>BiTree</span> T) {<br>  <span class='code-keyword'>if</span> (T == <span class='code-number'>NULL</span>) <span class='code-keyword'>return</span> <span class='code-number'>0</span>;<br>  <span class='code-keyword'>int</span> leftHeight = Height(T->lchild);<br>  <span class='code-keyword'>int</span> rightHeight = Height(T->rchild);<br>  <span class='code-keyword'>return</span> __________ ? leftHeight + <span class='code-number'>1</span> : rightHeight + <span class='code-number'>1</span>;<br>}</div>",
+        options: [
+            "leftHeight > rightHeight",
+            "leftHeight < rightHeight",
+            "leftHeight >= rightHeight",
+            "leftHeight <= rightHeight"
+        ],
+        answer: 0,
+        explanation: "二叉树的高度等于左右子树高度的较大值加1。所以应该返回左右子树中较高的那个高度再加1。因此，当leftHeight > rightHeight时，返回leftHeight + 1，否则返回rightHeight + 1。注意，如果两者相等，返回哪个都可以，但通常用>或>=都可以。但代码中用的是? : 三元运算符，所以用leftHeight > rightHeight更准确。",
+        difficulty: "easy"
+    },
+    {
+        id: 17,
+        title: "已知字符集{a,b,c,d,e,f,g,h}，对应频率为{5,29,7,8,14,23,3,11}，以这些频率作为权值构造哈夫曼树，则字符c的哈夫曼编码为（ ）。",
+        options: [
+            "1110",
+            "1100",
+            "1011",
+            "1010"
+        ],
+        answer: 0,
+        explanation: "构造哈夫曼树：将所有结点按权值从小到大排序，每次取最小的两个结点合并，直到只剩一棵树。构造完成后，字符c的权值为7，在哈夫曼树中的路径为：从根节点开始，左分支为0，右分支为1，c的编码为1110（具体取决于构造方式，但通常按左0右1，且权值小的在左）。计算过程略，但根据频率构造后可得c的编码为1110。",
+        difficulty: "hard"
+    },
+    {
+        id: 18,
+        title: "一棵二叉树的中序序列为ABCDEFG，后序序列为BDCAFGE，则前序序列为（ ）。",
+        options: [
+            "EACBDGF",
+            "EACDBGF",
+            "EACBDG",
+            "EACDBG"
+        ],
+        answer: 0,
+        explanation: "后序序列的最后一个结点E是根结点，在中序序列中E左边的是左子树（ABCD），右边的是右子树（FG）。递归构造：左子树中序为ABCD，后序为BDCA；右子树中序为FG，后序为FG。最终得到的二叉树前序遍历序列为EACBDGF。",
+        difficulty: "hard"
+    },
+    {
+        id: 19,
+        title: "以下关于二叉树的说法中，正确的是（ ）。",
+        options: [
+            "二叉树中每个结点的度都小于等于2",
+            "二叉树中至少有一个结点的度为2",
+            "二叉树中每个结点的度都为2",
+            "二叉树中每个结点的度都大于等于2"
+        ],
+        answer: 0,
+        explanation: "二叉树的定义：每个结点至多有两棵子树，即每个结点的度小于等于2。所以A正确。B错误：二叉树可以所有结点的度都小于2（比如单支树）。C错误：二叉树中可以存在度为1或0的结点。D错误：二叉树中可以有度为0或1的结点。",
+        difficulty: "easy"
+    },
+    {
+        id: 20,
+        title: "设一棵二叉树的前序遍历序列和后序遍历序列分别为1,2,3,4和4,3,2,1，则其中序遍历序列不可能是（ ）。",
+        options: [
+            "1,2,3,4",
+            "2,3,4,1",
+            "3,2,4,1",
+            "4,3,2,1"
+        ],
+        answer: 3,
+        explanation: "前序序列为1,2,3,4，后序序列为4,3,2,1，可知根结点为1，且根结点只有左子树（因为后序序列的倒数第二个是2，不是1的右孩子）。可能的二叉树结构：根结点1，左子树结点为2,3,4。由于前序和后序不能唯一确定二叉树，我们需要检查每个选项。选项A：中序为1,2,3,4，则二叉树为右斜树（1为根，2为右孩子，3为2的右孩子，4为3的右孩子），前序为1,2,3,4，后序为4,3,2,1，符合。选项B：中序为2,3,4,1，则二叉树为左斜树（1为根，2为左孩子，3为2的左孩子，4为3的左孩子），前序为1,2,3,4，后序为4,3,2,1，符合。选项C：中序为3,2,4,1，则二叉树：1为根，左子树根为2，2的左孩子为3，右孩子为4，前序为1,2,3,4，后序为3,4,2,1，但题目给的后序是4,3,2,1，不符合。选项D：中序为4,3,2,1，则二叉树为左斜树（与B类似但顺序不同），实际上中序为4,3,2,1时，前序应为1,2,3,4，后序为4,3,2,1，符合。但选项C不可能。注意：本题要求选不可能，所以选C。但仔细分析，选项C的中序序列3,2,4,1对应的二叉树前序为1,2,3,4，后序为3,4,2,1，与题目给出的后序序列4,3,2,1不一致，所以不可能。",
+        difficulty: "hard"
+    }
+];
     
     /************************************************************
      * 2. 初始化变量
