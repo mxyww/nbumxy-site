@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第十一章：并发控制 - 练习题</title>
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary-color: #7209b7;
+      --success-color: #06d6a0;
+      --error-color: #ef476f;
+      --warning-color: #ffd166;
+      --dark-color: #2b2d42;
+      --light-color: #f8f9fa;
+      --gray-color: #8d99ae;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+    }
+/* 代码块样式 - 添加在现有CSS中 */
+.code-block {
+  background: var(--light-color);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  margin: 10px 0;
+  border-left: 4px solid var(--primary-color);
+  overflow-x: auto;
+}
+
+.code-keyword {
+  color: #d73a49;
+  font-weight: bold;
+}
+
+.code-number {
+  color: #005cc5;
+}
+
+.code-string {
+  color: #032f62;
+}
+    /* 头部导航 */
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* 主容器 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    /* 左侧题目区域 */
+    .question-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    /* 进度条 */
+    .progress-container {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--gray-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* 题目信息 */
+    .question-header {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .question-difficulty {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .difficulty-easy {
+      background: rgba(6, 214, 160, 0.1);
+      color: #06d6a0;
+    }
+
+    .difficulty-medium {
+      background: rgba(255, 209, 102, 0.1);
+      color: #ff9e00;
+    }
+
+    .difficulty-hard {
+      background: rgba(239, 71, 111, 0.1);
+      color: #ef476f;
+    }
+
+    /* 选项区域 */
+    .options-container {
+      margin: 30px 0;
+    }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(6, 214, 160, 0.1);
+    }
+
+    .option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(239, 71, 111, 0.1);
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--error-color);
+      color: white;
+      border-color: var(--error-color);
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    /* 答案反馈 */
+    .feedback-container {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .feedback-container.show {
+      display: block;
+    }
+
+    .feedback-correct {
+      background: rgba(6, 214, 160, 0.1);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .feedback-incorrect {
+      background: rgba(239, 71, 111, 0.1);
+      border-left: 4px solid var(--error-color);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feedback-correct .feedback-icon {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .feedback-incorrect .feedback-icon {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .feedback-explanation {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    /* 控制按钮 */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #3a56d4;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+    }
+
+    .btn-secondary:hover {
+      background: #e9ecef;
+      transform: translateY(-3px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* 右侧信息面板 */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .stats-card, .hint-card, .navigation-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .hint-card {
+      border-top: 6px solid var(--warning-color);
+    }
+
+    .navigation-card {
+      border-top: 6px solid var(--success-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      font-size: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-color);
+      display: block;
+      margin-top: 5px;
+    }
+
+    .hint-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .question-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover {
+      background: #e9ecef;
+    }
+
+    .question-nav-item.active {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .question-nav-number {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .question-nav-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--light-color);
+    }
+
+    .question-nav-status.correct {
+      background: var(--success-color);
+    }
+
+    .question-nav-status.incorrect {
+      background: var(--error-color);
+    }
+
+    .question-nav-status.current {
+      background: var(--primary-color);
+    }
+
+    /* 完成页面 */
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon {
+      font-size: 80px;
+      color: var(--success-color);
+      margin-bottom: 20px;
+      animation: bounce 1s ease;
+    }
+
+    .completion-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .completion-subtitle {
+      font-size: 18px;
+      color: var(--gray-color);
+      margin-bottom: 40px;
+    }
+
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .completion-stat-item {
+      padding: 25px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      min-width: 150px;
+    }
+
+    .completion-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .completion-stat-label {
+      font-size: 16px;
+      color: var(--gray-color);
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* 动画 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .question-container {
+        padding: 25px;
+      }
+      
+      .controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .completion-stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 头部导航 -->
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">数据结构题库</h1>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- 左侧题目区域 -->
+    <div class="question-container">
+      <!-- 进度条 -->
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- 题目信息 -->
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <!-- 选项区域 -->
+      <div class="options-container" id="optionsContainer">
+        <!-- 选项将动态生成在这里 -->
+      </div>
+
+      <!-- 答案反馈 -->
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 右侧信息面板 -->
+    <div class="sidebar">
+      <!-- 统计数据 -->
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 提示卡片 -->
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>1. 点击选项选择答案</p>
+          <p>2. 系统会自动判断对错</p>
+          <p>3. 点击"下一题"继续答题</p>
+          <p>4. 右侧可查看答题进度</p>
+        </div>
+      </div>
+
+      <!-- 题目导航 -->
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav">
+          <!-- 题目导航将动态生成在这里 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 完成页面（初始隐藏） -->
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成数据结构课程题库！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /************************************************************
+     * 1. 在这里添加您的题目数据
+     * 请按照以下格式添加题目：
+     ************************************************************/
+    const questions = [
+  {
+    id: 1,
+    title: "并发控制的主要目的是确保多个事务并发执行时，数据库的什么特性不被破坏？",
+    options: [
+      "安全性和完整性",
+      "一致性和隔离性", 
+      "可用性和持久性",
+      "原子性和一致性"
+    ],
+    answer: 1,
+    explanation: "并发控制的主要目的是保证多个事务并发执行时，数据库的一致性和隔离性不被破坏。一致性确保事务执行前后数据库状态正确，隔离性确保并发事务之间互不干扰。",
+    tag: "并发控制概述",
+    difficulty: "简单"
+  },
+  {
+    id: 2,
+    title: "当多个事务并发执行时，如果不加以控制，可能会出现各种不一致问题。其中，“丢失修改”是指：",
+    options: [
+      "一个事务读取了另一个事务未提交的数据",
+      "一个事务的修改被另一个事务的修改覆盖", 
+      "一个事务读取了某数据后，另一个事务修改了该数据，导致第一个事务再次读取时数据发生了变化",
+      "事务并发执行时，某些事务长时间等待而无法继续执行"
+    ],
+    answer: 1,
+    explanation: "丢失修改是指两个事务同时读取同一数据并修改，其中一个事务的修改结果被另一个事务的修改结果覆盖，导致第一次的修改丢失。这是并发操作可能带来的主要问题之一。",
+    tag: "并发控制概述",
+    difficulty: "简单"
+  },
+  {
+    id: 3,
+    title: "不可重复读是指在一个事务内，多次读取同一数据集合，由于其他事务的修改，导致该事务前后读取的结果不一致。这种情况违反了事务的：",
+    options: [
+      "原子性",
+      "一致性", 
+      "隔离性",
+      "持久性"
+    ],
+    answer: 2,
+    explanation: "不可重复读是指在一个事务执行期间，由于其他事务的修改，导致该事务两次读取同一数据得到不同结果。这违反了事务的隔离性，即一个事务的执行不应受其他事务的干扰。",
+    tag: "并发控制概述",
+    difficulty: "中等"
+  },
+  {
+    id: 4,
+    title: "在SQL标准中，定义了4个事务隔离级别。其中，允许脏读、不可重复读和幻读的隔离级别是：",
+    options: [
+      "READ UNCOMMITTED",
+      "READ COMMITTED", 
+      "REPEATABLE READ",
+      "SERIALIZABLE"
+    ],
+    answer: 0,
+    explanation: "READ UNCOMMITTED（读未提交）是最低的隔离级别，允许脏读、不可重复读和幻读。READ COMMITTED（读已提交）不允许脏读，但允许不可重复读和幻读。REPEATABLE READ（可重复读）不允许脏读和不可重复读，但允许幻读。SERIALIZABLE（可串行化）最高的隔离级别，不允许任何不一致。",
+    tag: "事务隔离级别",
+    difficulty: "中等"
+  },
+  {
+    id: 5,
+    title: "在SQL中，设置事务隔离级别为可重复读的语句是：",
+    options: [
+      "<div class='code-block'>SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;</div>",
+      "<div class='code-block'>SET TRANSACTION ISOLATION LEVEL READ COMMITTED;</div>", 
+      "<div class='code-block'>SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;</div>",
+      "<div class='code-block'>SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;</div>"
+    ],
+    answer: 2,
+    explanation: "设置事务隔离级别的SQL语句格式为：SET TRANSACTION ISOLATION LEVEL <隔离级别>; 可重复读的隔离级别是REPEATABLE READ。",
+    tag: "事务隔离级别",
+    difficulty: "简单"
+  },
+  {
+    id: 6,
+    title: "封锁是实现并发控制的主要技术。基本的封锁类型有两种，分别是：",
+    options: [
+      "读锁和写锁",
+      "共享锁和排他锁", 
+      "表锁和行锁",
+      "乐观锁和悲观锁"
+    ],
+    answer: 1,
+    explanation: "基本的封锁类型有两种：共享锁（S锁，读锁）和排他锁（X锁，写锁）。共享锁用于读操作，允许多个事务同时获取；排他锁用于写操作，只允许一个事务获取。",
+    tag: "封锁",
+    difficulty: "简单"
+  },
+  {
+    id: 7,
+    title: "关于共享锁和排他锁，以下说法正确的是：",
+    options: [
+      "一个事务对数据对象加了共享锁，其他事务可以对该对象加共享锁，也可以加排他锁",
+      "一个事务对数据对象加了排他锁，其他事务可以对该对象加共享锁，但不能加排他锁", 
+      "一个事务对数据对象加了共享锁，其他事务可以对该对象加共享锁，但不能加排他锁",
+      "一个事务对数据对象加了排他锁，其他事务可以对该对象加排他锁，但不能加共享锁"
+    ],
+    answer: 2,
+    explanation: "共享锁与共享锁是相容的，共享锁与排他锁是不相容的，排他锁与排他锁也是不相容的。即：一个事务对数据对象加了共享锁，其他事务可以加共享锁，但不能加排他锁；一个事务对数据对象加了排他锁，其他事务既不能加共享锁也不能加排他锁。",
+    tag: "封锁",
+    difficulty: "中等"
+  },
+  {
+    id: 8,
+    title: "一级封锁协议可以解决的数据不一致问题是：",
+    options: [
+      "丢失修改",
+      "脏读", 
+      "不可重复读",
+      "幻读"
+    ],
+    answer: 0,
+    explanation: "一级封锁协议要求事务在修改数据之前必须先加X锁，直到事务结束才释放。这可以防止丢失修改问题，但不能防止脏读和不可重复读。",
+    tag: "封锁协议",
+    difficulty: "中等"
+  },
+  {
+    id: 9,
+    title: "二级封锁协议在一级封锁协议的基础上，增加的要求是：",
+    options: [
+      "事务在读取数据之前必须先加S锁，读完后即可释放",
+      "事务在读取数据之前必须先加S锁，直到事务结束才释放", 
+      "事务在修改数据之前必须先加X锁，读完后即可释放",
+      "事务在修改数据之前必须先加X锁，直到事务结束才释放"
+    ],
+    answer: 0,
+    explanation: "二级封锁协议要求：1) 事务在修改数据之前必须先加X锁，直到事务结束才释放；2) 事务在读取数据之前必须先加S锁，读完后即可释放。这样可以防止丢失修改和脏读，但不能防止不可重复读。",
+    tag: "封锁协议",
+    difficulty: "中等"
+  },
+  {
+    id: 10,
+    title: "三级封锁协议可以解决的数据不一致问题包括：",
+    options: [
+      "丢失修改",
+      "脏读和丢失修改", 
+      "不可重复读、脏读和丢失修改",
+      "幻读、不可重复读、脏读和丢失修改"
+    ],
+    answer: 2,
+    explanation: "三级封锁协议要求：1) 事务在修改数据之前必须先加X锁，直到事务结束才释放；2) 事务在读取数据之前必须先加S锁，直到事务结束才释放。这样可以防止丢失修改、脏读和不可重复读，但不能防止幻读。",
+    tag: "封锁协议",
+    difficulty: "中等"
+  },
+  {
+    id: 11,
+    title: "如果事务T1封锁了数据R，事务T2又请求封锁R，于是T2等待。T3也请求封锁R，当T1释放了R上的封锁之后，系统首先批准了T3的请求，T2仍然等待。然后T4又请求封锁R，当T3释放了R上的封锁之后，系统又批准了T4的请求，T2可能永远等待。这种现象称为：",
+    options: [
+      "死锁",
+      "活锁", 
+      "饥饿",
+      "阻塞"
+    ],
+    answer: 1,
+    explanation: "活锁是指事务永远处于等待状态，可能被其他事务“插队”而无法获得封锁，但并没有被永久阻塞（理论上仍有可能获得封锁）。死锁是指两个或多个事务互相等待对方释放锁，导致所有事务都无法继续执行。",
+    tag: "活锁和死锁",
+    difficulty: "中等"
+  },
+  {
+    id: 12,
+    title: "死锁是指两个或多个事务互相等待对方释放锁，导致所有事务都无法继续执行。预防死锁的方法之一是采用：",
+    options: [
+      "顺序封锁法",
+      "一次封锁法", 
+      "两段锁协议",
+      "超时法"
+    ],
+    answer: 1,
+    explanation: "一次封锁法要求事务一次性申请所有需要的锁，否则不执行。这样可以避免事务在执行过程中再申请锁，从而预防死锁。顺序封锁法是预先规定一个封锁顺序，所有事务都按这个顺序申请锁。两段锁协议是保证并发调度可串行性的协议，不能预防死锁。超时法是死锁检测和解除的方法之一。",
+    tag: "活锁和死锁",
+    difficulty: "中等"
+  },
+  {
+    id: 13,
+    title: "解决死锁问题的方法中，DBMS定期检测是否存在死锁，如果发现死锁，则选择一个事务将其撤销，释放该事务持有的锁，使其他事务得以继续运行。这种方法称为：",
+    options: [
+      "死锁预防",
+      "死锁避免", 
+      "死锁检测与解除",
+      "死锁忽略"
+    ],
+    answer: 2,
+    explanation: "死锁检测与解除是允许死锁发生，但系统定期检测死锁，一旦检测到死锁，就选择一个“代价最小”的事务撤销，释放其资源，打破死锁循环。",
+    tag: "活锁和死锁",
+    difficulty: "简单"
+  },
+  {
+    id: 14,
+    title: "多个事务并发执行是正确的，当且仅当其结果与按某一顺序串行执行这些事务时的结果相同。这种性质称为：",
+    options: [
+      "事务的原子性",
+      "事务的一致性", 
+      "调度的可串行性",
+      "调度的隔离性"
+    ],
+    answer: 2,
+    explanation: "可串行性是并发调度正确性的准则。多个事务的并发执行是正确的，当且仅当其结果与按某一顺序串行执行这些事务时的结果相同，则称这种调度为可串行化调度。",
+    tag: "并发调度的可串行性",
+    difficulty: "简单"
+  },
+  {
+    id: 15,
+    title: "两段锁协议（Two-Phase Locking，2PL）要求所有事务必须分两个阶段对数据项加锁和解锁。这两个阶段是：",
+    options: [
+      "申请阶段和释放阶段",
+      "扩展阶段和收缩阶段", 
+      "加锁阶段和解锁阶段",
+      "读取阶段和写入阶段"
+    ],
+    answer: 1,
+    explanation: "两段锁协议要求事务分为两个阶段：扩展阶段（申请锁，但不能释放锁）和收缩阶段（释放锁，但不能申请锁）。遵守两段锁协议的并发调度一定是可串行化的。",
+    tag: "两段锁协议",
+    difficulty: "中等"
+  },
+  {
+    id: 16,
+    title: "关于两段锁协议，以下说法正确的是：",
+    options: [
+      "两段锁协议可以保证不会发生死锁",
+      "两段锁协议可以保证不会发生活锁", 
+      "遵守两段锁协议的并发调度一定是可串行化的",
+      "遵守两段锁协议的并发调度一定不会发生死锁"
+    ],
+    answer: 2,
+    explanation: "两段锁协议是保证并发调度可串行性的充分条件，即遵守两段锁协议的并发调度一定是可串行化的。但两段锁协议不能保证避免死锁，实际上可能会产生死锁。",
+    tag: "两段锁协议",
+    difficulty: "中等"
+  },
+  {
+    id: 17,
+    title: "严格两段锁协议（Strict 2PL）要求：",
+    options: [
+      "事务在提交或回滚后才释放所有排他锁",
+      "事务在提交或回滚后才释放所有锁", 
+      "事务在读数据前加共享锁，读完后立即释放",
+      "事务在写数据前加排他锁，写完后立即释放"
+    ],
+    answer: 0,
+    explanation: "严格两段锁协议要求事务在提交或回滚后才释放所有排他锁（X锁），共享锁（S锁）可以在事务结束前释放。这样可以避免级联回滚，因为其他事务无法读取未提交的数据。",
+    tag: "两段锁协议",
+    difficulty: "较难"
+  },
+  {
+    id: 18,
+    title: "封锁的粒度是指封锁对象的大小。封锁粒度与系统的并发度和并发控制的开销密切相关，以下说法正确的是：",
+    options: [
+      "封锁粒度越小，并发度越高，系统开销越小",
+      "封锁粒度越大，并发度越高，系统开销越小", 
+      "封锁粒度越小，并发度越高，系统开销越大",
+      "封锁粒度越大，并发度越高，系统开销越大"
+    ],
+    answer: 2,
+    explanation: "封锁粒度越小，数据库中被封锁的对象越多，允许的并发度越高，但系统需要管理的锁越多，系统开销越大。封锁粒度越大，系统中需要管理的锁越少，系统开销越小，但并发度降低。",
+    tag: "封锁的粒度",
+    difficulty: "中等"
+  },
+  {
+    id: 19,
+    title: "多粒度封锁协议允许多粒度树中的节点被独立加锁。意向锁的作用是：",
+    options: [
+      "提高封锁的粒度",
+      "降低封锁的粒度", 
+      "提高并发度",
+      "表明对下层节点加锁的意向"
+    ],
+    answer: 3,
+    explanation: "意向锁表示事务对下层节点加锁的意向。如果一个节点加了意向锁，表示该节点的下层节点正在被加锁。意向锁分为意向共享锁（IS锁）、意向排他锁（IX锁）和共享意向排他锁（SIX锁）。意向锁可以提高封锁检查的效率。",
+    tag: "封锁的粒度",
+    difficulty: "中等"
+  },
+  {
+    id: 20,
+    title: "以下关于乐观并发控制的说法中，正确的是：",
+    options: [
+      "乐观并发控制假定冲突很少发生，事务执行时不加锁",
+      "乐观并发控制假定冲突经常发生，事务执行时加锁", 
+      "乐观并发控制分为读阶段、验证阶段和写阶段",
+      "乐观并发控制适合冲突频繁的应用环境"
+    ],
+    answer: 0,
+    explanation: "乐观并发控制假定事务间冲突很少发生，因此事务执行时不加锁，只在提交时检查是否有冲突。如果发生冲突，则回滚事务。乐观并发控制分为读阶段、验证阶段和写阶段。它适合冲突很少的应用环境，如查询为主的应用。",
+    tag: "并发控制概述",
+    difficulty: "中等"
+  }
+];
+    
+    /************************************************************
+     * 2. 初始化变量
+     ************************************************************/
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+    
+    /************************************************************
+     * 3. DOM元素引用
+     ************************************************************/
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+    
+    /************************************************************
+     * 4. 初始化函数
+     ************************************************************/
+    function init() {
+      if (questions.length === 0) {
+        // 如果没有题目，显示提示信息
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
+        return;
+      }
+      
+      // 初始化用户答案数组
+      userAnswers = new Array(questions.length).fill(null);
+      
+      // 加载第一题
+      loadQuestion();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 生成题目导航
+      generateQuestionNav();
+    }
+    
+    /************************************************************
+     * 5. 加载题目函数
+     ************************************************************/
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      
+      // 更新题目信息
+      questionTitleEl.innerHTML = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      
+      // 更新难度显示
+      questionDifficultyEl.textContent = 
+        question.difficulty === 'easy' ? '简单难度' : 
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      
+      // 清空选项容器
+      optionsContainerEl.innerHTML = '';
+      
+      // 创建选项
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        // 如果用户已经回答过此题，显示答案状态
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) {
+            optionDiv.classList.add('correct');
+          } else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) {
+            optionDiv.classList.add('incorrect');
+          }
+          if (index === userAnswers[currentQuestionIndex]) {
+            optionDiv.classList.add('selected');
+          }
+        }
+        
+        // 添加选项字母
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index); // A, B, C, D
+        
+        // 添加选项文本
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.innerHTML = option;
+        
+        // 组装选项
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        
+        // 如果还未回答此题，添加点击事件
+        if (userAnswers[currentQuestionIndex] === null) {
+          optionDiv.onclick = () => selectAnswer(optionDiv, index);
+        }
+        
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      
+      // 更新反馈区域
+      if (userAnswers[currentQuestionIndex] !== null) {
+        showFeedback();
+      } else {
+        feedbackContainerEl.classList.remove('show');
+      }
+      
+      // 更新按钮状态
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      
+      // 更新进度条
+      updateProgress();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 6. 选择答案函数
+     ************************************************************/
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      
+      // 禁用所有选项的点击
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.onclick = null;
+      });
+      
+      // 标记用户选择的选项
+      optionElement.classList.add('selected');
+      
+      // 存储用户答案
+      userAnswers[currentQuestionIndex] = answerIndex;
+      
+      // 显示正确答案和错误答案
+      if (answerIndex === question.answer) {
+        optionElement.classList.add('correct');
+      } else {
+        optionElement.classList.add('incorrect');
+        
+        // 标记正确答案
+        const correctOption = options[question.answer];
+        correctOption.classList.add('correct');
+      }
+      
+      // 显示反馈
+      showFeedback();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 7. 显示反馈函数
+     ************************************************************/
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      
+      // 设置反馈内容
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      
+      // 设置反馈样式
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+    
+    /************************************************************
+     * 8. 上一题/下一题函数
+     ************************************************************/
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+    
+    function nextQuestion() {
+      // 如果当前题目未回答，不能进入下一题
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择答案');
+        return;
+      }
+      
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        // 如果是最后一题，显示完成页面
+        showCompletionScreen();
+      }
+    }
+    
+    /************************************************************
+     * 9. 显示完成页面函数
+     ************************************************************/
+    function showCompletionScreen() {
+      // 隐藏主容器，显示完成页面
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      
+      // 计算最终统计数据
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      
+      // 更新完成页面统计
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      
+      quizCompleted = true;
+    }
+    
+    /************************************************************
+     * 10. 重新开始函数
+     ************************************************************/
+    function restartQuiz() {
+      // 重置状态
+      currentQuestionIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      quizCompleted = false;
+      
+      // 隐藏完成页面，显示主容器
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      
+      // 重新加载第一题
+      loadQuestion();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 11. 更新进度条函数
+     ************************************************************/
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    /************************************************************
+     * 12. 更新统计数据函数
+     ************************************************************/
+    function updateStats() {
+      const totalQuestions = questions.length;
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
+      
+      answeredCountEl.textContent = answeredQuestions;
+      correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`;
+      remainingCountEl.textContent = remainingQuestions;
+    }
+    
+    /************************************************************
+     * 13. 生成题目导航函数
+     ************************************************************/
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
+      
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'question-nav-item';
+        
+        if (index === currentQuestionIndex) {
+          navItem.classList.add('active');
+        }
+        
+        navItem.onclick = () => {
+          // 如果已完成答题，可以跳转到任何题目
+          // 如果未完成，只能跳转到已答题目或下一题
+          if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) {
+            currentQuestionIndex = index;
+            loadQuestion();
+          } else {
+            alert('请按顺序答题');
+          }
+        };
+        
+        const navNumber = document.createElement('div');
+        navNumber.className = 'question-nav-number';
+        navNumber.textContent = `第 ${index + 1} 题`;
+        
+        const navStatus = document.createElement('div');
+        navStatus.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          navStatus.classList.add('current');
+        }
+        
+        navItem.appendChild(navNumber);
+        navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
+    }
+    
+    /************************************************************
+     * 14. 更新题目导航函数
+     ************************************************************/
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      
+      navItems.forEach((item, index) => {
+        // 更新活动状态
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+        
+        // 更新状态指示器
+        const statusIndicator = item.querySelector('.question-nav-status');
+        statusIndicator.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          statusIndicator.classList.add('current');
+        }
+      });
+    }
+    
+    /************************************************************
+     * 15. 键盘导航支持
+     ************************************************************/
+    document.addEventListener('keydown', function(e) {
+      // 如果当前在完成页面，不处理键盘事件
+      if (completionScreenEl.style.display === 'block') return;
+      
+      // 数字键1-4选择答案
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) {
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        
+        if (optionIndex < options.length) {
+          options[optionIndex].click();
+        }
+      }
+      
+      // 左箭头或A键：上一题
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) {
+        prevQuestion();
+      }
+      
+      // 右箭头或D键：下一题
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else if (userAnswers[currentQuestionIndex] !== null) {
+          nextQuestion();
+        }
+      }
+      
+      // 空格键或回车键：如果已回答，进入下一题
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else {
+          nextQuestion();
+        }
+      }
+    });
+    
+    /************************************************************
+     * 16. 页面加载时初始化
+     ************************************************************/
+    window.onload = init;
+  </script>
+</body>
+</html>

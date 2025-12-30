@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第九章：关系数据查询处理和查询优化 - 练习题</title>
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary-color: #7209b7;
+      --success-color: #06d6a0;
+      --error-color: #ef476f;
+      --warning-color: #ffd166;
+      --dark-color: #2b2d42;
+      --light-color: #f8f9fa;
+      --gray-color: #8d99ae;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+    }
+/* 代码块样式 - 添加在现有CSS中 */
+.code-block {
+  background: var(--light-color);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  margin: 10px 0;
+  border-left: 4px solid var(--primary-color);
+  overflow-x: auto;
+}
+
+.code-keyword {
+  color: #d73a49;
+  font-weight: bold;
+}
+
+.code-number {
+  color: #005cc5;
+}
+
+.code-string {
+  color: #032f62;
+}
+    /* 头部导航 */
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* 主容器 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    /* 左侧题目区域 */
+    .question-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    /* 进度条 */
+    .progress-container {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--gray-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* 题目信息 */
+    .question-header {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .question-difficulty {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .difficulty-easy {
+      background: rgba(6, 214, 160, 0.1);
+      color: #06d6a0;
+    }
+
+    .difficulty-medium {
+      background: rgba(255, 209, 102, 0.1);
+      color: #ff9e00;
+    }
+
+    .difficulty-hard {
+      background: rgba(239, 71, 111, 0.1);
+      color: #ef476f;
+    }
+
+    /* 选项区域 */
+    .options-container {
+      margin: 30px 0;
+    }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(6, 214, 160, 0.1);
+    }
+
+    .option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(239, 71, 111, 0.1);
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--error-color);
+      color: white;
+      border-color: var(--error-color);
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    /* 答案反馈 */
+    .feedback-container {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .feedback-container.show {
+      display: block;
+    }
+
+    .feedback-correct {
+      background: rgba(6, 214, 160, 0.1);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .feedback-incorrect {
+      background: rgba(239, 71, 111, 0.1);
+      border-left: 4px solid var(--error-color);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feedback-correct .feedback-icon {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .feedback-incorrect .feedback-icon {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .feedback-explanation {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    /* 控制按钮 */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #3a56d4;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+    }
+
+    .btn-secondary:hover {
+      background: #e9ecef;
+      transform: translateY(-3px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* 右侧信息面板 */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .stats-card, .hint-card, .navigation-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .hint-card {
+      border-top: 6px solid var(--warning-color);
+    }
+
+    .navigation-card {
+      border-top: 6px solid var(--success-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      font-size: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-color);
+      display: block;
+      margin-top: 5px;
+    }
+
+    .hint-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .question-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover {
+      background: #e9ecef;
+    }
+
+    .question-nav-item.active {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .question-nav-number {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .question-nav-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--light-color);
+    }
+
+    .question-nav-status.correct {
+      background: var(--success-color);
+    }
+
+    .question-nav-status.incorrect {
+      background: var(--error-color);
+    }
+
+    .question-nav-status.current {
+      background: var(--primary-color);
+    }
+
+    /* 完成页面 */
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon {
+      font-size: 80px;
+      color: var(--success-color);
+      margin-bottom: 20px;
+      animation: bounce 1s ease;
+    }
+
+    .completion-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .completion-subtitle {
+      font-size: 18px;
+      color: var(--gray-color);
+      margin-bottom: 40px;
+    }
+
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .completion-stat-item {
+      padding: 25px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      min-width: 150px;
+    }
+
+    .completion-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .completion-stat-label {
+      font-size: 16px;
+      color: var(--gray-color);
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* 动画 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .question-container {
+        padding: 25px;
+      }
+      
+      .controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .completion-stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 头部导航 -->
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">数据结构题库</h1>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- 左侧题目区域 -->
+    <div class="question-container">
+      <!-- 进度条 -->
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- 题目信息 -->
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <!-- 选项区域 -->
+      <div class="options-container" id="optionsContainer">
+        <!-- 选项将动态生成在这里 -->
+      </div>
+
+      <!-- 答案反馈 -->
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 右侧信息面板 -->
+    <div class="sidebar">
+      <!-- 统计数据 -->
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 提示卡片 -->
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>1. 点击选项选择答案</p>
+          <p>2. 系统会自动判断对错</p>
+          <p>3. 点击"下一题"继续答题</p>
+          <p>4. 右侧可查看答题进度</p>
+        </div>
+      </div>
+
+      <!-- 题目导航 -->
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav">
+          <!-- 题目导航将动态生成在这里 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 完成页面（初始隐藏） -->
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成数据结构课程题库！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /************************************************************
+     * 1. 在这里添加您的题目数据
+     * 请按照以下格式添加题目：
+     ************************************************************/
+    const questions = [
+  {
+    id: 1,
+    title: "关系数据库管理系统查询处理的步骤通常为：",
+    options: [
+      "查询分析→查询检查→查询优化→查询执行",
+      "查询检查→查询分析→查询优化→查询执行", 
+      "查询优化→查询分析→查询检查→查询执行",
+      "查询分析→查询优化→查询检查→查询执行"
+    ],
+    answer: 0,
+    explanation: "查询处理的基本步骤：1) 查询分析：对查询语句进行词法和语法分析；2) 查询检查：检查语义和权限；3) 查询优化：选择高效执行策略；4) 查询执行：执行查询并返回结果。",
+    tag: "查询处理概述",
+    difficulty: "简单"
+  },
+  {
+    id: 2,
+    title: "在查询处理过程中，将查询语句转换为内部表示（如查询树）的阶段是：",
+    options: [
+      "查询分析",
+      "查询检查", 
+      "查询优化",
+      "查询执行"
+    ],
+    answer: 0,
+    explanation: "在查询分析阶段，系统对查询语句进行词法分析和语法分析，将其转换为查询树（语法分析树）或某种内部表示形式。",
+    tag: "查询处理概述",
+    difficulty: "简单"
+  },
+  {
+    id: 3,
+    title: "查询优化分为代数优化和物理优化。代数优化主要改变查询的：",
+    options: [
+      "存取路径",
+      "执行算法", 
+      "操作顺序",
+      "存储结构"
+    ],
+    answer: 2,
+    explanation: "代数优化（逻辑优化）是基于关系代数表达式的等价变换规则，改变查询操作（选择、投影、连接等）的顺序和组合，而不考虑存取路径等物理因素。",
+    tag: "查询优化概述",
+    difficulty: "简单"
+  },
+  {
+    id: 4,
+    title: "在关系代数表达式中，选择操作应尽可能：",
+    options: [
+      "最后执行",
+      "最早执行", 
+      "与投影同时执行",
+      "与连接同时执行"
+    ],
+    answer: 1,
+    explanation: "选择操作应尽可能早执行，因为选择操作可以减少参与后续操作的元组数量，降低中间结果的大小，从而提高查询效率。",
+    tag: "代数优化",
+    difficulty: "中等"
+  },
+  {
+    id: 5,
+    title: "在关系代数中，下列哪个等价变换规则可以用于优化查询？",
+    options: [
+      "σ<sub>θ1</sub>(σ<sub>θ2</sub>(E)) ≡ σ<sub>θ2</sub>(σ<sub>θ1</sub>(E))",
+      "σ<sub>θ</sub>(E<sub>1</sub> × E<sub>2</sub>) ≡ σ<sub>θ</sub>(E<sub>1</sub>) × σ<sub>θ</sub>(E<sub>2</sub>)", 
+      "Π<sub>L</sub>(σ<sub>θ</sub>(E)) ≡ σ<sub>θ</sub>(Π<sub>L</sub>(E))",
+      "σ<sub>θ</sub>(E<sub>1</sub> ∪ E<sub>2</sub>) ≡ σ<sub>θ</sub>(E<sub>1</sub>) ∩ σ<sub>θ</sub>(E<sub>2</sub>)"
+    ],
+    answer: 0,
+    explanation: "选择操作的交换律：σ<sub>θ1</sub>(σ<sub>θ2</sub>(E)) ≡ σ<sub>θ2</sub>(σ<sub>θ1</sub>(E))，允许将选择条件重新排序，便于优化。其他选项的等价变换通常不成立或有特定条件。",
+    tag: "代数优化",
+    difficulty: "较难"
+  },
+  {
+    id: 6,
+    title: "在关系代数表达式中，投影操作应尽可能：",
+    options: [
+      "最后执行",
+      "最早执行", 
+      "与选择同时执行",
+      "与连接同时执行"
+    ],
+    answer: 1,
+    explanation: "投影操作也应尽可能早执行，因为投影操作可以减少参与后续操作的属性数量，减少中间结果的大小，但需要注意保持查询语义正确（如不能过早删除连接属性）。",
+    tag: "代数优化",
+    difficulty: "中等"
+  },
+  {
+    id: 7,
+    title: "对于连接操作的优化，将多个关系同时进行连接的算法称为：",
+    options: [
+      "嵌套循环连接",
+      "排序合并连接", 
+      "索引连接",
+      "多表连接优化"
+    ],
+    answer: 3,
+    explanation: "多表连接优化是指优化器决定多个表连接的顺序和方法。嵌套循环连接、排序合并连接、索引连接等都是具体的连接算法，而多表连接优化是决定如何组合这些算法。",
+    tag: "物理优化",
+    difficulty: "中等"
+  },
+  {
+    id: 8,
+    title: "嵌套循环连接算法的时间复杂度为：",
+    options: [
+      "O(n)",
+      "O(n log n)", 
+      "O(n²)",
+      "O(n³)"
+    ],
+    answer: 2,
+    explanation: "嵌套循环连接算法需要对两个表的每一行进行匹配，如果两个表分别有m和n行，则最坏情况下需要m×n次比较，时间复杂度为O(m×n)≈O(n²)。",
+    tag: "物理优化",
+    difficulty: "简单"
+  },
+  {
+    id: 9,
+    title: "排序合并连接算法的前提条件是：",
+    options: [
+      "两个表在连接属性上都有索引",
+      "两个表在连接属性上已经排序或可以排序", 
+      "连接条件是等值连接",
+      "两个表都很小"
+    ],
+    answer: 1,
+    explanation: "排序合并连接算法要求两个表在连接属性上有序，如果无序则需要先进行排序。该算法特别适合连接属性上有序或可以排序的情况。",
+    tag: "物理优化",
+    difficulty: "中等"
+  },
+  {
+    id: 10,
+    title: "索引连接算法的优点是：",
+    options: [
+      "不需要额外的存储空间",
+      "适合所有类型的连接条件", 
+      "可以利用已有索引提高连接效率",
+      "总是比其他连接算法快"
+    ],
+    answer: 2,
+    explanation: "索引连接算法利用一个表在连接属性上的索引来查找匹配元组，避免了全表扫描，可以提高连接效率，特别是当索引选择度较高时。",
+    tag: "物理优化",
+    difficulty: "简单"
+  },
+  {
+    id: 11,
+    title: "查询优化器中，基于启发式规则的优化方法称为：",
+    options: [
+      "基于代价的优化",
+      "基于规则的优化", 
+      "基于统计的优化",
+      "基于学习的优化"
+    ],
+    answer: 1,
+    explanation: "基于规则的优化（启发式优化）使用一系列启发式规则（如“选择操作尽可能早执行”）来重写查询，不依赖于数据统计信息。",
+    tag: "查询优化概述",
+    difficulty: "简单"
+  },
+  {
+    id: 12,
+    title: "查询优化器中，根据数据统计信息估算不同执行计划代价的方法称为：",
+    options: [
+      "基于规则的优化",
+      "基于代价的优化", 
+      "基于经验的优化",
+      "基于学习的优化"
+    ],
+    answer: 1,
+    explanation: "基于代价的优化通过收集数据统计信息（如表大小、索引选择度等）来估算不同执行计划的代价，选择代价最小的执行计划。",
+    tag: "查询优化概述",
+    difficulty: "简单"
+  },
+  {
+    id: 13,
+    title: "在执行计划中，操作符的估计代价通常不包括：",
+    options: [
+      "CPU代价",
+      "I/O代价", 
+      "内存代价",
+      "网络代价"
+    ],
+    answer: 3,
+    answer: 3,
+    explanation: "查询优化的代价估算通常包括CPU代价（处理元组的开销）、I/O代价（磁盘访问开销）和内存代价（内存使用开销）。网络代价在分布式数据库中才考虑，在集中式数据库中通常不考虑。",
+    tag: "查询优化概述",
+    difficulty: "中等"
+  },
+  {
+    id: 14,
+    title: "在查询优化中，选择操作的选择度（selectivity）是指：",
+    options: [
+      "选择操作执行的时间",
+      "满足选择条件的元组比例", 
+      "选择操作减少的元组数量",
+      "选择操作的CPU代价"
+    ],
+    answer: 1,
+    explanation: "选择度是指满足选择条件的元组数占总元组数的比例，是查询优化中重要的统计信息，用于估算中间结果大小和执行代价。",
+    tag: "查询优化概述",
+    difficulty: "中等"
+  },
+  {
+    id: 15,
+    title: "对于连接顺序的选择，当有多个表需要连接时，动态规划算法的时间复杂度为：",
+    options: [
+      "O(n)",
+      "O(n²)", 
+      "O(2<sup>n</sup>)",
+      "O(n!)"
+    ],
+    answer: 3,
+    explanation: "动态规划算法需要考虑所有可能的连接顺序，最坏情况下需要检查所有可能的连接树形状，时间复杂度约为O(2<sup>n</sup>)或O(n!)，具体取决于实现方式。",
+    tag: "物理优化",
+    difficulty: "较难"
+  },
+  {
+    id: 16,
+    title: "在查询优化中，物化（materialization）是指：",
+    options: [
+      "将查询结果写入磁盘",
+      "将中间结果完全计算并存储", 
+      "将查询转换为关系代数表达式",
+      "将优化后的查询转换为执行计划"
+    ],
+    answer: 1,
+    explanation: "物化是指将中间结果完全计算出来并存储在临时表中，以便后续操作使用。与流水线（pipelining）相对，流水线是将中间结果直接传递给下一个操作而不存储。",
+    tag: "查询处理概述",
+    difficulty: "中等"
+  },
+  {
+    id: 17,
+    title: "流水线（pipelining）技术的优点是：",
+    options: [
+      "减少内存使用",
+      "减少I/O操作", 
+      "提高并行度",
+      "以上都是"
+    ],
+    answer: 3,
+    explanation: "流水线技术允许一个操作的结果直接作为下一个操作的输入，避免了中间结果的物化存储，从而减少内存使用、减少I/O操作，并且可以提高操作的并行度。",
+    tag: "查询处理概述",
+    difficulty: "中等"
+  },
+  {
+    id: 18,
+    title: "以下关于查询优化的说法中，正确的是：",
+    options: [
+      "优化器总是能找到最优的执行计划",
+      "基于代价的优化不需要任何统计信息", 
+      "查询优化可以完全消除查询执行时间",
+      "查询优化的目标是找到执行时间较短的执行计划"
+    ],
+    answer: 3,
+    explanation: "查询优化的目标是找到执行效率较高的执行计划，但无法保证总是最优（可能是局部最优）。基于代价的优化需要统计信息，查询优化可以减少但不能完全消除执行时间。",
+    tag: "查询优化概述",
+    difficulty: "中等"
+  }
+];
+    
+    /************************************************************
+     * 2. 初始化变量
+     ************************************************************/
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+    
+    /************************************************************
+     * 3. DOM元素引用
+     ************************************************************/
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+    
+    /************************************************************
+     * 4. 初始化函数
+     ************************************************************/
+    function init() {
+      if (questions.length === 0) {
+        // 如果没有题目，显示提示信息
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
+        return;
+      }
+      
+      // 初始化用户答案数组
+      userAnswers = new Array(questions.length).fill(null);
+      
+      // 加载第一题
+      loadQuestion();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 生成题目导航
+      generateQuestionNav();
+    }
+    
+    /************************************************************
+     * 5. 加载题目函数
+     ************************************************************/
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      
+      // 更新题目信息
+      questionTitleEl.innerHTML = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      
+      // 更新难度显示
+      questionDifficultyEl.textContent = 
+        question.difficulty === 'easy' ? '简单难度' : 
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      
+      // 清空选项容器
+      optionsContainerEl.innerHTML = '';
+      
+      // 创建选项
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        // 如果用户已经回答过此题，显示答案状态
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) {
+            optionDiv.classList.add('correct');
+          } else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) {
+            optionDiv.classList.add('incorrect');
+          }
+          if (index === userAnswers[currentQuestionIndex]) {
+            optionDiv.classList.add('selected');
+          }
+        }
+        
+        // 添加选项字母
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index); // A, B, C, D
+        
+        // 添加选项文本
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.innerHTML = option;
+        
+        // 组装选项
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        
+        // 如果还未回答此题，添加点击事件
+        if (userAnswers[currentQuestionIndex] === null) {
+          optionDiv.onclick = () => selectAnswer(optionDiv, index);
+        }
+        
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      
+      // 更新反馈区域
+      if (userAnswers[currentQuestionIndex] !== null) {
+        showFeedback();
+      } else {
+        feedbackContainerEl.classList.remove('show');
+      }
+      
+      // 更新按钮状态
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      
+      // 更新进度条
+      updateProgress();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 6. 选择答案函数
+     ************************************************************/
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      
+      // 禁用所有选项的点击
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.onclick = null;
+      });
+      
+      // 标记用户选择的选项
+      optionElement.classList.add('selected');
+      
+      // 存储用户答案
+      userAnswers[currentQuestionIndex] = answerIndex;
+      
+      // 显示正确答案和错误答案
+      if (answerIndex === question.answer) {
+        optionElement.classList.add('correct');
+      } else {
+        optionElement.classList.add('incorrect');
+        
+        // 标记正确答案
+        const correctOption = options[question.answer];
+        correctOption.classList.add('correct');
+      }
+      
+      // 显示反馈
+      showFeedback();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 7. 显示反馈函数
+     ************************************************************/
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      
+      // 设置反馈内容
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      
+      // 设置反馈样式
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+    
+    /************************************************************
+     * 8. 上一题/下一题函数
+     ************************************************************/
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+    
+    function nextQuestion() {
+      // 如果当前题目未回答，不能进入下一题
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择答案');
+        return;
+      }
+      
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        // 如果是最后一题，显示完成页面
+        showCompletionScreen();
+      }
+    }
+    
+    /************************************************************
+     * 9. 显示完成页面函数
+     ************************************************************/
+    function showCompletionScreen() {
+      // 隐藏主容器，显示完成页面
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      
+      // 计算最终统计数据
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      
+      // 更新完成页面统计
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      
+      quizCompleted = true;
+    }
+    
+    /************************************************************
+     * 10. 重新开始函数
+     ************************************************************/
+    function restartQuiz() {
+      // 重置状态
+      currentQuestionIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      quizCompleted = false;
+      
+      // 隐藏完成页面，显示主容器
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      
+      // 重新加载第一题
+      loadQuestion();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 11. 更新进度条函数
+     ************************************************************/
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    /************************************************************
+     * 12. 更新统计数据函数
+     ************************************************************/
+    function updateStats() {
+      const totalQuestions = questions.length;
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
+      
+      answeredCountEl.textContent = answeredQuestions;
+      correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`;
+      remainingCountEl.textContent = remainingQuestions;
+    }
+    
+    /************************************************************
+     * 13. 生成题目导航函数
+     ************************************************************/
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
+      
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'question-nav-item';
+        
+        if (index === currentQuestionIndex) {
+          navItem.classList.add('active');
+        }
+        
+        navItem.onclick = () => {
+          // 如果已完成答题，可以跳转到任何题目
+          // 如果未完成，只能跳转到已答题目或下一题
+          if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) {
+            currentQuestionIndex = index;
+            loadQuestion();
+          } else {
+            alert('请按顺序答题');
+          }
+        };
+        
+        const navNumber = document.createElement('div');
+        navNumber.className = 'question-nav-number';
+        navNumber.textContent = `第 ${index + 1} 题`;
+        
+        const navStatus = document.createElement('div');
+        navStatus.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          navStatus.classList.add('current');
+        }
+        
+        navItem.appendChild(navNumber);
+        navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
+    }
+    
+    /************************************************************
+     * 14. 更新题目导航函数
+     ************************************************************/
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      
+      navItems.forEach((item, index) => {
+        // 更新活动状态
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+        
+        // 更新状态指示器
+        const statusIndicator = item.querySelector('.question-nav-status');
+        statusIndicator.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          statusIndicator.classList.add('current');
+        }
+      });
+    }
+    
+    /************************************************************
+     * 15. 键盘导航支持
+     ************************************************************/
+    document.addEventListener('keydown', function(e) {
+      // 如果当前在完成页面，不处理键盘事件
+      if (completionScreenEl.style.display === 'block') return;
+      
+      // 数字键1-4选择答案
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) {
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        
+        if (optionIndex < options.length) {
+          options[optionIndex].click();
+        }
+      }
+      
+      // 左箭头或A键：上一题
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) {
+        prevQuestion();
+      }
+      
+      // 右箭头或D键：下一题
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else if (userAnswers[currentQuestionIndex] !== null) {
+          nextQuestion();
+        }
+      }
+      
+      // 空格键或回车键：如果已回答，进入下一题
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else {
+          nextQuestion();
+        }
+      }
+    });
+    
+    /************************************************************
+     * 16. 页面加载时初始化
+     ************************************************************/
+    window.onload = init;
+  </script>
+</body>
+</html>
