@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第一章：绪论 - 练习题</title>
+  <title>第五章：数据库完整性 - 练习题</title>
   <style>
     :root {
       --primary-color: #4361ee;
@@ -776,255 +776,256 @@
     const questions = [
   {
     id: 1,
-    title: "下列哪一项不属于数据库系统的特点？",
+    title: "数据库完整性是指数据库中数据的正确性和相容性。完整性约束条件的作用对象不包括：",
     options: [
-      "数据结构化",
-      "数据共享性高、冗余度低",
-      "数据独立性高",
-      "数据面向特定应用"
+      "列（属性）",
+      "元组（行）", 
+      "关系（表）",
+      "数据库用户"
     ],
     answer: 3,
-    explanation: "数据库系统的特点 include：数据结构化；数据的共享性高、冗余度低；数据独立性高；数据由DBMS统一管理和控制。而数据面向特定应用是文件系统的特点，不是数据库系统的特点。",
-    tag: "数据库系统概述",
+    explanation: "完整性约束条件的作用对象包括列（列级约束）、元组（元组级约束）和关系（表级约束），但不包括数据库用户。用户是数据库的使用者，不是数据的组成部分。",
+    tag: "数据库完整性概述",
     difficulty: "简单"
   },
   {
     id: 2,
-    title: "数据库系统的核心是：",
+    title: "在SQL中，用于定义实体完整性的关键字是：",
     options: [
-      "数据库",
-      "数据库管理系统",
-      "数据模型",
-      "数据库管理员"
+      "FOREIGN KEY",
+      "PRIMARY KEY", 
+      "UNIQUE",
+      "CHECK"
     ],
     answer: 1,
-    explanation: "数据库管理系统（DBMS）是数据库系统的核心，它是位于用户与操作系统之间的一层数据管理软件，用于科学地组织和存储数据，高效地获取和维护数据。",
-    tag: "数据库系统概述",
+    explanation: "PRIMARY KEY用于定义实体完整性，规定主码的属性不能取空值，且主码的值必须唯一。FOREIGN KEY用于定义参照完整性，UNIQUE用于定义唯一性约束，CHECK用于定义用户定义的完整性。",
+    tag: "实体完整性",
     difficulty: "简单"
   },
   {
     id: 3,
-    title: "在数据库系统中，描述数据库中全体数据的逻辑结构 and 特征的是：",
+    title: "创建学生表(Student)时，将学号(sno)设为主键的SQL语句是：",
     options: [
-      "外模式",
-      "内模式",
-      "模式",
-      "存储模式"
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9) NOT NULL, sname CHAR(20));</div>",
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9) PRIMARY KEY, sname CHAR(20));</div>", 
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9) FOREIGN KEY, sname CHAR(20));</div>",
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9) UNIQUE, sname CHAR(20));</div>"
     ],
-    answer: 2,
-    explanation: "数据库系统的三级模式结构包括：模式（也称逻辑模式）、外模式（也称用户模式）和内模式（也称存储模式）。模式是数据库中全体数据的逻辑结构和特征的描述，是所有用户的公共数据视图。",
-    tag: "数据库系统结构",
-    difficulty: "中等"
+    answer: 1,
+    explanation: "PRIMARY KEY用于指定主键，它包含了NOT NULL和UNIQUE两种约束，确保主键属性既不能为空也不能重复。",
+    tag: "实体完整性",
+    difficulty: "简单"
   },
   {
     id: 4,
-    title: "数据模型的三个要素是：",
+    title: "实体完整性规则规定：",
     options: [
-      "数据结构、数据操作、完整性约束",
-      "数据结构、数据定义、数据操作",
-      "数据定义、数据操作、数据控制",
-      "数据结构、数据存储、数据操作"
+      "主码中的属性不能取空值",
+      "外码必须与参照关系的主码对应", 
+      "属性值必须满足用户定义的约束",
+      "元组值必须满足用户定义的约束"
     ],
     answer: 0,
-    explanation: "数据模型是数据库中用来对现实世界进行抽象的工具，它通常由数据结构、数据操作和数据的完整性约束三个要素组成。",
-    tag: "数据模型",
+    explanation: "实体完整性规则规定：若属性A是基本关系R的主属性，则属性A不能取空值。空值是指不知道或不存在或不适用于该元组的值。",
+    tag: "实体完整性",
     difficulty: "简单"
   },
   {
     id: 5,
-    title: "关系模型的基本数据结构是：",
+    title: "在SQL中，用于定义参照完整性的关键字是：",
     options: [
-      "树",
-      "图",
-      "表",
-      "网络"
+      "PRIMARY KEY",
+      "FOREIGN KEY", 
+      "UNIQUE",
+      "CHECK"
     ],
-    answer: 2,
-    explanation: "关系模型是目前最常用的一种数据模型，它用二维表结构来表示实体及实体间的联系，其基本数据结构是表（即关系）。",
-    tag: "数据模型",
+    answer: 1,
+    explanation: "FOREIGN KEY用于定义参照完整性，指定一个属性或属性组作为外键，参照另一个关系的主键。",
+    tag: "参照完整性",
     difficulty: "简单"
   },
   {
     id: 6,
-    title: "数据库系统的数据独立性包括：",
+    title: "创建选课表(SC)时，将学号(sno)设为外键，参照学生表(Student)的主键(sno)的SQL语句是：",
     options: [
-      "逻辑独立性和物理独立性",
-      "结构独立性和类型独立性",
-      "层次独立性和网状独立性",
-      "存储独立性和访问独立性"
+      "<div class='code-block'>CREATE TABLE SC (sno CHAR(9), cno CHAR(4), grade INT);</div>",
+      "<div class='code-block'>CREATE TABLE SC (sno CHAR(9) FOREIGN KEY, cno CHAR(4), grade INT);</div>", 
+      "<div class='code-block'>CREATE TABLE SC (sno CHAR(9), cno CHAR(4), grade INT, PRIMARY KEY(sno, cno));</div>",
+      "<div class='code-block'>CREATE TABLE SC (sno CHAR(9), cno CHAR(4), grade INT, FOREIGN KEY(sno) REFERENCES Student(sno));</div>"
     ],
-    answer: 0,
-    explanation: "数据库系统的数据独立性包括物理独立性和逻辑独立性。物理独立性是指用户的应用程序与存储在磁盘上的数据库中的数据相互独立；逻辑独立性是指用户的应用程序与数据库的逻辑结构相互独立。",
-    tag: "数据库系统结构",
+    answer: 3,
+    explanation: "FOREIGN KEY(sno) REFERENCES Student(sno)指定sno为外键，参照Student表的sno列。完整的语法是：FOREIGN KEY (列名) REFERENCES 参照表(参照列)。",
+    tag: "参照完整性",
     difficulty: "中等"
   },
   {
     id: 7,
-    title: "下列哪一项不属于数据库管理系统的主要功能？",
+    title: "参照完整性规则规定：若属性（或属性组）F是基本关系R的外码，它与基本关系S的主码Ks相对应，则对于R中每个元组在F上的值必须：",
     options: [
-      "数据定义功能",
-      "数据操纵功能",
-      "数据编译功能",
-      "数据库的运行管理"
+      "取空值",
+      "等于S中某个元组的主码值", 
+      "取任意值",
+      "或者取空值，或者等于S中某个元组的主码值"
     ],
-    answer: 2,
-    explanation: "数据库管理系统（DBMS）的主要功能包括：数据定义功能；数据操纵功能；数据库的运行管理；数据库的建立和维护功能。数据编译功能不是DBMS的主要功能。",
-    tag: "数据库管理系统",
-    difficulty: "简单"
+    answer: 3,
+    explanation: "参照完整性规则规定：若属性F是关系R的外码，参照关系S的主码Ks，则R中每个元组在F上的值要么取空值（F的每个属性值均为空值），要么等于S中某个元组的主码值。",
+    tag: "参照完整性",
+    difficulty: "中等"
   },
   {
     id: 8,
-    title: "数据库管理系统提供的数据控制功能不包括：",
+    title: "在SQL中，用于定义外键时指定删除操作的子句是：",
     options: [
-      "数据的安全性保护",
-      "数据的完整性检查",
-      "数据的网络传输",
-      "并发控制"
+      "ON DELETE",
+      "ON UPDATE", 
+      "ON REMOVE",
+      "ON DROP"
     ],
-    answer: 2,
-    explanation: "数据库管理系统（DBMS）提供的数据控制功能主要包括：数据的安全性保护；数据的完整性检查；并发控制；数据库恢复。数据的网络传输是网络系统的功能，不属于DBMS的数据控制功能。",
-    tag: "数据库管理系统",
-    difficulty: "简单"
+    answer: 0,
+    explanation: "ON DELETE子句用于指定当参照关系中的元组被删除时，外键关系如何处理。常见的选项有CASCADE（级联删除）、SET NULL（设置为空）、RESTRICT（限制删除）等。",
+    tag: "参照完整性",
+    difficulty: "中等"
   },
   {
     id: 9,
-    title: "下列数据模型中，最早出现的是：",
+    title: "当定义外键约束时，使用ON DELETE CASCADE选项表示：",
     options: [
-      "层次模型",
-      "网状模型",
-      "关系模型",
-      "面向对象模型"
+      "当参照关系中的元组被删除时，将外键设置为空值",
+      "当参照关系中的元组被删除时，不允许删除", 
+      "当参照关系中的元组被删除时，同时删除外键关系中的所有对应元组",
+      "当参照关系中的元组被删除时，将外键设置为默认值"
     ],
-    answer: 0,
-    explanation: "数据模型的发展经历了多个阶段：最早出现的是层次模型（20世纪60年代末），然后是网状模型（20世纪70年代），接着是关系模型（20世纪80年代），最后是面向对象模型（20世纪90年代）。",
-    tag: "数据库发展",
+    answer: 2,
+    explanation: "ON DELETE CASCADE表示级联删除，当参照关系中的元组被删除时，外键关系中的所有对应元组也将被自动删除，以保持参照完整性。",
+    tag: "参照完整性",
     difficulty: "中等"
   },
   {
     id: 10,
-    title: "数据库系统的三级模式结构提供了数据的：",
+    title: "在SQL中，用于定义用户定义的完整性的关键字不包括：",
     options: [
-      "数据独立性",
-      "数据安全性",
-      "数据并发性",
-      "数据完整性"
+      "NOT NULL",
+      "UNIQUE", 
+      "CHECK",
+      "PRIMARY KEY"
     ],
-    answer: 0,
-    explanation: "数据库系统的三级模式结构（外模式、模式、内模式）以及它们之间的两级映像（外模式/模式映像、模式/内模式映像）保证了数据库系统中的数据具有较高的逻辑独立性和物理独立性。",
-    tag: "数据库系统结构",
-    difficulty: "中等"
+    answer: 3,
+    answer: 3,
+    explanation: "PRIMARY KEY用于定义实体完整性，不属于用户定义的完整性。NOT NULL（非空约束）、UNIQUE（唯一约束）、CHECK（检查约束）都可用于定义用户定义的完整性。",
+    tag: "用户定义的完整性",
+    difficulty: "简单"
   },
   {
     id: 11,
-    title: "在数据库的三级模式结构中，描述物理存储结构的是：",
+    title: "创建学生表(Student)时，要求年龄(sage)必须在15到45岁之间，应使用的约束是：",
     options: [
-      "外模式",
-      "模式",
-      "内模式",
-      "概念模式"
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9), sname CHAR(20), sage INT NOT NULL);</div>",
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9), sname CHAR(20), sage INT UNIQUE);</div>", 
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9), sname CHAR(20), sage INT CHECK(sage>=15 AND sage<=45));</div>",
+      "<div class='code-block'>CREATE TABLE Student (sno CHAR(9), sname CHAR(20), sage INT DEFAULT 20);</div>"
     ],
     answer: 2,
-    explanation: "在数据库的三级模式结构中：外模式是用户看到的数据视图；模式是所有用户的公共数据视图；内模式是数据物理结构和存储方式的描述，是数据在数据库内部的表示方式。",
-    tag: "数据库系统结构",
+    explanation: "CHECK约束用于定义属性值必须满足的条件，可以用于限制属性的取值范围。这里CHECK(sage>=15 AND sage<=45)确保年龄在15到45岁之间。",
+    tag: "用户定义的完整性",
     difficulty: "中等"
   },
   {
     id: 12,
-    title: "数据库（DB）、数据库系统（DBS）和数据库管理系统（DBMS）三者之间的关系是：",
+    title: "在SQL中，用于为约束命名的子句是：",
     options: [
-      "DBS包括DB和DBMS",
-      "DBMS包括DB和DBS",
-      "DB包括DBS and DBMS",
-      "DBS就是DB，也就是DBMS"
+      "NAME",
+      "IDENTIFY", 
+      "CONSTRAINT",
+      "DEFINE"
     ],
-    answer: 0,
-    explanation: "数据库系统（DBS）是指在计算机系统中引入数据库后的系统，一般由数据库（DB）、数据库管理系统（DBMS）、应用系统、数据库管理员（DBA）和用户构成。因此，DBS包括DB和DBMS。",
-    tag: "基本概念",
+    answer: 2,
+    explanation: "CONSTRAINT子句用于为约束命名，这样在以后需要修改或删除约束时可以通过名称引用。例如：CONSTRAINT ck_age CHECK(sage>=15 AND sage<=45)。",
+    tag: "完整性约束命名",
     difficulty: "简单"
   },
   {
     id: 13,
-    title: "以下关于数据库管理系统的描述中，错误的是：",
+    title: "删除学生表(Student)中名为ck_age的CHECK约束的SQL语句是：",
     options: [
-      "DBMS是数据库系统的核心",
-      "DBMS负责数据库的建立、使用和维护",
-      "DBMS建立在操作系统之上",
-      "DBMS独立于具体的数据库"
+      "<div class='code-block'>DROP CONSTRAINT ck_age FROM Student;</div>",
+      "<div class='code-block'>DELETE CONSTRAINT ck_age FROM Student;</div>", 
+      "<div class='code-block'>ALTER TABLE Student DROP CONSTRAINT ck_age;</div>",
+      "<div class='code-block'>REMOVE CONSTRAINT ck_age FROM Student;</div>"
     ],
-    answer: 3,
-    explanation: "DBMS是数据库系统的核心，负责数据库的建立、使用和维护，通常建立在操作系统之上。但DBMS不是独立于具体的数据库的，不同的数据库需要使用相应的DBMS进行管理。",
-    tag: "数据库管理系统",
+    answer: 2,
+    explanation: "ALTER TABLE语句用于修改表结构，DROP CONSTRAINT用于删除指定的约束。基本语法为：ALTER TABLE 表名 DROP CONSTRAINT 约束名。",
+    tag: "完整性约束命名",
     difficulty: "中等"
   },
   {
     id: 14,
-    title: "数据库系统与文件系统的主要区别是：",
+    title: "在SQL中，用于修改表结构、添加约束的语句是：",
     options: [
-      "数据库系统复杂，而文件系统简单",
-      "文件系统不能解决数据冗余和数据独立性问题，而数据库系统可以",
-      "文件系统只能管理程序文件，而数据库系统能够管理各种类型的文件",
-      "文件系统管理的数据量较小，而数据库系统可以管理庞大的数据量"
+      "CREATE TABLE",
+      "ALTER TABLE", 
+      "MODIFY TABLE",
+      "UPDATE TABLE"
     ],
     answer: 1,
-    explanation: "数据库系统与文件系统的主要区别在于：数据库系统实现了整体数据的结构化，数据共享性高、冗余度低，具有较高的数据独立性，而文件系统存在数据冗余、数据不一致性、数据联系弱等缺点。",
-    tag: "数据库系统概述",
-    difficulty: "中等"
-  },
-  {
-    id: 15,
-    title: "概念模型是现实世界的第一层抽象，最常用的概念模型是：",
-    options: [
-      "关系模型",
-      "层次模型",
-      "网状模型",
-      "实体-联系模型"
-    ],
-    answer: 3,
-    explanation: "概念模型用于信息世界的建模，是现实世界到信息世界的第一层抽象。最常用的概念模型是实体-联系模型（E-R模型），它用E-R图来描述现实世界的概念模型。",
-    tag: "数据模型",
+    explanation: "ALTER TABLE用于修改表结构，包括添加、修改或删除列，以及添加或删除约束。CREATE TABLE用于创建新表，UPDATE用于修改表中的数据。",
+    tag: "完整性约束命名",
     difficulty: "简单"
   },
   {
-    id: 16,
-    title: "数据库的三级模式结构中，模式有：",
+    id: 15,
+    title: "断言(Assertion)是数据库完整性约束的一种，它描述的是：",
     options: [
-      "1个",
-      "2个",
-      "3个",
-      "任意多个"
+      "单个属性必须满足的条件",
+      "单个元组必须满足的条件", 
+      "单个关系必须满足的条件",
+      "涉及多个关系或聚集操作的更一般性约束"
     ],
-    answer: 0,
-    explanation: "在数据库的三级模式结构中，模式（也称逻辑模式）是数据库中全体数据的逻辑结构和特征的描述，是所有用户的公共数据视图。一个数据库只有一个模式。",
-    tag: "数据库系统结构",
+    answer: 3,
+    explanation: "断言是一种更一般的完整性约束，可以定义涉及多个关系或聚集操作的复杂约束条件。与CHECK约束相比，断言不依赖于特定的表，而是描述数据库状态必须满足的条件。",
+    tag: "断言",
+    difficulty: "中等"
+  },
+  {
+    id: 16,
+    title: "触发器(Trigger)是数据库完整性约束的一种实现机制。关于触发器，以下说法正确的是：",
+    options: [
+      "触发器是显式调用的存储过程",
+      "触发器在数据修改前执行，不能用于数据修改后", 
+      "触发器是事件驱动型的，由特定事件自动激活执行",
+      "触发器只能用于实现实体完整性和参照完整性"
+    ],
+    answer: 2,
+    explanation: "触发器是事件驱动型的，当特定的数据库事件（如INSERT、UPDATE、DELETE）发生时自动激活执行，无需显式调用。触发器可以用于数据修改前或后，可以用于实现各种完整性约束。",
+    tag: "触发器",
     difficulty: "中等"
   },
   {
     id: 17,
-    title: "数据库技术发展的三个阶段中，没有专门的数据管理软件的阶段是：",
+    title: "创建触发器时，指定触发器在INSERT操作之后执行的子句是：",
     options: [
-      "人工管理阶段",
-      "文件系统阶段",
-      "数据库系统阶段",
-      "所有阶段都有"
+      "BEFORE INSERT",
+      "AFTER INSERT", 
+      "INSTEAD OF INSERT",
+      "FOR INSERT"
     ],
-    answer: 0,
-    explanation: "数据管理技术的发展经历了三个阶段：人工管理阶段（20世纪50年代前）、文件系统阶段（20世纪50年代后期到60年代中期）、数据库系统阶段（20世纪60年代后期至今）。在人工管理阶段，没有专门的软件对数据进行管理。",
-    tag: "数据库发展",
-    difficulty: "简单"
+    answer: 1,
+    explanation: "AFTER INSERT指定触发器在INSERT操作执行之后激活。BEFORE INSERT指定在操作执行之前激活。INSTEAD OF INSERT用于视图上的触发器，替代原操作执行。",
+    tag: "触发器",
+    difficulty: "中等"
   },
   {
     id: 18,
-    title: "数据库系统中，负责数据库系统的建立、使用和维护的专门人员是：",
+    title: "完整性约束的违约处理中，常见的处理方式不包括：",
     options: [
-      "数据库管理员",
-      "系统分析员",
-      "应用程序员",
-      "最终用户"
+      "拒绝执行（NO ACTION）",
+      "级联操作（CASCADE）", 
+      "设置为默认值（SET DEFAULT）",
+      "忽略约束（IGNORE）"
     ],
-    answer: 0,
-    explanation: "数据库管理员（DBA）是负责数据库系统的建立、使用和维护的专门人员。DBA的主要职责包括：决定数据库中的信息内容和结构；决定数据库的存储结构和存取策略；定义数据的安全性要求和完整性约束条件；监控数据库的使用和运行等。",
-    tag: "数据库系统概述",
-    difficulty: "简单"
+    answer: 3,
+    explanation: "当违反完整性约束时，常见的处理方式包括拒绝执行（NO ACTION或RESTRICT）、级联操作（CASCADE）、设置为空（SET NULL）或设置为默认值（SET DEFAULT）。数据库系统通常不允许忽略约束。",
+    tag: "完整性约束违约处理",
+    difficulty: "中等"
   }
 ];
     
