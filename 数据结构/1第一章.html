@@ -821,7 +821,7 @@
     },
     {
         id: 6,
-        title: "以下算法的时间复杂度为：\nfor(i=0; i<n; i++)\n    for(j=0; j<n; j++)\n        x++;",
+        title: "以下算法的时间复杂度为：<br><div class='code-block'><span class='code-keyword'>for</span>(i=0; i&lt;n; i++)<br>    <span class='code-keyword'>for</span>(j=0; j&lt;n; j++)<br>        x++;</div>",
         options: ["O(1)", "O(n)", "O(n²)", "O(log n)"],
         answer: 2,
         explanation: "外层循环执行n次，内层循环也执行n次，总共执行n×n=n²次，所以时间复杂度为O(n²)。",
@@ -829,7 +829,7 @@
     },
     {
         id: 7,
-        title: "分析以下函数的时间复杂度：\nfunction f(n) {\n    if (n <= 1) return 1;\n    return f(n-1) + f(n-1);\n}",
+        title: "分析以下函数的时间复杂度：<br><div class='code-block'><span class='code-keyword'>function</span> f(n) {<br>    <span class='code-keyword'>if</span> (n &lt;= 1) <span class='code-keyword'>return</span> 1;<br>    <span class='code-keyword'>return</span> f(n-1) + f(n-1);<br>}</div>",
         options: ["O(n)", "O(n²)", "O(2ⁿ)", "O(log n)"],
         answer: 2,
         explanation: "每次调用产生两个子调用，递归深度为n，总调用次数为2⁰+2¹+...+2ⁿ⁻¹≈2ⁿ，所以时间复杂度为O(2ⁿ)。",
@@ -837,7 +837,7 @@
     },
     {
         id: 8,
-        title: "下列程序段的空间复杂度为：\nint sum = 0;\nfor(int i=0; i<n; i++) {\n    sum += i;\n}",
+        title: "下列程序段的空间复杂度为：<br><div class='code-block'><span class='code-keyword'>int</span> sum = 0;<br><span class='code-keyword'>for</span>(<span class='code-keyword'>int</span> i=0; i&lt;n; i++) {<br>    sum += i;<br>}</div>",
         options: ["O(1)", "O(n)", "O(n²)", "O(log n)"],
         answer: 0,
         explanation: "算法中只使用了固定数量的变量（sum和i），不随问题规模n变化，因此空间复杂度为O(1)。",
