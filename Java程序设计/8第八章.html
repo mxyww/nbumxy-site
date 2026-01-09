@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>第六章：异常的捕获及处理 - 练习题</title>
+  <title>第八章：IO编程 - 练习题</title>
   <style>
     :root {
       --primary-color: #4361ee;
@@ -774,187 +774,187 @@
      * 请按照以下格式添加题目：
      ************************************************************/
     const questions = [
-      {
-        id: 1,
-        title: "关于Java异常的分类，以下说法正确的是？",
-        options: [
-          "Java异常分为Error和Exception两大类",
-          "Exception分为RuntimeException和非RuntimeException",
-          "Error表示严重错误，程序一般无法处理",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "Java异常体系：Throwable是所有异常和错误的父类，分为Error和Exception。Error表示严重错误（如OutOfMemoryError），程序一般无法处理。Exception分为RuntimeException（运行时异常/非受检异常）和其他Exception（受检异常）。"
-      },
-      {
-        id: 2,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      System.out.println(<span class='code-string'>\"Try block\"</span>);<br>      <span class='code-keyword'>int</span> result = <span class='code-number'>10</span> / <span class='code-number'>0</span>;<br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      System.out.println(<span class='code-string'>\"Catch block\"</span>);<br>      <span class='code-keyword'>return</span>;<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"Finally block\"</span>);<br>    }<br>    System.out.println(<span class='code-string'>\"After try-catch\"</span>);<br>  }<br>}</div>",
-        options: [
-          "Try block<br>Catch block<br>Finally block<br>After try-catch",
-          "Try block<br>Catch block<br>Finally block",
-          "Try block<br>Catch block",
-          "Try block<br>Finally block"
-        ],
-        answer: 1,
-        explanation: "执行顺序：try块输出\"Try block\"，发生ArithmeticException，跳转到catch块输出\"Catch block\"，catch块中有return语句，但在return之前会执行finally块，输出\"Finally block\"，然后return，所以\"After try-catch\"不会输出。"
-      },
-      {
-        id: 3,
-        title: "关于throw和throws的区别，以下说法错误的是？",
-        options: [
-          "throw用于在方法内部抛出异常对象",
-          "throws用于方法声明，表示该方法可能抛出的异常类型",
-          "throw后面跟的是异常对象，throws后面跟的是异常类型",
-          "使用throw抛出的异常必须使用try-catch捕获"
-        ],
-        answer: 3,
-        explanation: "throw用于在方法内部抛出异常对象；throws用于方法声明，表示该方法可能抛出的异常类型，调用者需要处理。使用throw抛出的异常不一定必须使用try-catch捕获，也可以通过throws声明让调用者处理。"
-      },
-      {
-        id: 4,
-        title: "以下关于try-catch-finally语句的说法，正确的是？",
-        options: [
-          "try块必须至少有一个catch块或finally块",
-          "finally块无论是否发生异常都会执行",
-          "可以有多个catch块，但异常类型应从具体到一般",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "try块必须至少有一个catch块或finally块；finally块无论是否发生异常都会执行（除非JVM退出）；多个catch块时，异常类型应从具体到一般（子类在前，父类在后），否则编译错误。"
-      },
-      {
-        id: 5,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      System.out.println(<span class='code-string'>\"Start\"</span>);<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> RuntimeException(<span class='code-string'>\"Error\"</span>);<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"Caught: \"</span> + e.getMessage());<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> RuntimeException(<span class='code-string'>\"New Error\"</span>);<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"Finally\"</span>);<br>    }<br>  }<br>}</div>",
-        options: [
-          "Start<br>Caught: Error<br>Finally",
-          "Start<br>Caught: Error<br>Finally，然后抛出\"New Error\"异常",
-          "Start<br>Finally",
-          "编译错误"
-        ],
-        answer: 1,
-        explanation: "执行顺序：输出\"Start\"，抛出RuntimeException(\"Error\")，被catch捕获，输出\"Caught: Error\"，然后catch块中抛出新的RuntimeException(\"New Error\")，但在新异常传播之前，会执行finally块输出\"Finally\"，然后\"New Error\"异常传播到main方法，导致程序异常终止。"
-      },
-      {
-        id: 6,
-        title: "关于RuntimeException，以下说法正确的是？",
-        options: [
-          "RuntimeException是Exception的子类",
-          "RuntimeException及其子类是非受检异常(unchecked exception)",
-          "常见的RuntimeException有NullPointerException、ArrayIndexOutOfBoundsException等",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "RuntimeException是Exception的子类，属于非受检异常(unchecked exception)，编译器不强制要求处理。常见的RuntimeException包括：NullPointerException、ArrayIndexOutOfBoundsException、ClassCastException、IllegalArgumentException等。"
-      },
-      {
-        id: 7,
-        title: "以下关于异常处理的最佳实践，错误的是？",
-        options: [
-          "不要捕获异常后不做任何处理（空的catch块）",
-          "尽量捕获具体的异常，而不是捕获通用的Exception",
-          "在finally块中释放资源（如关闭文件、数据库连接）",
-          "应该尽可能多地使用异常来控制程序流程"
-        ],
-        answer: 3,
-        explanation: "异常应该用于处理意外情况，而不是控制正常的程序流程。使用异常控制流程会使代码难以理解和维护，而且异常处理的开销较大。异常应该用于处理真正的错误和异常情况。"
-      },
-      {
-        id: 8,
-        title: "以下关于assert关键字的使用，正确的是？",
-        options: [
-          "assert用于在程序中加入断言，检查程序逻辑的正确性",
-          "assert语句在默认情况下是禁用的，需要通过-ea选项启用",
-          "assert有两种形式：assert condition; 和 assert condition : message;",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "assert关键字用于在程序中加入断言，检查程序逻辑的正确性。默认情况下assert语句是禁用的，需要通过JVM参数-ea(enable assertions)启用。assert有两种形式：简单断言assert condition;和带消息的断言assert condition : message;。"
-      },
-      {
-        id: 9,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>class</span> <span class='code-type'>MyException</span> <span class='code-keyword'>extends</span> Exception {<br>  <span class='code-keyword'>public</span> MyException(<span class='code-keyword'>String</span> message) {<br>    <span class='code-keyword'>super</span>(message);<br>  }<br>}<br><br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> validate(<span class='code-keyword'>int</span> age) <span class='code-keyword'>throws</span> MyException {<br>    <span class='code-keyword'>if</span> (age < <span class='code-number'>18</span>) {<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> MyException(<span class='code-string'>\"年龄不足18岁\"</span>);<br>    }<br>  }<br><br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      validate(<span class='code-number'>16</span>);<br>      System.out.println(<span class='code-string'>\"验证通过\"</span>);<br>    } <span class='code-keyword'>catch</span> (MyException e) {<br>      System.out.println(<span class='code-string'>\"捕获异常: \"</span> + e.getMessage());<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(<span class='code-string'>\"结束验证\"</span>);<br>    }<br>  }<br>}</div>",
-        options: [
-          "验证通过<br>结束验证",
-          "捕获异常: 年龄不足18岁<br>结束验证",
-          "捕获异常: 年龄不足18岁",
-          "编译错误"
-        ],
-        answer: 1,
-        explanation: "validate(16)会抛出MyException异常，因为16<18。异常被catch块捕获，输出\"捕获异常: 年龄不足18岁\"，然后执行finally块输出\"结束验证\"。"
-      },
-      {
-        id: 10,
-        title: "关于Java 7引入的多异常捕获，以下说法正确的是？",
-        options: [
-          "可以使用一个catch块捕获多种类型的异常",
-          "语法：catch (ExceptionType1 | ExceptionType2 e)",
-          "多异常捕获中，异常变量e是final的，不能重新赋值",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "Java 7引入了多异常捕获机制，可以使用一个catch块捕获多种类型的异常，语法：catch (ExceptionType1 | ExceptionType2 e)。在多异常捕获中，异常变量e是隐式final的，不能重新赋值。"
-      },
-      {
-        id: 11,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      <span class='code-keyword'>int</span>[] arr = <span class='code-keyword'>new</span> <span class='code-keyword'>int</span>[<span class='code-number'>5</span>];<br>      arr[<span class='code-number'>10</span>] = <span class='code-number'>50</span>; <span class='code-comment'>// 数组越界</span><br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      System.out.println(<span class='code-string'>\"算术异常\"</span>);<br>    } <span class='code-keyword'>catch</span> (ArrayIndexOutOfBoundsException e) {<br>      System.out.println(<span class='code-string'>\"数组越界异常\"</span>);<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"其他异常\"</span>);<br>    }<br>  }<br>}</div>",
-        options: [
-          "算术异常",
-          "数组越界异常",
-          "其他异常",
-          "编译错误"
-        ],
-        answer: 1,
-        explanation: "arr[10] = 50 会抛出ArrayIndexOutOfBoundsException异常，被第二个catch块捕获，输出\"数组越界异常\"。注意catch块的顺序：ArrayIndexOutOfBoundsException是Exception的子类，但它在Exception之前，所以会被正确捕获。"
-      },
-      {
-        id: 12,
-        title: "关于try-with-resources语句，以下说法正确的是？",
-        options: [
-          "try-with-resources是Java 7引入的特性",
-          "实现了AutoCloseable接口的资源可以在try-with-resources中使用",
-          "try-with-resources可以自动关闭资源，不需要显式调用close()方法",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "try-with-resources是Java 7引入的特性，用于自动管理资源。实现了AutoCloseable接口的资源可以在try-with-resources中使用，资源会在try块结束后自动关闭，不需要显式调用close()方法，即使发生异常也会正确关闭。"
-      },
-      {
-        id: 13,
-        title: "以下关于异常链的说法，错误的是？",
-        options: [
-          "异常链允许将一个异常包装为另一个异常",
-          "Throwable类提供了initCause()和getCause()方法支持异常链",
-          "异常链可以保留原始异常信息，便于调试",
-          "异常链会导致原始异常被丢弃，只保留新异常"
-        ],
-        answer: 3,
-        explanation: "异常链允许将一个异常包装为另一个异常，通过Throwable的initCause()和getCause()方法实现。异常链可以保留原始异常信息，便于调试和追踪异常根源。新异常包装了原始异常，原始异常不会被丢弃，可以通过getCause()获取。"
-      },
-      {
-        id: 14,
-        title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(<span class='code-keyword'>String</span>[] args) {<br>    <span class='code-keyword'>try</span> {<br>      method1();<br>    } <span class='code-keyword'>catch</span> (Exception e) {<br>      System.out.println(<span class='code-string'>\"Main caught: \"</span> + e.getClass().getSimpleName());<br>      System.out.println(<span class='code-string'>\"Cause: \"</span> + e.getCause().getClass().getSimpleName());<br>    }<br>  }<br><br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> method1() <span class='code-keyword'>throws</span> Exception {<br>    <span class='code-keyword'>try</span> {<br>      method2();<br>    } <span class='code-keyword'>catch</span> (ArithmeticException e) {<br>      <span class='code-keyword'>throw</span> <span class='code-keyword'>new</span> Exception(<span class='code-string'>\"Wrapper exception\"</span>, e);<br>    }<br>  }<br><br>  <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> method2() {<br>    <span class='code-keyword'>int</span> result = <span class='code-number'>10</span> / <span class='code-number'>0</span>;<br>  }<br>}</div>",
-        options: [
-          "Main caught: Exception<br>Cause: ArithmeticException",
-          "Main caught: ArithmeticException",
-          "Main caught: Exception<br>Cause: null",
-          "编译错误"
-        ],
-        answer: 0,
-        explanation: "method2()中10/0抛出ArithmeticException，method1()的catch块捕获后，包装为新的Exception并设置原始异常为cause，然后抛出。main方法捕获Exception，输出\"Main caught: Exception\"，通过getCause()获取原始异常ArithmeticException。"
-      },
-      {
-        id: 15,
-        title: "以下关于自定义异常的说法，正确的是？",
-        options: [
-          "自定义异常通常继承Exception或RuntimeException",
-          "继承Exception创建受检异常，继承RuntimeException创建非受检异常",
-          "自定义异常可以提供多个构造方法，包括带消息和cause的构造方法",
-          "以上都正确"
-        ],
-        answer: 3,
-        explanation: "自定义异常通常继承Exception或RuntimeException。继承Exception创建受检异常（必须处理），继承RuntimeException创建非受检异常。良好的自定义异常应该提供多个构造方法，包括无参构造、带消息构造、带cause构造、带消息和cause构造，以方便使用。"
-      }
-    ];
+  {
+    id: 1,
+    title: "关于 Java IO 流的分类，以下说法正确的是？",
+    options: [
+      "按数据流向分为输入流和输出流",
+      "按处理数据类型分为字节流和字符流",
+      "字节流基类是 InputStream/OutputStream，字符流基类是 Reader/Writer",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Java IO 流分类：1. 按数据流向：输入流（读取数据）、输出流（写入数据）；2. 按数据类型：字节流（处理二进制数据）和字符流（处理文本数据）；3. 字节流基类：InputStream/OutputStream，字符流基类：Reader/Writer。"
+  },
+  {
+    id: 2,
+    title: "以下代码的输出结果是什么？<br><div class='code-block'><span class='code-keyword'>import</span> java.io.*;<br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(String[] args) <span class='code-keyword'>throws</span> IOException {<br>    File file = <span class='code-keyword'>new</span> File(\"test.txt\");<br>    FileOutputStream fos = <span class='code-keyword'>new</span> FileOutputStream(file);<br>    fos.write(\"Hello\".getBytes());<br>    fos.close();<br>    FileInputStream fis = <span class='code-keyword'>new</span> FileInputStream(file);<br>    <span class='code-keyword'>int</span> data;<br>    <span class='code-keyword'>while</span> ((data = fis.read()) != -1) {<br>      System.out.print((<span class='code-keyword'>char</span>)data);<br>    }<br>    fis.close();<br>  }<br>}</div>",
+    options: [
+      "Hello",
+      "编译错误",
+      "运行时异常",
+      "无输出"
+    ],
+    answer: 0,
+    explanation: "代码功能：1. 创建 File 对象表示 test.txt 文件；2. 使用 FileOutputStream 写入 \"Hello\" 字节数据；3. 使用 FileInputStream 读取文件内容并打印。文件存在且无异常时输出 Hello。注意：需要处理 IOException，这里直接 throws 了。"
+  },
+  {
+    id: 3,
+    title: "关于字节缓冲流 BufferedInputStream/BufferedOutputStream，以下说法错误的是？",
+    options: [
+      "缓冲流内部维护了一个缓冲区，提高读写效率",
+      "缓冲流的 close() 方法会自动关闭其包装的底层流",
+      "使用缓冲流读取数据时，每次 read() 调用都会直接操作磁盘",
+      "通常先关闭缓冲流再关闭底层流，但关闭缓冲流时底层流也会自动关闭"
+    ],
+    answer: 2,
+    explanation: "缓冲流内部有缓冲区（默认 8KB），read() 时先从缓冲区读取，缓冲区为空时才从磁盘读取大量数据填充缓冲区，因此并非每次 read() 都直接操作磁盘。其他选项正确：缓冲流包装底层流，关闭时自动关闭底层流，提高了IO效率。"
+  },
+  {
+    id: 4,
+    title: "以下关于字符流 FileReader 和 FileWriter 的说法，正确的是？",
+    options: [
+      "FileReader 使用平台默认字符编码读取文件",
+      "可以指定字符编码，如 new InputStreamReader(new FileInputStream(file), \"UTF-8\")",
+      "FileWriter 写入文件时，可以指定是否追加模式",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "FileReader/FileWriter 使用平台默认字符编码，可能在不同平台产生乱码。若要指定编码，应使用 InputStreamReader/OutputStreamWriter 包装 FileInputStream/FileOutputStream。FileWriter 构造方法可接受 boolean 参数表示是否追加写入。"
+  },
+  {
+    id: 5,
+    title: "以下代码执行后，文件 content.txt 的内容是什么？<br><div class='code-block'><span class='code-keyword'>import</span> java.io.*;<br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(String[] args) <span class='code-keyword'>throws</span> IOException {<br>    FileWriter fw = <span class='code-keyword'>new</span> FileWriter(\"content.txt\", true);<br>    fw.write(\"Java\");<br>    fw.close();<br>    fw = <span class='code-keyword'>new</span> FileWriter(\"content.txt\", false);<br>    fw.write(\"IO\");<br>    fw.close();<br>  }<br>}</div>",
+    options: [
+      "JavaIO",
+      "IO",
+      "Java",
+      "IOJava"
+    ],
+    answer: 1,
+    explanation: "第一次 FileWriter 构造时第二个参数 true 表示追加，写入 \"Java\"；第二次构造时参数 false 表示覆盖，之前内容被清空，写入 \"IO\"，因此最终文件内容为 \"IO\"。注意：每次创建 FileWriter 时若不指定追加模式，默认覆盖文件。"
+  },
+  {
+    id: 6,
+    title: "关于对象序列化，以下说法正确的是？",
+    options: [
+      "序列化是将对象状态转换为字节流的过程",
+      "实现 java.io.Serializable 接口的类才能被序列化",
+      "transient 关键字修饰的字段不会被序列化",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "对象序列化：将对象转换为字节流以便存储或传输。需要实现 Serializable 接口（标记接口）。transient 修饰的字段不参与序列化。static 字段属于类，也不参与序列化。"
+  },
+  {
+    id: 7,
+    title: "以下关于 NIO（New IO）的说法，错误的是？",
+    options: [
+      "NIO 的核心组件包括 Channel、Buffer、Selector",
+      "NIO 是面向块的（Block-Oriented），传统 IO 是面向流的（Stream-Oriented）",
+      "NIO 提供了非阻塞模式，允许线程在等待数据时做其他事情",
+      "NIO 中的 Buffer 只能用于读数据，不能用于写数据"
+    ],
+    answer: 3,
+    explanation: "NIO 的 Buffer 既可以读也可以写，通过 flip() 方法切换读写模式。其他选项正确：NIO 三大核心：Channel（通道）、Buffer（缓冲区）、Selector（选择器）；NIO 是面向缓冲区的，支持非阻塞 IO。"
+  },
+  {
+    id: 8,
+    title: "以下代码的功能是？<br><div class='code-block'><span class='code-keyword'>import</span> java.io.*;<br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(String[] args) <span class='code-keyword'>throws</span> IOException {<br>    BufferedReader br = <span class='code-keyword'>new</span> BufferedReader(<span class='code-keyword'>new</span> FileReader(\"input.txt\"));<br>    PrintWriter pw = <span class='code-keyword'>new</span> PrintWriter(<span class='code-keyword'>new</span> FileWriter(\"output.txt\"));<br>    String line;<br>    <span class='code-keyword'>while</span> ((line = br.readLine()) != null) {<br>      pw.println(line);<br>    }<br>    br.close();<br>    pw.close();<br>  }<br>}</div>",
+    options: [
+      "逐行读取 input.txt 并写入 output.txt",
+      "逐字符读取 input.txt 并写入 output.txt",
+      "复制 input.txt 到 output.txt，但只复制第一行",
+      "编译错误"
+    ],
+    answer: 0,
+    explanation: "使用 BufferedReader 的 readLine() 方法逐行读取文本文件，使用 PrintWriter 的 println() 方法逐行写入到 output.txt。实现了文本文件的逐行复制。"
+  },
+  {
+    id: 9,
+    title: "关于 Java IO 中的装饰者模式，以下说法正确的是？",
+    options: [
+      "IO 流类使用了装饰者模式，如 BufferedInputStream 包装 FileInputStream",
+      "装饰者模式可以在运行时动态地给对象添加功能",
+      "装饰类和被装饰类实现相同的接口或继承相同的父类",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "Java IO 流大量使用装饰者模式：抽象组件（如 InputStream）、具体组件（如 FileInputStream）、装饰者（如 BufferedInputStream）。装饰者模式通过组合而非继承扩展功能，符合开闭原则。"
+  },
+  {
+    id: 10,
+    title: "以下代码的输出结果是什么？（假设文件 data.txt 不存在）<br><div class='code-block'><span class='code-keyword'>import</span> java.io.*;<br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(String[] args) {<br>    <span class='code-keyword'>try</span> {<br>      FileInputStream fis = <span class='code-keyword'>new</span> FileInputStream(\"data.txt\");<br>      System.out.println(\"File opened\");<br>    } <span class='code-keyword'>catch</span> (FileNotFoundException e) {<br>      System.out.println(\"File not found\");<br>    } <span class='code-keyword'>catch</span> (IOException e) {<br>      System.out.println(\"IO error\");<br>    } <span class='code-keyword'>finally</span> {<br>      System.out.println(\"Finally block\");<br>    }<br>  }<br>}</div>",
+    options: [
+      "File opened<br>Finally block",
+      "File not found<br>Finally block",
+      "IO error<br>Finally block",
+      "编译错误"
+    ],
+    answer: 1,
+    explanation: "文件不存在时，FileInputStream 构造器抛出 FileNotFoundException，被第一个 catch 块捕获，输出 \"File not found\"，然后执行 finally 块输出 \"Finally block\"。注意：FileNotFoundException 是 IOException 的子类，所以子类 catch 块必须在前。"
+  },
+  {
+    id: 11,
+    title: "关于 RandomAccessFile 类，以下说法错误的是？",
+    options: [
+      "RandomAccessFile 既可以读文件也可以写文件",
+      "RandomAccessFile 支持随机访问，可以移动文件指针",
+      "RandomAccessFile 实现了 DataInput 和 DataOutput 接口",
+      "RandomAccessFile 只能操作字节数据，不能操作字符数据"
+    ],
+    answer: 3,
+    explanation: "RandomAccessFile 可以通过 readChar()/writeChar() 等方法操作字符数据，也可以使用 readLine() 读取文本行。其他选项正确：它支持随机访问（通过 seek() 方法），实现了 DataInput 和 DataOutput 接口，可以读写基本数据类型。"
+  },
+  {
+    id: 12,
+    title: "以下代码的功能是？<br><div class='code-block'><span class='code-keyword'>import</span> java.io.*;<br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(String[] args) <span class='code-keyword'>throws</span> IOException {<br>    DataOutputStream dos = <span class='code-keyword'>new</span> DataOutputStream(<br>        <span class='code-keyword'>new</span> FileOutputStream(\"data.bin\"));<br>    dos.writeInt(100);<br>    dos.writeDouble(3.14);<br>    dos.writeBoolean(true);<br>    dos.close();<br>  }<br>}</div>",
+    options: [
+      "将文本数据写入文件",
+      "将二进制数据（int、double、boolean）写入文件",
+      "从文件读取二进制数据",
+      "将对象序列化到文件"
+    ],
+    answer: 1,
+    explanation: "DataOutputStream 提供了 writeInt()、writeDouble()、writeBoolean() 等方法，将基本数据类型以二进制格式写入底层输出流。这里将整数 100、双精度浮点数 3.14 和布尔值 true 写入 data.bin 文件。"
+  },
+  {
+    id: 13,
+    title: "关于 Java 7 引入的 try-with-resources 语句，以下说法正确的是？",
+    options: [
+      "自动关闭实现了 AutoCloseable 接口的资源",
+      "可以同时管理多个资源，用分号分隔",
+      "资源会在 try 块结束后自动关闭，无论是否发生异常",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "try-with-resources 语法：try (声明资源) { ... }。资源必须实现 AutoCloseable 接口，可以声明多个资源，按相反顺序自动关闭。关闭时若抛出异常，可能会被抑制（可通过 getSuppressed() 获取）。"
+  },
+  {
+    id: 14,
+    title: "以下关于文件操作的说法，正确的是？",
+    options: [
+      "File 类可以表示文件或目录",
+      "File 类的 mkdir() 创建单级目录，mkdirs() 创建多级目录",
+      "File 类的 exists() 方法判断文件或目录是否存在",
+      "以上都正确"
+    ],
+    answer: 3,
+    explanation: "File 类用于表示文件和目录路径名。mkdir() 创建此抽象路径名指定的目录（仅一级）；mkdirs() 创建多级目录。exists() 判断文件或目录是否存在。其他常用方法：isFile()、isDirectory()、listFiles() 等。"
+  },
+  {
+    id: 15,
+    title: "以下代码的输出结果是什么？（假设文件 test.txt 内容为：ABCDE）<br><div class='code-block'><span class='code-keyword'>import</span> java.io.*;<br><span class='code-keyword'>public</span> <span class='code-keyword'>class</span> <span class='code-type'>Test</span> {<br>  <span class='code-keyword'>public</span> <span class='code-keyword'>static</span> <span class='code-keyword'>void</span> main(String[] args) <span class='code-keyword'>throws</span> IOException {<br>    RandomAccessFile raf = <span class='code-keyword'>new</span> RandomAccessFile(\"test.txt\", \"r\");<br>    raf.seek(2);<br>    System.out.print((<span class='code-keyword'>char</span>)raf.read());<br>    raf.seek(0);<br>    System.out.print((<span class='code-keyword'>char</span>)raf.read());<br>    raf.close();<br>  }<br>}</div>",
+    options: [
+      "AB",
+      "CA",
+      "CD",
+      "AC"
+    ],
+    answer: 1,
+    explanation: "seek(2) 将文件指针移动到索引 2（从 0 开始），即第三个字符 'C'，读取并输出 'C'；然后 seek(0) 移动回开头，读取并输出第一个字符 'A'，因此输出 CA。注意：每个 read() 读取一个字节，转换为字符。"
+  }
+];
     
     /************************************************************
      * 2. 初始化变量
