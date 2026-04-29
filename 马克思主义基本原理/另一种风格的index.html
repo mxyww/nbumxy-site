@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>马克思主义基本原理</title>
+    <style>
+        :root {
+            --primary-color: #C62828;
+            --primary-light: #FF5F52;
+            --primary-dark: #8E0000;
+            --secondary-color: #1565C0;
+            --accent-color: #F9A825;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --gray-color: #616161;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #fdfbf7 0%, #f5f0e8 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+            padding: 20px;
+            position: relative;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(198, 40, 40, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(21, 101, 192, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(249, 168, 37, 0.05) 0%, transparent 20%);
+            z-index: -1;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+            background-size: cover;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .course-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .course-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .course-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chapters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .chapter-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border-top: 6px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-top-color: var(--secondary-color);
+        }
+
+        .chapter-card:nth-child(3n+1) {
+            border-top-color: var(--primary-color);
+        }
+
+        .chapter-card:nth-child(3n+2) {
+            border-top-color: var(--secondary-color);
+        }
+
+        .chapter-card:nth-child(3n+3) {
+            border-top-color: var(--accent-color);
+        }
+
+        .chapter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(198, 40, 40, 0.03) 0%, rgba(21, 101, 192, 0.03) 100%);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .chapter-card:hover::before {
+            opacity: 1;
+        }
+
+        .chapter-number {
+            font-size: 14px;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chapter-card:nth-child(3n+1) .chapter-number {
+            color: var(--primary-color);
+        }
+
+        .chapter-card:nth-child(3n+2) .chapter-number {
+            color: var(--secondary-color);
+        }
+
+        .chapter-card:nth-child(3n+3) .chapter-number {
+            color: var(--accent-color);
+        }
+
+        .chapter-number::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: currentColor;
+            border-radius: 50%;
+            margin-right: 10px;
+            opacity: 0.2;
+        }
+
+        .chapter-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .chapter-desc {
+            font-size: 14px;
+            color: var(--gray-color);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .chapter-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--gray-color);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 15px;
+        }
+
+        .questions-count {
+            display: flex;
+            align-items: center;
+        }
+
+        .questions-count i {
+            margin-right: 5px;
+            color: var(--primary-color);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            margin-bottom: 30px;
+            border: 2px solid transparent;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray-color);
+            font-size: 14px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            padding: 15px 25px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray-color);
+            display: block;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 1100px) {
+            .chapters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .banner-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .course-icon {
+                margin-top: 20px;
+            }
+            .chapters-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            .back-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .chapters-grid {
+                grid-template-columns: 1fr;
+            }
+            .banner {
+                padding: 20px;
+            }
+            .course-title {
+                font-size: 26px;
+            }
+            .course-subtitle {
+                font-size: 16px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chapter-card {
+            animation: fadeInUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .chapter-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .chapter-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .chapter-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        .chapter-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+        .chapter-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+        .chapter-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+        .chapter-card:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+        .chapter-card:nth-child(8) {
+            animation-delay: 0.8s;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <div class="container">
+        <a href="../index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            返回题库首页
+        </a>
+
+        <div class="banner">
+            <div class="banner-content">
+                <div>
+                    <h1 class="course-title">马克思主义基本原理</h1>
+                    <p class="course-subtitle">系统学习马克思主义哲学、政治经济学和科学社会主义的基本立场、观点和方法</p>
+                </div>
+                <div class="course-icon">
+                    <i class="fas fa-landmark"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="chapters-grid">
+            <!-- 第一章 -->
+            <a href="1第一章.html" class="chapter-card">
+                <div class="chapter-number">第一章</div>
+                <h3 class="chapter-title">世界的物质性及发展规律</h3>
+                <p class="chapter-desc">物质观、运动观、时空观、唯物辩证法基本规律及联系发展观点</p>
+                <div class="chapter-meta">
+                    <div class="questions-count">
+                        <i class="fas fa-question-circle"></i>
+                        <span>25道题</span>
+                    </div>
+                    <div class="difficulty">基础章节</div>
+                </div>
+            </a>
+
+            <!-- 第二章 -->
+            <a href="2第二章.html" class="chapter-card">
+                <div class="chapter-number">第二章</div>
+                <h3 class="chapter-title">认识的本质及其发展规律</h3>
+                <p class="chapter-desc">实践与认识、真理的客观性与检验标准、辨证思维方法与思维规律</p>
+                <div class="chapter-meta">
+                    <div class="questions-count">
+                        <i class="fas fa-question-circle"></i>
+                        <span>22道题</span>
+                    </div>
+                    <div class="difficulty">基础章节</div>
+                </div>
+            </a>
+
+            <!-- 第三章 -->
+            <a href="3第三章.html" class="chapter-card">
+                <div class="chapter-number">第三章</div>
+                <h3 class="chapter-title">人类社会及其发展规律</h3>
+                <p class="chapter-desc">历史唯物主义基本观点、社会基本矛盾运动、改革与科技作用</p>
+                <div class="chapter-meta">
+                    <div class="questions-count">
+                        <i class="fas fa-question-circle"></i>
+                        <span>26道题</span>
+                    </div>
+                    <div class="difficulty">重点章节</div>
+                </div>
+            </a>
+
+            <!-- 第四章 -->
+            <a href="4第四章.html" class="chapter-card">
+                <div class="chapter-number">第四章</div>
+                <h3 class="chapter-title">资本主义的本质及规律</h3>
+                <p class="chapter-desc">劳动价值论、剩余价值理论、资本积累与资本主义基本矛盾剖析</p>
+                <div class="chapter-meta">
+                    <div class="questions-count">
+                        <i class="fas fa-question-circle"></i>
+                        <span>28道题</span>
+                    </div>
+                    <div class="difficulty">重点章节</div>
+                </div>
+            </a>
+
+            <!-- 第五章 -->
+            <a href="5第五章.html" class="chapter-card">
+                <div class="chapter-number">第五章</div>
+                <h3 class="chapter-title">资本主义的发展及其趋势</h3>
+                <p class="chapter-desc">垄断资本主义、经济全球化、当代资本主义新变化与历史地位</p>
+                <div class="chapter-meta">
+                    <div class="questions-count">
+                        <i class="fas fa-question-circle"></i>
+                        <span>20道题</span>
+                    </div>
+                    <div class="difficulty">中等难度</div>
+                </div>
+            </a>
+
+            <!-- 第六章 -->
+            <a href="6第六章.html" class="chapter-card">
+                <div class="chapter-number">第六章</div>
+                <h3 class="chapter-title">社会主义的发展及其规律</h3>
+                <p class="chapter-desc">社会主义从空想到科学、社会主义制度基本特征及发展规律</p>
+                <div class="chapter-meta">
+                    <div class="questions-count">
+                        <i class="fas fa-question-circle"></i>
+                        <span>22道题</span>
+                    </div>
+                    <div class="difficulty">中等难度</div>
+                </div>
+            </a>
+
+            <!-- 第七章 -->
+            <a href="7第七章.html" class="chapter-card">
+                <div class="chapter-number">第七章</div>
+                <h3 class="chapter-title">共产主义崇高理想</h3>
+                <p class="chapter-desc">共产主义社会基本特征、实现的历史必然性与中国特色社会主义共同理想</p>
+                <div class="chapter-meta">
+                    <div class="questions-count">
+                        <i class="fas fa-question-circle"></i>
+                        <span>18道题</span>
+                    </div>
+                    <div class="difficulty">基础章节</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-value">7</span>
+                    <span class="stat-label">个章节</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">160+</span>
+                    <span class="stat-label">道题目</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">100%</span>
+                    <span class="stat-label">知识点覆盖</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">随时</span>
+                    <span class="stat-label">学习进度保存</span>
+                </div>
+            </div>
+            <p class="copyright">
+                © 2026 宁波大学 M CHINE. 保留所有权利。
+            </p>
+            <p style="font-size: 12px; margin-top: 10px; color: #aaa;">点击任意章节卡片开始学习，系统将自动记录您的学习进度</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.chapter-card');
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href && href !== '#') {
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 150);
+                        console.log(`跳转到: ${href}`);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                const cards = document.querySelectorAll('.chapter-card');
+                let currentIndex = -1;
+                cards.forEach((card, index) => {
+                    if (card === document.activeElement) {
+                        currentIndex = index;
+                    }
+                });
+                if (e.key >= '1' && e.key <= '7') {
+                    const index = parseInt(e.key) - 1;
+                    if (index < cards.length) {
+                        cards[index].focus();
+                    }
+                }
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const nextIndex = (currentIndex + 1) % cards.length;
+                    cards[nextIndex].focus();
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+                    cards[prevIndex].focus();
+                } else if (e.key === 'Enter' && currentIndex !== -1) {
+                    cards[currentIndex].click();
+                } else if (e.key === 'Escape') {
+                    document.querySelector('.back-btn').focus();
+                }
+            });
+
+            function updateLearningProgress() {
+                try {
+                    const progress = localStorage.getItem('marx_progress');
+                    if (progress) {
+                        console.log('已加载学习进度:', JSON.parse(progress));
+                    } else {
+                        console.log('暂无学习进度，开始新的学习');
+                    }
+                } catch (e) {
+                    console.log('无法读取学习进度');
+                }
+            }
+
+            updateLearningProgress();
+
+            function saveLearningProgress(chapter, progress) {
+                try {
+                    let allProgress = JSON.parse(localStorage.getItem('marx_progress') || '{}');
+                    allProgress[chapter] = progress;
+                    localStorage.setItem('marx_progress', JSON.stringify(allProgress));
+                    console.log('学习进度已保存:', chapter, progress);
+                } catch (e) {
+                    console.log('无法保存学习进度');
+                }
+            }
+
+            cards.forEach(card => {
+                const chapter = card.querySelector('.chapter-number').textContent;
+                card.addEventListener('click', function(e) {
+                    saveLearningProgress(chapter, {
+                        lastAccessed: new Date().toISOString(),
+                        chapter: chapter
+                    });
+                });
+            });
+        });
+
+        window.addEventListener('beforeunload', function(e) {
+            console.log('学习进度已自动保存');
+        });
+    </script>
+</body>
+</html>
