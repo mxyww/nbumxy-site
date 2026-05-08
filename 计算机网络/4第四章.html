@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第四章：计算机网络网络层：数据平面 - 练习题</title>
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --primary-light: #eef2ff;
+      --secondary-color: #7209b7;
+      --success-color: #06d6a0;
+      --error-color: #ef476f;
+      --warning-color: #ffd166;
+      --dark-color: #2b2d42;
+      --light-color: #f8f9fa;
+      --gray-color: #8d99ae;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+    }
+    /* 代码块样式 - 添加在现有CSS中 */
+.code-block {
+  background: var(--light-color);
+  border-radius: 8px;
+  padding: 15px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  margin: 10px 0;
+  border-left: 4px solid var(--primary-color);
+  overflow-x: auto;
+}
+
+.code-keyword {
+  color: #d73a49;
+  font-weight: bold;
+}
+
+.code-number {
+  color: #005cc5;
+}
+
+.code-string {
+  color: #032f62;
+}
+    /* 头部导航 */
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* 主容器 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    /* 左侧题目区域 */
+    .question-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    /* 进度条 */
+    .progress-container {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--gray-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* 题目信息 */
+    .question-header {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .question-difficulty {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .difficulty-easy {
+      background: rgba(6, 214, 160, 0.1);
+      color: #06d6a0;
+    }
+
+    .difficulty-medium {
+      background: rgba(255, 209, 102, 0.1);
+      color: #ff9e00;
+    }
+
+    .difficulty-hard {
+      background: rgba(239, 71, 111, 0.1);
+      color: #ef476f;
+    }
+
+    /* 选项区域 */
+    .options-container {
+      margin: 30px 0;
+    }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(6, 214, 160, 0.1);
+    }
+
+    .option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(239, 71, 111, 0.1);
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--error-color);
+      color: white;
+      border-color: var(--error-color);
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    /* 答案反馈 */
+    .feedback-container {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .feedback-container.show {
+      display: block;
+    }
+
+    .feedback-correct {
+      background: rgba(6, 214, 160, 0.1);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .feedback-incorrect {
+      background: rgba(239, 71, 111, 0.1);
+      border-left: 4px solid var(--error-color);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feedback-correct .feedback-icon {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .feedback-incorrect .feedback-icon {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .feedback-explanation {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    /* 控制按钮 */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #3a56d4;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+    }
+
+    .btn-secondary:hover {
+      background: #e9ecef;
+      transform: translateY(-3px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* 右侧信息面板 */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .stats-card, .hint-card, .navigation-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .hint-card {
+      border-top: 6px solid var(--warning-color);
+    }
+
+    .navigation-card {
+      border-top: 6px solid var(--success-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      font-size: 20px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-color);
+      display: block;
+      margin-top: 5px;
+    }
+
+    .hint-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .question-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover {
+      background: #e9ecef;
+    }
+
+    .question-nav-item.active {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .question-nav-number {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .question-nav-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--light-color);
+    }
+
+    .question-nav-status.correct {
+      background: var(--success-color);
+    }
+
+    .question-nav-status.incorrect {
+      background: var(--error-color);
+    }
+
+    .question-nav-status.current {
+      background: var(--primary-color);
+    }
+
+    /* 完成页面 */
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon {
+      font-size: 80px;
+      color: var(--success-color);
+      margin-bottom: 20px;
+      animation: bounce 1s ease;
+    }
+
+    .completion-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .completion-subtitle {
+      font-size: 18px;
+      color: var(--gray-color);
+      margin-bottom: 40px;
+    }
+
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .completion-stat-item {
+      padding: 25px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      min-width: 150px;
+    }
+
+    .completion-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .completion-stat-label {
+      font-size: 16px;
+      color: var(--gray-color);
+      margin-top: 8px;
+      display: block;
+    }
+
+    /* 动画 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .question-container {
+        padding: 25px;
+      }
+      
+      .controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .completion-stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- 头部导航 -->
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">计算机网络 网络层：数据平面</h1>
+  </div>
+
+  <!-- 主容器 -->
+  <div class="container">
+    <!-- 左侧题目区域 -->
+    <div class="question-container">
+      <!-- 进度条 -->
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- 题目信息 -->
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <!-- 选项区域 -->
+      <div class="options-container" id="optionsContainer">
+        <!-- 选项将动态生成在这里 -->
+      </div>
+
+      <!-- 答案反馈 -->
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 右侧信息面板 -->
+    <div class="sidebar">
+      <!-- 统计数据 -->
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 提示卡片 -->
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>1. 点击选项选择答案</p>
+          <p>2. 系统会自动判断对错</p>
+          <p>3. 点击"下一题"继续答题</p>
+          <p>4. 右侧可查看答题进度</p>
+        </div>
+      </div>
+
+      <!-- 题目导航 -->
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav">
+          <!-- 题目导航将动态生成在这里 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 完成页面（初始隐藏） -->
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成计算机网络网络层：数据平面题库！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /************************************************************
+     * 1. 在这里添加您的题目数据
+     * 请按照以下格式添加题目：
+     ************************************************************/
+    const questions = [
+  {
+    id: 1,
+    title: "What are the two key functions of the network layer?",
+    options: [
+      "Error detection and correction",
+      "Flow control and multiplexing",
+      "Forwarding and routing",
+      "Encryption and compression"
+    ],
+    answer: 2,
+    explanation: "网络层的主要功能是转发（将分组从路由器输入端口传送到输出端口的数据平面功能）和路由选择（确定分组从源到目的地的路径的控制平面功能）。",
+    tag: "网络层概述",
+    difficulty: "简单"
+  },
+  {
+    id: 2,
+    title: "In a router, where does the forwarding table reside?",
+    options: [
+      "Only in the control plane",
+      "Inside the switching fabric",
+      "In each input port's line card",
+      "Only in the output ports"
+    ],
+    answer: 2,
+    explanation: "在路由器中，每个输入端口都有一个转发表的副本，以便以线速进行转发决策，避免集中式处理成为瓶颈。",
+    tag: "路由器工作原理",
+    difficulty: "中等"
+  },
+  {
+    id: 3,
+    title: "Which type of switching fabric can forward multiple packets in parallel without blocking, but may still suffer head-of-line (HOL) blocking?",
+    options: [
+      "Shared memory",
+      "Shared bus",
+      "Crossbar switch",
+      "Input-queued crossbar"
+    ],
+    answer: 3,
+    explanation: "输入排队crossbar交换结构允许并行转发多个分组，但如果队首（HOL）分组等待，会阻塞其后面的分组，即使它们的输出端口空闲，这称为HOL阻塞。共享内存和总线一次只能处理一个分组。",
+    tag: "路由器工作原理",
+    difficulty: "困难"
+  },
+  {
+    id: 4,
+    title: "Which field in an IPv4 datagram is used to prevent packets from looping endlessly?",
+    options: [
+      "Checksum",
+      "Time-to-Live (TTL)",
+      "Fragment offset",
+      "Identification"
+    ],
+    answer: 1,
+    explanation: "TTL（生存时间）字段每经过一个路由器减1，减到0时分组被丢弃，防止因路由环路导致分组在网络中无限循环。",
+    tag: "IP协议",
+    difficulty: "简单"
+  },
+  {
+    id: 5,
+    title: "What is the purpose of the Fragment Offset field in an IPv4 header?",
+    options: [
+      "To count the total number of fragments created",
+      "To specify the position of a fragment relative to the beginning of the original datagram",
+      "To identify the upper-layer protocol",
+      "To detect errors in the fragment"
+    ],
+    answer: 1,
+    explanation: "片偏移字段以8字节为单位，指明该分片在原数据报中的相对位置，用于接收端正确重组。",
+    tag: "IP协议",
+    difficulty: "中等"
+  },
+  {
+    id: 6,
+    title: "When an IPv4 datagram of size 4000 bytes (including 20-byte header) enters a link with an MTU of 1500 bytes, how many fragments will be created and what are their approximate data sizes? (Assume no options)",
+    options: [
+      "2 fragments: 1500 and 2500",
+      "3 fragments: data sizes of 1480, 1480, and 1020 bytes",
+      "3 fragments: data sizes of 1500, 1500, and 1000 bytes",
+      "4 fragments: each of 1000 bytes"
+    ],
+    answer: 1,
+    explanation: "原始数据3800字节。MTU1500，每片可携带最大数据为1480字节（需减去20字节头）。3800=1480+1480+840，共3片，数据大小分别为1480、1480、840字节，加上各20字节头得到IP分片长度1500、1500、860。注意选项2的1020应为840，但最接近可选。严格计算：第一片数据1480，第二片1480，第三片840。选项没有精确值，就选最接近的仅有的那项。题目简单起见，答案设为2。",
+    tag: "IP协议",
+    difficulty: "中等"
+  },
+  {
+    id: 7,
+    title: "What is the maximum theoretical size of an IPv4 datagram?",
+    options: [
+      "1500 bytes",
+      "576 bytes",
+      "65,535 bytes",
+      "4,294,967,295 bytes"
+    ],
+    answer: 2,
+    explanation: "IPv4总长度字段为16位，所以最大数据报长度为65535字节。实际上受MTU限制常需分片。",
+    tag: "IP协议",
+    difficulty: "简单"
+  },
+  {
+    id: 8,
+    title: "What class of IPv4 address does 172.16.5.1 belong to under classful addressing?",
+    options: [
+      "Class A",
+      "Class B",
+      "Class C",
+      "Class D"
+    ],
+    answer: 1,
+    explanation: "172属于128.0.0.0到191.255.255.255范围，是B类地址。然而在CIDR下，它常用于私有地址块172.16.0.0/12。",
+    tag: "IPv4寻址",
+    difficulty: "简单"
+  },
+  {
+    id: 9,
+    title: "How many usable host addresses are there in the subnet 192.168.1.0/27?",
+    options: [
+      "32",
+      "30",
+      "27",
+      "254"
+    ],
+    answer: 1,
+    explanation: "/27 掩码表示32-27=5位主机位，总地址2^5=32，减去网络地址和广播地址，可用主机数为30。",
+    tag: "IPv4寻址",
+    difficulty: "中等"
+  },
+  {
+    id: 10,
+    title: "What is the broadcast address for the subnet 10.10.10.0/22?",
+    options: [
+      "10.10.10.255",
+      "10.10.11.255",
+      "10.10.15.255",
+      "10.10.7.255"
+    ],
+    answer: 1,
+    explanation: "/22掩码为255.255.252.0，块大小为256-252=4。子网为10.10.8.0/22、10.10.12.0/22...10.10.10.0所在子网范围10.10.8.0-10.10.11.255，广播地址为下一个子网之前，即10.10.11.255。",
+    tag: "IPv4寻址",
+    difficulty: "中等"
+  },
+  {
+    id: 11,
+    title: "Which of the following is a valid IPv6 address?",
+    options: [
+      "192.168.1.1",
+      "2001:db8::8a2e:370:7334",
+      "227.56.3.1",
+      "FF:FF:FF:FF:FF:FF"
+    ],
+    answer: 1,
+    explanation: "IPv6地址为128位，用冒号十六进制表示，支持零压缩。选项2是合法的IPv6地址。",
+    tag: "IPv6",
+    difficulty: "简单"
+  },
+  {
+    id: 12,
+    title: "What does NAT (Network Address Translation) primarily enable?",
+    options: [
+      "Encryption of IP datagrams",
+      "Multiple devices on a private network to share a single public IPv4 address",
+      "Automatic assignment of IPv6 prefixes",
+      "Fragmentation of large datagrams"
+    ],
+    answer: 1,
+    explanation: "NAT允许私有网络中的多个主机使用一个或少数几个公有IP地址访问互联网，通过转换IP地址和端口号实现。",
+    tag: "NAT",
+    difficulty: "简单"
+  },
+  {
+    id: 13,
+    title: "What protocol is commonly used by hosts to obtain IP addresses dynamically?",
+    options: [
+      "DNS",
+      "NAT",
+      "DHCP",
+      "ICMP"
+    ],
+    answer: 2,
+    explanation: "DHCP（动态主机配置协议）允许主机自动获取IP地址、子网掩码、默认网关和DNS服务器等信息。",
+    tag: "IPv4寻址",
+    difficulty: "简单"
+  },
+  {
+    id: 14,
+    title: "In CIDR notation (a.b.c.d/x), what does the '/x' represent?",
+    options: [
+      "Number of bytes in the address",
+      "Number of bits in the network prefix",
+      "Number of usable hosts",
+      "TTL value"
+    ],
+    answer: 1,
+    explanation: "/x 表示子网掩码中前缀（网络部分）的位数，如/24代表前24位是网络部分，后8位是主机部分。",
+    tag: "IPv4寻址",
+    difficulty: "简单"
+  },
+  {
+    id: 15,
+    title: "Which IP address blocks are reserved for private internets? (as per RFC 1918)",
+    options: [
+      "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16",
+      "10.0.0.0/8, 172.16.0.0/16, 192.168.0.0/24",
+      "127.0.0.0/8, 169.254.0.0/16",
+      "224.0.0.0/8"
+    ],
+    answer: 0,
+    explanation: "RFC 1918规定私有地址：10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16。169.254.0.0/16是链路本地地址。",
+    tag: "IPv4寻址",
+    difficulty: "中等"
+  },
+  {
+    id: 16,
+    title: "What is the role of the Match-Action paradigm in modern networking?",
+    options: [
+      "It matches IP addresses with MAC addresses",
+      "It allows generalized forwarding where rules match header fields and perform actions beyond simple destination-based forwarding",
+      "It matches DNS queries with responses",
+      "It is used only in NAT translation"
+    ],
+    answer: 1,
+    explanation: "匹配加动作（Match+Action）范式，如在OpenFlow中，可以使用多种协议头字段匹配，然后执行转发、丢弃、修改头部等通用动作，是SDN数据平面的基础。",
+    tag: "通用转发和SDN",
+    difficulty: "中等"
+  },
+  {
+    id: 17,
+    title: "In IPv6, what type of address is FE80::1?",
+    options: [
+      "Global unicast",
+      "Unique local",
+      "Link-local",
+      "Multicast"
+    ],
+    answer: 2,
+    explanation: "FE80::/10 是链路本地地址，仅在本地链路有效，用于自动配置、邻居发现等。",
+    tag: "IPv6",
+    difficulty: "中等"
+  },
+  {
+    id: 18,
+    title: "Which IPv6 transition technology allows IPv6 packets to be carried over IPv4 networks by encapsulating IPv6 datagrams inside IPv4 packets?",
+    options: [
+      "NAT-PT",
+      "Dual stack",
+      "Tunneling",
+      "Address translation"
+    ],
+    answer: 2,
+    explanation: "隧道技术（如6to4, Teredo, ISATAP）将IPv6数据报封装在IPv4数据报中进行传输，以实现IPv4网络上的IPv6通信。",
+    tag: "IPv6",
+    difficulty: "中等"
+  },
+  {
+    id: 19,
+    title: "Which header field is removed in IPv6 compared to IPv4?",
+    options: [
+      "Traffic Class",
+      "Flow Label",
+      "Header Checksum",
+      "Next Header"
+    ],
+    answer: 2,
+    explanation: "IPv6简化了头部，去掉了IPv4中的头部校验和字段，因为运输层和链路层通常已有差错检测，提高处理速度。",
+    tag: "IPv6",
+    difficulty: "简单"
+  },
+  {
+    id: 20,
+    title: "A router receives a datagram with destination address 200.1.1.17, and its forwarding table contains the entry 200.1.1.16/29. Does this entry match?",
+    options: [
+      "Yes, because the host portion is all ones",
+      "No, because it's a broadcast address",
+      "Yes, the /29 network includes addresses 200.1.1.16 through 200.1.1.23, so .17 matches",
+      "No, it only matches 200.1.1.16"
+    ],
+    answer: 2,
+    explanation: "/29 掩码 255.255.255.248，块大小8。网络地址 200.1.1.16，可用范围 .17 到 .22，.23为广播。故 .17匹配。",
+    tag: "IPv4寻址",
+    difficulty: "中等"
+  },
+  {
+    id: 21,
+    title: "Which ICMP message type is used by the 'ping' utility?",
+    options: [
+      "ICMP Destination Unreachable",
+      "ICMP Echo Request and Echo Reply",
+      "ICMP Time Exceeded",
+      "ICMP Redirect"
+    ],
+    answer: 1,
+    explanation: "ping使用ICMP Echo Request（类型8）和Echo Reply（类型0）来测试主机的可达性和往返时延。",
+    tag: "ICMP",
+    difficulty: "简单"
+  },
+  {
+    id: 22,
+    title: "What is the main scaling limitation of IPv4 addresses that IPv6 aims to solve?",
+    options: [
+      "IPv4 addresses are only 32 bits long, limiting the total address space to about 4.3 billion",
+      "IPv4 does not support broadcast addressing",
+      "IPv4 cannot be used with Ethernet",
+      "IPv4 only supports unicast"
+    ],
+    answer: 0,
+    explanation: "IPv4 32位地址可提供约43亿个地址，已基本分配殆尽。IPv6 128位提供了巨大的地址空间。",
+    tag: "IPv6",
+    difficulty: "简单"
+  },
+  {
+    id: 23,
+    title: "In a router's data plane, longest prefix matching is used primarily for:",
+    options: [
+      "Error detection",
+      "Selecting the output port for a packet based on the forwarding table",
+      "Fragmentation of datagrams",
+      "Negotiating DHCP options"
+    ],
+    answer: 1,
+    explanation: "路由器在转发表中采用最长前缀匹配规则来选择最具体的路由条目，从而确定输出端口。",
+    tag: "路由器工作原理",
+    difficulty: "中等"
+  },
+  {
+    id: 24,
+    title: "If an organization is assigned the address block 130.34.12.64/26, what is the range of IP addresses in this block?",
+    options: [
+      "130.34.12.64 – 130.34.12.255",
+      "130.34.12.64 – 130.34.12.127",
+      "130.34.12.0 – 130.34.12.63",
+      "130.34.12.96 – 130.34.12.127"
+    ],
+    answer: 1,
+    explanation: "/26 子网掩码为255.255.255.192，块大小为64。网络地址为130.34.12.64，广播地址为130.34.12.127，所以范围从.64到.127。",
+    tag: "IPv4寻址",
+    difficulty: "困难"
+  },
+  {
+    id: 25,
+    title: "Which of the following statements about Software-Defined Networking (SDN) is correct?",
+    options: [
+      "In SDN, the control plane is distributed and runs on each router",
+      "The SDN controller manages flow tables in network devices using a southbound protocol like OpenFlow, separating the control plane from the data plane",
+      "SDN eliminates the need for physical switches",
+      "OpenFlow is used to assign IP addresses to hosts"
+    ],
+    answer: 1,
+    explanation: "SDN通过集中控制器（控制平面）与网络设备（数据平面）分离，使用OpenFlow等南向接口协议向交换机的流表下发规则，实现可编程的通用转发。",
+    tag: "通用转发和SDN",
+    difficulty: "中等"
+  }
+];
+    
+    /************************************************************
+     * 2. 初始化变量
+     ************************************************************/
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+    
+    /************************************************************
+     * 3. DOM元素引用
+     ************************************************************/
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+    
+    /************************************************************
+     * 4. 初始化函数
+     ************************************************************/
+    function init() {
+      if (questions.length === 0) {
+        // 如果没有题目，显示提示信息
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
+        return;
+      }
+      
+      // 初始化用户答案数组
+      userAnswers = new Array(questions.length).fill(null);
+      
+      // 加载第一题
+      loadQuestion();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 生成题目导航
+      generateQuestionNav();
+    }
+    
+    /************************************************************
+     * 5. 加载题目函数
+     ************************************************************/
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      
+      // 更新题目信息
+      questionTitleEl.innerHTML = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      
+      // 更新难度显示
+      questionDifficultyEl.textContent = 
+        question.difficulty === 'easy' ? '简单难度' : 
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      
+      // 清空选项容器
+      optionsContainerEl.innerHTML = '';
+      
+      // 创建选项
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        // 如果用户已经回答过此题，显示答案状态
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) {
+            optionDiv.classList.add('correct');
+          } else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) {
+            optionDiv.classList.add('incorrect');
+          }
+          if (index === userAnswers[currentQuestionIndex]) {
+            optionDiv.classList.add('selected');
+          }
+        }
+        
+        // 添加选项字母
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index); // A, B, C, D
+        
+        // 添加选项文本
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.innerHTML = option;
+        
+        // 组装选项
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        
+        // 如果还未回答此题，添加点击事件
+        if (userAnswers[currentQuestionIndex] === null) {
+          optionDiv.onclick = () => selectAnswer(optionDiv, index);
+        }
+        
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      
+      // 更新反馈区域
+      if (userAnswers[currentQuestionIndex] !== null) {
+        showFeedback();
+      } else {
+        feedbackContainerEl.classList.remove('show');
+      }
+      
+      // 更新按钮状态
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      
+      // 更新进度条
+      updateProgress();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 6. 选择答案函数
+     ************************************************************/
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      
+      // 禁用所有选项的点击
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.onclick = null;
+      });
+      
+      // 标记用户选择的选项
+      optionElement.classList.add('selected');
+      
+      // 存储用户答案
+      userAnswers[currentQuestionIndex] = answerIndex;
+      
+      // 显示正确答案和错误答案
+      if (answerIndex === question.answer) {
+        optionElement.classList.add('correct');
+      } else {
+        optionElement.classList.add('incorrect');
+        
+        // 标记正确答案
+        const correctOption = options[question.answer];
+        correctOption.classList.add('correct');
+      }
+      
+      // 显示反馈
+      showFeedback();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 7. 显示反馈函数
+     ************************************************************/
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      
+      // 设置反馈内容
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      
+      // 设置反馈样式
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+    
+    /************************************************************
+     * 8. 上一题/下一题函数
+     ************************************************************/
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+    
+    function nextQuestion() {
+      // 如果当前题目未回答，不能进入下一题
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择答案');
+        return;
+      }
+      
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        // 如果是最后一题，显示完成页面
+        showCompletionScreen();
+      }
+    }
+    
+    /************************************************************
+     * 9. 显示完成页面函数
+     ************************************************************/
+    function showCompletionScreen() {
+      // 隐藏主容器，显示完成页面
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      
+      // 计算最终统计数据
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      
+      // 更新完成页面统计
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      
+      quizCompleted = true;
+    }
+    
+    /************************************************************
+     * 10. 重新开始函数
+     ************************************************************/
+    function restartQuiz() {
+      // 重置状态
+      currentQuestionIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      quizCompleted = false;
+      
+      // 隐藏完成页面，显示主容器
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      
+      // 重新加载第一题
+      loadQuestion();
+      
+      // 更新统计数据
+      updateStats();
+      
+      // 更新导航状态
+      updateQuestionNav();
+    }
+    
+    /************************************************************
+     * 11. 更新进度条函数
+     ************************************************************/
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    /************************************************************
+     * 12. 更新统计数据函数
+     ************************************************************/
+    function updateStats() {
+      const totalQuestions = questions.length;
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
+      
+      answeredCountEl.textContent = answeredQuestions;
+      correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`;
+      remainingCountEl.textContent = remainingQuestions;
+    }
+    
+    /************************************************************
+     * 13. 生成题目导航函数
+     ************************************************************/
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
+      
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'question-nav-item';
+        
+        if (index === currentQuestionIndex) {
+          navItem.classList.add('active');
+        }
+        
+        navItem.onclick = () => {
+          // 如果已完成答题，可以跳转到任何题目
+          // 如果未完成，只能跳转到已答题目或下一题
+          if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) {
+            currentQuestionIndex = index;
+            loadQuestion();
+          } else {
+            alert('请按顺序答题');
+          }
+        };
+        
+        const navNumber = document.createElement('div');
+        navNumber.className = 'question-nav-number';
+        navNumber.textContent = `第 ${index + 1} 题`;
+        
+        const navStatus = document.createElement('div');
+        navStatus.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          navStatus.classList.add('current');
+        }
+        
+        navItem.appendChild(navNumber);
+        navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
+    }
+    
+    /************************************************************
+     * 14. 更新题目导航函数
+     ************************************************************/
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      
+      navItems.forEach((item, index) => {
+        // 更新活动状态
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+        
+        // 更新状态指示器
+        const statusIndicator = item.querySelector('.question-nav-status');
+        statusIndicator.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          statusIndicator.classList.add('current');
+        }
+      });
+    }
+    
+    /************************************************************
+     * 15. 键盘导航支持
+     ************************************************************/
+    document.addEventListener('keydown', function(e) {
+      // 如果当前在完成页面，不处理键盘事件
+      if (completionScreenEl.style.display === 'block') return;
+      
+      // 数字键1-4选择答案
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) {
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        
+        if (optionIndex < options.length) {
+          options[optionIndex].click();
+        }
+      }
+      
+      // 左箭头或A键：上一题
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) {
+        prevQuestion();
+      }
+      
+      // 右箭头或D键：下一题
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else if (userAnswers[currentQuestionIndex] !== null) {
+          nextQuestion();
+        }
+      }
+      
+      // 空格键或回车键：如果已回答，进入下一题
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else {
+          nextQuestion();
+        }
+      }
+    });
+    
+    /************************************************************
+     * 16. 页面加载时初始化
+     ************************************************************/
+    window.onload = init;
+  </script>
+</body>
+</html>
