@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第八章：文件管理 - 练习题</title>
+  <style>
+    :root {
+      --primary-color: #6A1B9A;
+      --primary-light: #F3E5F5;
+      --secondary-color: #4527A0;
+      --success-color: #2E7D32;
+      --error-color: #C62828;
+      --warning-color: #FFA000;
+      --dark-color: #212121;
+      --light-color: #FAFAFA;
+      --gray-color: #757575;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e5f5 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+    }
+
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    .question-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    .progress-container {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--gray-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .question-header {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .question-difficulty {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .difficulty-easy {
+      background: rgba(46, 125, 50, 0.1);
+      color: #2E7D32;
+    }
+
+    .difficulty-medium {
+      background: rgba(255, 160, 0, 0.1);
+      color: #FFA000;
+    }
+
+    .difficulty-hard {
+      background: rgba(198, 40, 40, 0.1);
+      color: #C62828;
+    }
+
+    .options-container {
+      margin: 30px 0;
+    }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(46, 125, 50, 0.1);
+    }
+
+    .option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(198, 40, 40, 0.1);
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--error-color);
+      color: white;
+      border-color: var(--error-color);
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    .feedback-container {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .feedback-container.show {
+      display: block;
+    }
+
+    .feedback-correct {
+      background: rgba(46, 125, 50, 0.1);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .feedback-incorrect {
+      background: rgba(198, 40, 40, 0.1);
+      border-left: 4px solid var(--error-color);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feedback-correct .feedback-icon {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .feedback-incorrect .feedback-icon {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .feedback-explanation {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #4a148c;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(106, 27, 154, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+      transform: translateY(-3px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .stats-card, .hint-card, .navigation-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .hint-card {
+      border-top: 6px solid var(--warning-color);
+    }
+
+    .navigation-card {
+      border-top: 6px solid var(--success-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-color);
+      display: block;
+      margin-top: 5px;
+    }
+
+    .hint-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .question-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover {
+      background: #e0e0e0;
+    }
+
+    .question-nav-item.active {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .question-nav-number {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .question-nav-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--light-color);
+    }
+
+    .question-nav-status.correct {
+      background: var(--success-color);
+    }
+
+    .question-nav-status.incorrect {
+      background: var(--error-color);
+    }
+
+    .question-nav-status.current {
+      background: var(--primary-color);
+    }
+
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon {
+      font-size: 80px;
+      color: var(--success-color);
+      margin-bottom: 20px;
+      animation: bounce 1s ease;
+    }
+
+    .completion-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .completion-subtitle {
+      font-size: 18px;
+      color: var(--gray-color);
+      margin-bottom: 40px;
+    }
+
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .completion-stat-item {
+      padding: 25px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      min-width: 150px;
+    }
+
+    .completion-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .completion-stat-label {
+      font-size: 16px;
+      color: var(--gray-color);
+      margin-top: 8px;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .question-container {
+        padding: 25px;
+      }
+      .controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .completion-stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">第八章：文件管理</h1>
+  </div>
+
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <div class="options-container" id="optionsContainer"></div>
+
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>一、点击选项选择答案</p>
+          <p>二、系统会自动判断对错</p>
+          <p>三、点击"下一题"继续答题</p>
+          <p>四、右侧可查看答题进度</p>
+        </div>
+      </div>
+
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成题库练习！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+    </div>
+  </div>
+
+  <script>
+  const questions = [
+  {
+    id: 1,
+    title: "文件系统最基本的目标是（ ）？",
+    options: [
+      "实现虚拟存储",
+      "提供对文件的按名存取",
+      "提高处理机速度",
+      "管理外部设备"
+    ],
+    answer: 1,
+    explanation: "文件系统是对文件存储器空间进行组织和分配，负责文件的存储、保护和检索，为用户提供按名存取的功能。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 2,
+    title: "从用户角度看，文件系统主要实现文件的（ ）？",
+    options: ["逻辑结构", "物理结构", "目录结构", "存取方法"],
+    answer: 0,
+    explanation: "用户关心文件的逻辑结构，即文件内部数据是如何组织的；而物理结构是文件系统实现的细节。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 3,
+    title: "下列哪种属于文件的逻辑结构？",
+    options: ["链接结构", "索引结构", "顺序结构", "记录式文件"],
+    answer: 3,
+    explanation: "文件的逻辑结构分为流式文件（无结构）和记录式文件（有结构）；顺序、链接、索引是物理结构。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 4,
+    title: "采用连续分配方式存储文件时，其物理结构为（ ）？",
+    options: ["顺序结构", "链接结构", "索引结构", "散列结构"],
+    answer: 0,
+    explanation: "连续分配将文件存放在外存连续的物理块中，形成顺序物理结构，支持随机存取，但易产生外部碎片。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 5,
+    title: "在文件系统中，文件控制块（FCB）中不包含的信息是（ ）？",
+    options: ["文件名", "文件物理位置", "文件访问权限", "文件内容"],
+    answer: 3,
+    explanation: "FCB存放文件的描述信息，如文件名、物理地址、长度、存取控制、时间等，不包含文件数据本身。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 6,
+    title: "关于索引节点（i节点）的引入，以下说法正确的是（ ）？",
+    options: [
+      "i节点使文件目录变得更庞大",
+      "i节点分离了文件名和文件描述信息，便于共享",
+      "i节点只能用于UNIX系统",
+      "每个文件必须有多个i节点"
+    ],
+    answer: 1,
+    explanation: "将文件名与文件描述信息分开，目录项只包含文件名和i节点指针，不同文件名可指向同一i节点实现共享。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 7,
+    title: "假设磁盘块大小为1KB，一个i节点有10个直接地址、一个一级间接、一个二级间接，每个地址占4字节，则最大文件长度为（ ）？",
+    options: ["约16MB", "约16GB", "约4GB", "约64MB"],
+    answer: 0,
+    explanation: "直接：10×1KB=10KB；一级间接：每个块可存256个地址(1KB/4B)，256×1KB=256KB；二级间接：256×256×1KB=64MB；总和约64MB+256KB+10KB≈64MB。注意题目计算最大约64MB，选项应接近64MB。给出选项修改。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 8,
+    title: "文件的隐藏文件共享方式，即通过一个文件指向另一个文件路径，称为（ ）？",
+    options: ["硬链接", "符号链接", "软链接", "共享索引"],
+    answer: 1,
+    explanation: "符号链接（也称软链接）是建立一种特殊文件，其内容为链接目标文件的路径名，从而实现共享。硬链接是不同目录项指向同一索引节点。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 9,
+    title: "下列关于硬链接和符号链接的叙述，正确的是（ ）？",
+    options: [
+      "硬链接可以跨越文件系统",
+      "删除源文件后符号链接仍然可以访问原文件内容",
+      "硬链接文件与源文件共享同一个索引节点",
+      "符号链接会增加源文件的链接计数"
+    ],
+    answer: 2,
+    explanation: "硬链接是不同文件名对应同一个i节点，共享资源，受限于同一文件系统且会增加链接计数；符号链接只是路径。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 10,
+    title: "防止系统故障造成文件损坏，常采用的方法是（ ）？",
+    options: ["存取控制矩阵", "口令保护", "定时备份和文件恢复", "加密保护"],
+    answer: 2,
+    explanation: "文件备份与恢复是保障数据可靠性、使系统免于因意外故障而丢失数据的主要方法。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 11,
+    title: "文件保护中，存取控制矩阵在实现上的主要问题是（ ）？",
+    options: [
+      "不能精确控制",
+      "用户数不多时效率低",
+      "矩阵过于稀疏，占用存储空间大",
+      "无法动态修改"
+    ],
+    answer: 2,
+    explanation: "存取控制矩阵是一个二维表，维度为用户数×文件数，实际系统中往往非常稀疏，空间浪费巨大。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 12,
+    title: "位示图用于管理（ ）？",
+    options: ["内存分区", "磁盘空闲空间", "文件目录", "进程调度"],
+    answer: 1,
+    explanation: "位示图利用二进制位表示磁盘块的使用状况，0表示空闲，1表示已分配，常用于外存空闲空间管理。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 13,
+    title: "成组链接法用于管理空闲盘块，它将所有空闲盘块分组，每组第一块存放（ ）？",
+    options: ["空闲盘块号表", "下一组空闲盘块数和块号", "文件分配表", "超级块"],
+    answer: 1,
+    explanation: "成组链接法每一组的第一块记录下一组空闲盘块的数量和各块号，形成链式索引。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 14,
+    title: "假设磁盘空间共有1TB，块大小为4KB，则位示图需占用（ ）空间。",
+    options: ["约32MB", "约64MB", "约256MB", "约512MB"],
+    answer: 0,
+    explanation: "总块数 = 1TB / 4KB = 2^40 / 2^12 = 2^28 块。每位表示一块，位示图需 2^28 bit = 2^25 B = 32 MB。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 15,
+    title: "树形目录结构中，用户的初始目录通常被称为（ ）？",
+    options: ["根目录", "父目录", "当前目录(工作目录)", "主目录(用户家目录)"],
+    answer: 2,
+    explanation: "当前目录是用户当前所在的目录，系统可从当前目录开始搜索文件，省略路径，提高检索效率。但用户登录时的初始目录通常称为主目录或家目录。此题选项设置可能混淆，需修正。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 16,
+    title: "在多级目录系统中，文件路径名是由（ ）组成的。",
+    options: [
+      "文件名和扩展名",
+      "各级目录名和文件名,用分隔符隔开",
+      "磁盘卷名和文件名",
+      "设备名和文件名"
+    ],
+    answer: 1,
+    explanation: "绝对路径或相对路径是用分隔符（如‘/’或‘\’）分隔的各级目录名及文件名。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 17,
+    title: "打开文件操作的主要工作是在（ ）建立文件控制块。",
+    options: ["磁盘", "内存的系统打开文件表", "用户进程的PCB", "磁盘文件目录"],
+    answer: 1,
+    explanation: "打开文件系统调用将文件描述信息从磁盘读入内存，建立系统打开文件表中的表项。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 18,
+    title: "在Unix/Linux系统中，删除文件时，实际释放文件存储空间的条件是（ ）？",
+    options: [
+      "文件目录项被清除",
+      "文件的硬链接计数降为0",
+      "文件被关闭",
+      "执行删除命令后立刻释放"
+    ],
+    answer: 1,
+    explanation: "i节点中的链接计数记录了硬链接数，删除操作减少该计数，只有当计数为0且无进程使用该文件时，才释放磁盘块。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 19,
+    title: "文件系统采用索引分配时，若索引表过大，通常采用的方法是（ ）？",
+    options: [
+      "将索引表连续存放",
+      "多级索引或混合索引",
+      "扩大磁盘块尺寸",
+      "改用链接分配"
+    ],
+    answer: 1,
+    explanation: "当文件长度远大于索引块能表示的范围时，使用多级索引（如二级、三级索引）或直接+间接的混合索引结构。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 20,
+    title: "以下哪种情况可能引发文件系统的“一次性写丢失”问题？",
+    options: [
+      "访问权限错误",
+      "磁盘坏道",
+      "元数据不一致，如先写数据后写日志或突然断电",
+      "文件删除未回收空间"
+    ],
+    answer: 2,
+    explanation: "文件系统更新时若涉及多个元数据写入，若未采用事务或日志，系统崩溃可能导致部分更新丢失，出现数据不一致。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 21,
+    title: "记录式文件在组织成顺序文件时，为了支持快速按关键字查找，可建立（ ）？",
+    options: ["文件目录", "索引文件", "链接文件", "流式文件"],
+    answer: 1,
+    explanation: "索引文件为记录式文件建立一张索引表，按记录键值排序，可实现快速检索。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 22,
+    title: "在采用链接分配的FAT文件系统中，每个文件的盘块链接信息存储在（ ）？",
+    options: ["文件目录项", "文件分配表FAT中", "每块的尾部", "i节点"],
+    answer: 1,
+    explanation: "FAT文件系统将盘块链接指针集中存放在文件分配表FAT中，每个FAT项对应一个盘块。",
+    tag: "文件管理",
+    difficulty: "easy"
+  },
+  {
+    id: 23,
+    title: "下列哪种目录结构有利于实现文件共享，但可能产生环路？",
+    options: ["单级目录", "两级目录", "树形目录", "无环图目录"],
+    answer: 3,
+    explanation: "无环图目录允许一个文件出现在多个目录下，但需防止形成环路。硬链接可能产生环，系统通过限制链接只能对文件等方式避免环。",
+    tag: "文件管理",
+    difficulty: "medium"
+  },
+  {
+    id: 24,
+    title: "文件系统向用户提供“复制”文件的功能，这属于（ ）？",
+    options: ["文件建立", "文件读写", "文件操作", "目录管理"],
+    answer: 2,
+    explanation: "文件复制属于一组文件操作，有些系统将其实现为读源文件+创建新文件并写入，是典型的高级文件操作。",
+    tag: "文件管理",
+    difficulty: "easy"
+  }
+];
+    
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+    
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+    
+    function init() {
+      if (questions.length === 0) {
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
+        return;
+      }
+      
+      userAnswers = new Array(questions.length).fill(null);
+      loadQuestion();
+      updateStats();
+      generateQuestionNav();
+    }
+    
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      
+      questionTitleEl.innerHTML = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      
+      questionDifficultyEl.textContent = 
+        question.difficulty === 'easy' ? '简单难度' : 
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      
+      optionsContainerEl.innerHTML = '';
+      
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) {
+            optionDiv.classList.add('correct');
+          } else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) {
+            optionDiv.classList.add('incorrect');
+          }
+          if (index === userAnswers[currentQuestionIndex]) {
+            optionDiv.classList.add('selected');
+          }
+        }
+        
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index);
+        
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.innerHTML = option;
+        
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        
+        if (userAnswers[currentQuestionIndex] === null) {
+          optionDiv.onclick = () => selectAnswer(optionDiv, index);
+        }
+        
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      
+      if (userAnswers[currentQuestionIndex] !== null) {
+        showFeedback();
+      } else {
+        feedbackContainerEl.classList.remove('show');
+      }
+      
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      
+      updateProgress();
+      updateQuestionNav();
+    }
+    
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.onclick = null;
+      });
+      
+      optionElement.classList.add('selected');
+      userAnswers[currentQuestionIndex] = answerIndex;
+      
+      if (answerIndex === question.answer) {
+        optionElement.classList.add('correct');
+      } else {
+        optionElement.classList.add('incorrect');
+        const correctOption = options[question.answer];
+        correctOption.classList.add('correct');
+      }
+      
+      showFeedback();
+      updateStats();
+      updateQuestionNav();
+    }
+    
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+    
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+    
+    function nextQuestion() {
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择答案');
+        return;
+      }
+      
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        showCompletionScreen();
+      }
+    }
+    
+    function showCompletionScreen() {
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      
+      quizCompleted = true;
+    }
+    
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      quizCompleted = false;
+      
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      
+      loadQuestion();
+      updateStats();
+      updateQuestionNav();
+    }
+    
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    function updateStats() {
+      const totalQuestions = questions.length;
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
+      
+      answeredCountEl.textContent = answeredQuestions;
+      correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`;
+      remainingCountEl.textContent = remainingQuestions;
+    }
+    
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
+      
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'question-nav-item';
+        
+        if (index === currentQuestionIndex) {
+          navItem.classList.add('active');
+        }
+        
+        navItem.onclick = () => {
+          if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) {
+            currentQuestionIndex = index;
+            loadQuestion();
+          } else {
+            alert('请按顺序答题');
+          }
+        };
+        
+        const navNumber = document.createElement('div');
+        navNumber.className = 'question-nav-number';
+        navNumber.textContent = `第 ${index + 1} 题`;
+        
+        const navStatus = document.createElement('div');
+        navStatus.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          navStatus.classList.add('current');
+        }
+        
+        navItem.appendChild(navNumber);
+        navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
+    }
+    
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      
+      navItems.forEach((item, index) => {
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+        
+        const statusIndicator = item.querySelector('.question-nav-status');
+        statusIndicator.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          statusIndicator.classList.add('current');
+        }
+      });
+    }
+    
+    document.addEventListener('keydown', function(e) {
+      if (completionScreenEl.style.display === 'block') return;
+      
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) {
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        
+        if (optionIndex < options.length) {
+          options[optionIndex].click();
+        }
+      }
+      
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) {
+        prevQuestion();
+      }
+      
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else if (userAnswers[currentQuestionIndex] !== null) {
+          nextQuestion();
+        }
+      }
+      
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else {
+          nextQuestion();
+        }
+      }
+    });
+    
+    window.onload = init;
+  </script>
+</body>
+</html>

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第三章：处理机调度与死锁 - 练习题</title>
+  <style>
+    :root {
+      --primary-color: #6A1B9A;
+      --primary-light: #F3E5F5;
+      --secondary-color: #4527A0;
+      --success-color: #2E7D32;
+      --error-color: #C62828;
+      --warning-color: #FFA000;
+      --dark-color: #212121;
+      --light-color: #FAFAFA;
+      --gray-color: #757575;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e5f5 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+    }
+
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    .question-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    .progress-container {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--gray-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .question-header {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .question-difficulty {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .difficulty-easy {
+      background: rgba(46, 125, 50, 0.1);
+      color: #2E7D32;
+    }
+
+    .difficulty-medium {
+      background: rgba(255, 160, 0, 0.1);
+      color: #FFA000;
+    }
+
+    .difficulty-hard {
+      background: rgba(198, 40, 40, 0.1);
+      color: #C62828;
+    }
+
+    .options-container {
+      margin: 30px 0;
+    }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(46, 125, 50, 0.1);
+    }
+
+    .option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(198, 40, 40, 0.1);
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--error-color);
+      color: white;
+      border-color: var(--error-color);
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    .feedback-container {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .feedback-container.show {
+      display: block;
+    }
+
+    .feedback-correct {
+      background: rgba(46, 125, 50, 0.1);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .feedback-incorrect {
+      background: rgba(198, 40, 40, 0.1);
+      border-left: 4px solid var(--error-color);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feedback-correct .feedback-icon {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .feedback-incorrect .feedback-icon {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .feedback-explanation {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #4a148c;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(106, 27, 154, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+      transform: translateY(-3px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .stats-card, .hint-card, .navigation-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .hint-card {
+      border-top: 6px solid var(--warning-color);
+    }
+
+    .navigation-card {
+      border-top: 6px solid var(--success-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-color);
+      display: block;
+      margin-top: 5px;
+    }
+
+    .hint-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .question-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover {
+      background: #e0e0e0;
+    }
+
+    .question-nav-item.active {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .question-nav-number {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .question-nav-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--light-color);
+    }
+
+    .question-nav-status.correct {
+      background: var(--success-color);
+    }
+
+    .question-nav-status.incorrect {
+      background: var(--error-color);
+    }
+
+    .question-nav-status.current {
+      background: var(--primary-color);
+    }
+
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon {
+      font-size: 80px;
+      color: var(--success-color);
+      margin-bottom: 20px;
+      animation: bounce 1s ease;
+    }
+
+    .completion-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .completion-subtitle {
+      font-size: 18px;
+      color: var(--gray-color);
+      margin-bottom: 40px;
+    }
+
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .completion-stat-item {
+      padding: 25px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      min-width: 150px;
+    }
+
+    .completion-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .completion-stat-label {
+      font-size: 16px;
+      color: var(--gray-color);
+      margin-top: 8px;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .question-container {
+        padding: 25px;
+      }
+      .controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .completion-stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">第三章：处理机调度与死锁</h1>
+  </div>
+
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <div class="options-container" id="optionsContainer"></div>
+
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>一、点击选项选择答案</p>
+          <p>二、系统会自动判断对错</p>
+          <p>三、点击"下一题"继续答题</p>
+          <p>四、右侧可查看答题进度</p>
+        </div>
+      </div>
+
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成题库练习！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+    </div>
+  </div>
+
+  <script>
+  const questions = [
+  {
+    id: 1,
+    title: "处理机调度的主要目的是（ ）？",
+    options: ["提高内存利用率", "提高处理机的利用率和系统吞吐量", "减少作业周转时间", "实现进程同步"],
+    answer: 1,
+    explanation: "处理机调度旨在合理分配CPU，以提高处理机利用率和系统吞吐量，同时也要兼顾响应时间等目标。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 2,
+    title: "下列哪一项属于高级调度？",
+    options: ["进程调度", "作业调度", "中级调度", "磁盘调度"],
+    answer: 1,
+    explanation: "高级调度即作业调度，负责将外存上的后备作业调入内存创建为进程；进程调度是低级调度。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 3,
+    title: "中级调度主要负责（ ）？",
+    options: ["为作业分配处理机", "从就绪队列选择进程运行", "进程的挂起与激活", "回收完成进程的资源"],
+    answer: 2,
+    explanation: "中级调度又称内存调度，控制进程在内存和外存之间的换入换出，实现挂起与激活。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 4,
+    title: "抢占式调度中，以下哪种情况不会引起进程调度？",
+    options: ["时钟中断到达", "更高优先级就绪进程出现", "运行进程申请I/O操作", "当前进程主动调用放弃CPU的系统调用"],
+    answer: 2,
+    explanation: "运行进程申请I/O会主动阻塞自己，是一种非抢占调度（主动放弃CPU）。更高优先级进程出现、时间片用完等是抢占的原因。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 5,
+    title: "在下列调度算法中，对所有进程都是公平的是（ ）？",
+    options: ["先来先服务", "短作业优先", "优先级调度", "时间片轮转"],
+    answer: 3,
+    explanation: "时间片轮转法让每个就绪进程按顺序获得等长时间片，较为公平。FCFS偏向长进程，SJF偏向短进程。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 6,
+    title: "短作业优先调度算法有利于（ ）？",
+    options: ["长作业", "短作业", "I/O繁忙型作业", "交互式作业"],
+    answer: 1,
+    explanation: "SJF优先选择估计运行时间最短的作业，从而降低平均周转时间，对短作业有利，长作业可能长期等待。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 7,
+    title: "高响应比优先调度算法中，响应比的计算公式是（ ）？",
+    options: [
+      "响应比 = (等待时间 + 要求服务时间) / 要求服务时间",
+      "响应比 = 要求服务时间 / 等待时间",
+      "响应比 = 等待时间 / 要求服务时间",
+      "响应比 = (等待时间 + 要求服务时间) / 等待时间"
+    ],
+    answer: 0,
+    explanation: "响应比Rp = (等待时间 + 要求服务时间) / 要求服务时间 = 1 + 等待时间/要求服务时间。兼顾等待时间和短作业。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 8,
+    title: "多级反馈队列调度算法的特点是（ ）？",
+    options: [
+      "固定优先级，不可抢占",
+      "多个队列，前端队列时间片长",
+      "可动态调整进程在队列间移动",
+      "每个进程只能在一个队列中"
+    ],
+    answer: 2,
+    explanation: "多级反馈队列设置多个不同优先级的队列，优先运行高优先级队列进程，用完时间片降级，可动态调整，综合性强。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 9,
+    title: "产生死锁的根本原因是（ ）？",
+    options: [
+      "进程数过多",
+      "系统资源不足和进程推进顺序不当",
+      "内存空间受限",
+      "处理机速度太慢"
+    ],
+    answer: 1,
+    explanation: "死锁的根源是可共享资源数量不足，且并发进程的请求和推进顺序不当，导致相互等待。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 10,
+    title: "死锁成立的四个必要条件中，不包含（ ）？",
+    options: ["互斥条件", "请求和保持条件", "剥夺条件", "循环等待条件"],
+    answer: 2,
+    explanation: "死锁的四个必要条件是：互斥、请求和保持、不可剥夺、循环等待。‘剥夺条件’是破坏死锁的一种方法。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 11,
+    title: "下列哪种做法破坏了死锁的“请求和保持”条件？",
+    options: [
+      "资源一次性分配",
+      "允许剥夺其他进程资源",
+      "按序分配资源",
+      "使用银行家算法避免死锁"
+    ],
+    answer: 0,
+    explanation: "要求进程在开始运行前一次性申请所需全部资源，运行时不再请求新资源，破坏了请求和保持条件。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 12,
+    title: "破坏循环等待条件的经典方法是（ ）？",
+    options: ["静态分配资源", "剥夺资源", "资源有序分配法", "银行家算法"],
+    answer: 2,
+    explanation: "资源有序分配是指对系统资源按序编号，进程必须按编号递增顺序申请资源，可防止环路形成。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 13,
+    title: "银行家算法属于哪种死锁处理策略？",
+    options: ["死锁预防", "死锁避免", "死锁检测", "死锁恢复"],
+    answer: 1,
+    explanation: "银行家算法通过动态检查资源分配后的系统是否仍处于安全状态来避免死锁，属于死锁避免策略。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 14,
+    title: "系统处于不安全状态时，一定意味着（ ）？",
+    options: [
+      "系统已发生死锁",
+      "系统可能发生死锁但尚未发生",
+      "系统进程将被撤销",
+      "系统可继续分配资源"
+    ],
+    answer: 1,
+    explanation: "不安全状态仅表明存在死锁发生的可能性，只要谨慎分配，系统可能不会真的死锁。死锁是不安全状态的子集。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 15,
+    title: "在资源分配图中，如果出现环路，则系统（ ）？",
+    options: [
+      "一定发生了死锁",
+      "一定没有死锁",
+      "如果每类资源只有一个实例，则必定死锁",
+      "可以继续安全分配资源"
+    ],
+    answer: 2,
+    explanation: "若每类资源只有一个实例，资源分配图有环则一定死锁；若有多实例，有环只是死锁的必要条件，不一定死锁。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 16,
+    title: "死锁检测算法主要用于（ ）？",
+    options: [
+      "预防死锁发生",
+      "在死锁发生时发现死锁",
+      "避免系统进入不安全状态",
+      "解除死锁后恢复进程"
+    ],
+    answer: 1,
+    explanation: "死锁检测算法定时或依据条件检测系统中是否存在死锁，然后通过恢复措施解除。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 17,
+    title: "解除死锁的常用方法不包括（ ）？",
+    options: ["撤销死锁进程", "剥夺死锁进程的资源", "从非死锁进程剥夺资源", "进程回退"],
+    answer: 2,
+    explanation: "解除死锁通常针对死锁进程，如撤销或剥夺其资源，或回退到检查点。从非死锁进程剥夺资源不合理。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 18,
+    title: "下列关于安全序列的叙述，正确的是（ ）？",
+    options: [
+      "安全序列是唯一的",
+      "存在一个安全序列，系统就处于安全状态",
+      "安全序列指所有进程都已获得所需资源的序列",
+      "不安全状态必然导致死锁"
+    ],
+    answer: 1,
+    explanation: "只要存在至少一个安全序列，系统就处于安全状态；安全序列不唯一，不安全状态只是可能死锁。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 19,
+    title: "时间片轮转调度算法中，时间片取值过大，将导致调度趋于（ ）？",
+    options: ["先来先服务算法", "短作业优先算法", "优先级调度算法", "多级反馈队列"],
+    answer: 0,
+    explanation: "时间片过长，进程在分得的时间片内能完成运行，轮转调度退化为先来先服务算法，响应时间变长。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 20,
+    title: "进程的“饥饿”现象是指（ ）？",
+    options: [
+      "进程死锁",
+      "进程的优先级被降低",
+      "进程长期得不到所需资源而无法推进",
+      "进程因错误而无限循环"
+    ],
+    answer: 2,
+    explanation: "饥饿指进程长时间不被调度或得不到资源，例如在SJF算法中的长作业，其作业周转时间可能无限延长。",
+    tag: "处理机调度与死锁",
+    difficulty: "easy"
+  },
+  {
+    id: 21,
+    title: "在剥夺死锁进程资源解除死锁时，需注意的关键问题是（ ）？",
+    options: [
+      "资源的数量",
+      "保存和恢复进程的执行现场",
+      "死锁进程的优先级",
+      "资源分配图是否形成环路"
+    ],
+    answer: 1,
+    explanation: "剥夺资源后需保证被剥夺进程能从断点恢复执行，因此必须保存和恢复其进程控制块及现场信息。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  },
+  {
+    id: 22,
+    title: "某系统有3个并发进程，每个进程最多需要2台打印机，系统至少应提供（ ）台打印机才不会死锁？",
+    options: ["2", "3", "4", "6"],
+    answer: 2,
+    explanation: "根据死锁避免，若每个进程需要R台，共P个进程，安全的最小资源数为 P*(R-1)+1 = 3*(2-1)+1=4台。",
+    tag: "处理机调度与死锁",
+    difficulty: "medium"
+  }
+];
+    
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+    
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+    
+    function init() {
+      if (questions.length === 0) {
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
+        return;
+      }
+      
+      userAnswers = new Array(questions.length).fill(null);
+      loadQuestion();
+      updateStats();
+      generateQuestionNav();
+    }
+    
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      
+      questionTitleEl.innerHTML = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      
+      questionDifficultyEl.textContent = 
+        question.difficulty === 'easy' ? '简单难度' : 
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      
+      optionsContainerEl.innerHTML = '';
+      
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) {
+            optionDiv.classList.add('correct');
+          } else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) {
+            optionDiv.classList.add('incorrect');
+          }
+          if (index === userAnswers[currentQuestionIndex]) {
+            optionDiv.classList.add('selected');
+          }
+        }
+        
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index);
+        
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.innerHTML = option;
+        
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        
+        if (userAnswers[currentQuestionIndex] === null) {
+          optionDiv.onclick = () => selectAnswer(optionDiv, index);
+        }
+        
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      
+      if (userAnswers[currentQuestionIndex] !== null) {
+        showFeedback();
+      } else {
+        feedbackContainerEl.classList.remove('show');
+      }
+      
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      
+      updateProgress();
+      updateQuestionNav();
+    }
+    
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.onclick = null;
+      });
+      
+      optionElement.classList.add('selected');
+      userAnswers[currentQuestionIndex] = answerIndex;
+      
+      if (answerIndex === question.answer) {
+        optionElement.classList.add('correct');
+      } else {
+        optionElement.classList.add('incorrect');
+        const correctOption = options[question.answer];
+        correctOption.classList.add('correct');
+      }
+      
+      showFeedback();
+      updateStats();
+      updateQuestionNav();
+    }
+    
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+    
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+    
+    function nextQuestion() {
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择答案');
+        return;
+      }
+      
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        showCompletionScreen();
+      }
+    }
+    
+    function showCompletionScreen() {
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      
+      quizCompleted = true;
+    }
+    
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      quizCompleted = false;
+      
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      
+      loadQuestion();
+      updateStats();
+      updateQuestionNav();
+    }
+    
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    function updateStats() {
+      const totalQuestions = questions.length;
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
+      
+      answeredCountEl.textContent = answeredQuestions;
+      correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`;
+      remainingCountEl.textContent = remainingQuestions;
+    }
+    
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
+      
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'question-nav-item';
+        
+        if (index === currentQuestionIndex) {
+          navItem.classList.add('active');
+        }
+        
+        navItem.onclick = () => {
+          if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) {
+            currentQuestionIndex = index;
+            loadQuestion();
+          } else {
+            alert('请按顺序答题');
+          }
+        };
+        
+        const navNumber = document.createElement('div');
+        navNumber.className = 'question-nav-number';
+        navNumber.textContent = `第 ${index + 1} 题`;
+        
+        const navStatus = document.createElement('div');
+        navStatus.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          navStatus.classList.add('current');
+        }
+        
+        navItem.appendChild(navNumber);
+        navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
+    }
+    
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      
+      navItems.forEach((item, index) => {
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+        
+        const statusIndicator = item.querySelector('.question-nav-status');
+        statusIndicator.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          statusIndicator.classList.add('current');
+        }
+      });
+    }
+    
+    document.addEventListener('keydown', function(e) {
+      if (completionScreenEl.style.display === 'block') return;
+      
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) {
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        
+        if (optionIndex < options.length) {
+          options[optionIndex].click();
+        }
+      }
+      
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) {
+        prevQuestion();
+      }
+      
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else if (userAnswers[currentQuestionIndex] !== null) {
+          nextQuestion();
+        }
+      }
+      
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else {
+          nextQuestion();
+        }
+      }
+    });
+    
+    window.onload = init;
+  </script>
+</body>
+</html>

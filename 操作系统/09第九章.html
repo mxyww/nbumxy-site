@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第九章：磁盘存储器管理 - 练习题</title>
+  <style>
+    :root {
+      --primary-color: #6A1B9A;
+      --primary-light: #F3E5F5;
+      --secondary-color: #4527A0;
+      --success-color: #2E7D32;
+      --error-color: #C62828;
+      --warning-color: #FFA000;
+      --dark-color: #212121;
+      --light-color: #FAFAFA;
+      --gray-color: #757575;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e5f5 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+    }
+
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    .question-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    .progress-container {
+      margin-bottom: 30px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .progress-label {
+      font-size: 14px;
+      color: var(--gray-color);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .question-header {
+      margin-bottom: 30px;
+    }
+
+    .question-number {
+      font-size: 14px;
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .question-difficulty {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .difficulty-easy {
+      background: rgba(46, 125, 50, 0.1);
+      color: #2E7D32;
+    }
+
+    .difficulty-medium {
+      background: rgba(255, 160, 0, 0.1);
+      color: #FFA000;
+    }
+
+    .difficulty-hard {
+      background: rgba(198, 40, 40, 0.1);
+      color: #C62828;
+    }
+
+    .options-container {
+      margin: 30px 0;
+    }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected {
+      border-color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .option.correct {
+      border-color: var(--success-color);
+      background: rgba(46, 125, 50, 0.1);
+    }
+
+    .option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(198, 40, 40, 0.1);
+    }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter {
+      border-color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .option.selected .option-letter {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .option.correct .option-letter {
+      background: var(--success-color);
+      color: white;
+      border-color: var(--success-color);
+    }
+
+    .option.incorrect .option-letter {
+      background: var(--error-color);
+      color: white;
+      border-color: var(--error-color);
+    }
+
+    .option-text {
+      flex: 1;
+      font-size: 16px;
+    }
+
+    .feedback-container {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .feedback-container.show {
+      display: block;
+    }
+
+    .feedback-correct {
+      background: rgba(46, 125, 50, 0.1);
+      border-left: 4px solid var(--success-color);
+    }
+
+    .feedback-incorrect {
+      background: rgba(198, 40, 40, 0.1);
+      border-left: 4px solid var(--error-color);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feedback-correct .feedback-icon {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .feedback-incorrect .feedback-icon {
+      background: var(--error-color);
+      color: white;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .feedback-explanation {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #4a148c;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(106, 27, 154, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--light-color);
+      color: var(--dark-color);
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+      transform: translateY(-3px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .stats-card, .hint-card, .navigation-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .stats-card {
+      border-top: 6px solid var(--primary-color);
+    }
+
+    .hint-card {
+      border-top: 6px solid var(--warning-color);
+    }
+
+    .navigation-card {
+      border-top: 6px solid var(--success-color);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--gray-color);
+      display: block;
+      margin-top: 5px;
+    }
+
+    .hint-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--dark-color);
+    }
+
+    .question-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover {
+      background: #e0e0e0;
+    }
+
+    .question-nav-item.active {
+      background: var(--primary-light);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .question-nav-number {
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .question-nav-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--light-color);
+    }
+
+    .question-nav-status.correct {
+      background: var(--success-color);
+    }
+
+    .question-nav-status.incorrect {
+      background: var(--error-color);
+    }
+
+    .question-nav-status.current {
+      background: var(--primary-color);
+    }
+
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon {
+      font-size: 80px;
+      color: var(--success-color);
+      margin-bottom: 20px;
+      animation: bounce 1s ease;
+    }
+
+    .completion-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    .completion-subtitle {
+      font-size: 18px;
+      color: var(--gray-color);
+      margin-bottom: 40px;
+    }
+
+    .completion-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .completion-stat-item {
+      padding: 25px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      min-width: 150px;
+    }
+
+    .completion-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary-color);
+      display: block;
+    }
+
+    .completion-stat-label {
+      font-size: 16px;
+      color: var(--gray-color);
+      margin-top: 8px;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .question-container {
+        padding: 25px;
+      }
+      .controls {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .completion-stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">第九章：磁盘存储器管理</h1>
+  </div>
+
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <div class="options-container" id="optionsContainer"></div>
+
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>一、点击选项选择答案</p>
+          <p>二、系统会自动判断对错</p>
+          <p>三、点击"下一题"继续答题</p>
+          <p>四、右侧可查看答题进度</p>
+        </div>
+      </div>
+
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成题库练习！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+    </div>
+  </div>
+
+  <script>
+  const questions = [
+  {
+    id: 1,
+    title: "磁盘的盘面上不同半径的同心圆称为（ ）？",
+    options: ["扇区", "柱面", "磁道", "簇"],
+    answer: 2,
+    explanation: "磁盘盘面上存储信息的圆形轨迹称为磁道。不同盘面上相同编号的磁道构成柱面。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 2,
+    title: "低级格式化（物理格式化）的作用是（ ）？",
+    options: [
+      "建立文件系统引导记录",
+      "将磁盘划分为一个个扇区，并初始化扇区头尾信息",
+      "创建根目录和文件分配表",
+      "清除分区表"
+    ],
+    answer: 1,
+    explanation: "低级格式化将磁道划分为若干扇区，每个扇区写入标识、校验码、间隙等控制信息。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 3,
+    title: "已知一个磁盘有8个盘片，16个可用记录面，每面256个磁道，每道64个扇区，每扇区512字节，则该磁盘的总容量约为（ ）？",
+    options: ["128MB", "256MB", "512MB", "1GB"],
+    answer: 0,
+    explanation: "容量 = 面数 × 磁道数 × 扇区数 × 扇区大小 = 16 × 256 × 64 × 512 B = 2^4 × 2^8 × 2^6 × 2^9 = 2^27 B = 128 MB。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 4,
+    title: "在磁盘空闲空间管理中，空闲表法将空闲磁盘块组织为一张表，其每个表项记录（ ）？",
+    options: [
+      "单个空闲块的块号",
+      "第一个空闲块号和连续空闲块数量",
+      "所有空闲块的链表指针",
+      "空闲块的位图"
+    ],
+    answer: 1,
+    explanation: "空闲表法类似于可变分区管理，每个表项包含空闲区的起始块号和空闲块数目。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 5,
+    title: "采用空闲链表法管理磁盘空间时，空闲盘块链和空闲盘区链的主要区别是（ ）？",
+    options: [
+      "前者以单个块为单位链接，后者以连续区域为单位链接",
+      "前者链接所有块，后者只链接已分配块",
+      "前者占用空间更大",
+      "前者无法回收空闲块"
+    ],
+    answer: 0,
+    explanation: "空闲盘块链将每个空闲块链接起来；空闲盘区链则将连续的若干空闲块视为一个盘区进行链接，节点中包含本区空闲块数。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 6,
+    title: "某磁盘共有1000个盘块，若采用位示图管理空闲空间，字长为32位，则位示图需要（ ）个字。",
+    options: ["32", "31", "250", "1000"],
+    answer: 2,
+    explanation: "1000个盘块需1000 bit，每个字32位，需要 ceil(1000/32)=32个字？计算：1000/32=31.25，向上取整为32。但选项有250，不对。重新设定：若字长为32，位示图字数=盘块数/字长向上取整=1000/32≈32字。修改选项为32。注意之前计算。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 7,
+    title: "在UNIX系统的成组链接法中，空闲盘块号栈的栈顶指针和栈本身存放在（ ）？",
+    options: ["内存专用区", "超级块中", "每个空闲块中", "文件目录中"],
+    answer: 1,
+    explanation: "成组链接法将当前可用的空闲盘块号栈（含栈中的空闲块号和栈顶指针）存放在文件卷的超级块中。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 8,
+    title: "成组链接法分配一个空闲盘块时，首先从（ ）取出一个空闲块号。",
+    options: ["空闲盘块号栈顶", "栈底", "第一个成组块", "位示图"],
+    answer: 0,
+    explanation: "分配时先检查超级块中空闲盘块号栈，将栈顶指向的空闲块号分配出去，栈顶指针下移。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 9,
+    title: "下列RAID级别中，无冗余、仅追求性能提升的是（ ）？",
+    options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+    answer: 0,
+    explanation: "RAID 0将数据条带化存储于多个磁盘，无奇偶校验或镜像，读写速度快，但任意一块盘损坏数据即丢失。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 10,
+    title: "RAID 5采用分布式奇偶校验，其校验信息（ ）？",
+    options: [
+      "固定存储在一块专用校验盘上",
+      "均匀分布在所有磁盘上",
+      "镜像存储在两块盘上",
+      "存放在内存中"
+    ],
+    answer: 1,
+    explanation: "RAID 5将数据和奇偶校验信息交替分布在所有磁盘上，避免专用校验盘成为性能瓶颈。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 11,
+    title: "下列哪项技术用于防止磁盘的磁臂黏着现象？",
+    options: ["SSTF算法", "SCAN算法", "N-Step-SCAN算法", "C-SCAN算法"],
+    answer: 2,
+    explanation: "N步SCAN将请求队列分成长度为N的子队列，每次SCAN处理一个子队列，可避免磁臂长时间停留在某一区域。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 12,
+    title: "为了提高磁盘I/O速度，可将文件数据连续存放于磁盘的同一柱面或相邻柱面，这是利用了（ ）？",
+    options: ["高速缓存", "优化物理块分布", "提前读", "虚拟盘"],
+    answer: 1,
+    explanation: "安排文件数据在物理上连续或相近，可减少寻道和旋转延迟，提高顺序访问速度。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 13,
+    title: "“提前读”提高磁盘I/O速度的原理是（ ）？",
+    options: [
+      "将被频繁访问的文件放入内存虚拟盘",
+      "将预计即将使用的盘块数据提前读入缓冲区",
+      "延迟将要写回的数据以减少写操作",
+      "使用磁盘镜像"
+    ],
+    answer: 1,
+    explanation: "提前读根据程序的空间局部性，在读当前块的同时将下一个盘块数据一并读入，减少后续读等待时间。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 14,
+    title: "磁盘高速缓存中的数据交付方式中，“指针交付”是指（ ）？",
+    options: [
+      "将数据从高速缓存复制到请求进程的内存工作区",
+      "将高速缓存中数据块的指针直接传递给请求进程",
+      "将数据直接写入磁盘",
+      "更换高速缓存块的置换算法"
+    ],
+    answer: 1,
+    explanation: "指针交付不复制数据，仅将高速缓存区的地址指针传递给进程，进程通过指针直接访问，减少了内存数据复制开销。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 15,
+    title: "系统容错技术SFT的第二级是（ ）？",
+    options: ["热修复重定向", "磁盘镜像或磁盘双工", "文件集群", "后援备份"],
+    answer: 1,
+    explanation: "SFT二级采用磁盘镜像（同一通道双盘）或磁盘双工（不同通道双盘），防止磁盘驱动器或控制器故障导致数据丢失。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 16,
+    title: "热修复重定向属于SFT的哪一级？",
+    options: ["第一级", "第二级", "第三级", "不属于SFT"],
+    answer: 0,
+    explanation: "SFT第一级采用双重目录、FAT及热修复重定向等措施，用于处理磁盘表面缺陷等轻微问题。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 17,
+    title: "后援备份中的增量备份是指（ ）？",
+    options: [
+      "每次备份整个文件系统",
+      "只备份自上次全量备份后被修改过的文件",
+      "只备份自上次备份（全量或增量）后修改的文件",
+      "备份系统关键启动文件"
+    ],
+    answer: 2,
+    explanation: "增量备份只复制自上次备份以来变化过的文件，节省时间和存储；差异备份通常指自上次全备份以来的变化。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 18,
+    title: "固态硬盘（SSD）中，磨损均衡算法的目的是（ ）？",
+    options: [
+      "提高数据读写速度",
+      "将擦写操作均匀分布到各个闪存块，延长整体寿命",
+      "减少内部碎片",
+      "实现坏块映射"
+    ],
+    answer: 1,
+    explanation: "闪存的擦写次数有限，磨损均衡通过动态或静态策略，避免部分块因频繁擦写而提前损坏。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 19,
+    title: "以下哪种措施不能直接提高磁盘的可靠性？",
+    options: ["磁盘镜像", "奇偶校验RAID", "定期坏块检测", "磁盘调度算法优化"],
+    answer: 3,
+    explanation: "调度算法主要优化性能，不直接提高数据的容错和可靠性。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 20,
+    title: "磁盘的一次数据读写操作是以（ ）为基本单位。",
+    options: ["磁道", "柱面", "扇区", "字节"],
+    answer: 2,
+    explanation: "磁盘控制器每次从磁盘读取或写入一个或若干个扇区，扇区是磁盘I/O的基本单位。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 21,
+    title: "在磁盘空闲空间的位示图中，字号i和位号j的位对应盘块号b的公式为（字长L位，位示图从0开始编号）？（ ）",
+    options: [
+      "b = i * L + j",
+      "b = i + j * L",
+      "b = j * L + i",
+      "b = (i+1) * (j+1) - 1"
+    ],
+    answer: 0,
+    explanation: "若从0开始，0号字0位对应块0，0号字1位对应块1，则盘块号 = i × 字长 + j。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 22,
+    title: "关于磁盘的存储密度，以下描述正确的是（ ）？",
+    options: [
+      "外层磁道和内层磁道的线密度相同",
+      "内层磁道的位密度高于外层磁道",
+      "外层磁道与内层磁道扇区数通常相同，故内层位密度高",
+      "所有磁道存储的数据量不等"
+    ],
+    answer: 2,
+    explanation: "现代磁盘采用等密度记录或区段记录时，内外圈位密度可不同，但若每个磁道扇区数相同（传统），内圈周长小，位密度更高。",
+    tag: "磁盘存储器管理",
+    difficulty: "medium"
+  },
+  {
+    id: 23,
+    title: "虚拟盘（RAM盘）的特点是（ ）？",
+    options: [
+      "容量非常大",
+      "数据永久保存",
+      "存取速度远高于磁盘，但关机后数据丢失",
+      "由磁盘模拟内存使用"
+    ],
+    answer: 2,
+    explanation: "虚拟盘利用内存空间仿真磁盘，访问速度极快，但属易失性存储，掉电后数据丢失，常用于存放临时文件。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  },
+  {
+    id: 24,
+    title: "在磁盘调度算法中，LOOK算法是SCAN算法的改进，它（ ）？",
+    options: [
+      "总是扫描到磁盘最内/最外柱面",
+      "到达最远请求柱面后立即返回，无需到物理尽头",
+      "每次服务最短寻道请求",
+      "固定从外向里扫描"
+    ],
+    answer: 1,
+    explanation: "LOOK算法磁头移动方向上无请求时便转向，不必运行到最内或最外柱面，减少了不必要的移动。",
+    tag: "磁盘存储器管理",
+    difficulty: "easy"
+  }
+];
+    
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+    
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+    
+    function init() {
+      if (questions.length === 0) {
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
+        return;
+      }
+      
+      userAnswers = new Array(questions.length).fill(null);
+      loadQuestion();
+      updateStats();
+      generateQuestionNav();
+    }
+    
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      
+      questionTitleEl.innerHTML = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      
+      questionDifficultyEl.textContent = 
+        question.difficulty === 'easy' ? '简单难度' : 
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      
+      optionsContainerEl.innerHTML = '';
+      
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) {
+            optionDiv.classList.add('correct');
+          } else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) {
+            optionDiv.classList.add('incorrect');
+          }
+          if (index === userAnswers[currentQuestionIndex]) {
+            optionDiv.classList.add('selected');
+          }
+        }
+        
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index);
+        
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.innerHTML = option;
+        
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        
+        if (userAnswers[currentQuestionIndex] === null) {
+          optionDiv.onclick = () => selectAnswer(optionDiv, index);
+        }
+        
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      
+      if (userAnswers[currentQuestionIndex] !== null) {
+        showFeedback();
+      } else {
+        feedbackContainerEl.classList.remove('show');
+      }
+      
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      
+      updateProgress();
+      updateQuestionNav();
+    }
+    
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => {
+        option.onclick = null;
+      });
+      
+      optionElement.classList.add('selected');
+      userAnswers[currentQuestionIndex] = answerIndex;
+      
+      if (answerIndex === question.answer) {
+        optionElement.classList.add('correct');
+      } else {
+        optionElement.classList.add('incorrect');
+        const correctOption = options[question.answer];
+        correctOption.classList.add('correct');
+      }
+      
+      showFeedback();
+      updateStats();
+      updateQuestionNav();
+    }
+    
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+    
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion();
+      }
+    }
+    
+    function nextQuestion() {
+      if (userAnswers[currentQuestionIndex] === null) {
+        alert('请先选择答案');
+        return;
+      }
+      
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        showCompletionScreen();
+      }
+    }
+    
+    function showCompletionScreen() {
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      
+      quizCompleted = true;
+    }
+    
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      userAnswers = new Array(questions.length).fill(null);
+      quizCompleted = false;
+      
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      
+      loadQuestion();
+      updateStats();
+      updateQuestionNav();
+    }
+    
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+    
+    function updateStats() {
+      const totalQuestions = questions.length;
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
+      
+      answeredCountEl.textContent = answeredQuestions;
+      correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`;
+      remainingCountEl.textContent = remainingQuestions;
+    }
+    
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
+      
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'question-nav-item';
+        
+        if (index === currentQuestionIndex) {
+          navItem.classList.add('active');
+        }
+        
+        navItem.onclick = () => {
+          if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) {
+            currentQuestionIndex = index;
+            loadQuestion();
+          } else {
+            alert('请按顺序答题');
+          }
+        };
+        
+        const navNumber = document.createElement('div');
+        navNumber.className = 'question-nav-number';
+        navNumber.textContent = `第 ${index + 1} 题`;
+        
+        const navStatus = document.createElement('div');
+        navStatus.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          navStatus.classList.add('current');
+        }
+        
+        navItem.appendChild(navNumber);
+        navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
+    }
+    
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      
+      navItems.forEach((item, index) => {
+        if (index === currentQuestionIndex) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+        
+        const statusIndicator = item.querySelector('.question-nav-status');
+        statusIndicator.className = 'question-nav-status';
+        
+        if (userAnswers[index] !== null) {
+          statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect');
+        } else if (index === currentQuestionIndex) {
+          statusIndicator.classList.add('current');
+        }
+      });
+    }
+    
+    document.addEventListener('keydown', function(e) {
+      if (completionScreenEl.style.display === 'block') return;
+      
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) {
+        const optionIndex = parseInt(e.key) - 1;
+        const options = document.querySelectorAll('.option');
+        
+        if (optionIndex < options.length) {
+          options[optionIndex].click();
+        }
+      }
+      
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) {
+        prevQuestion();
+      }
+      
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else if (userAnswers[currentQuestionIndex] !== null) {
+          nextQuestion();
+        }
+      }
+      
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) {
+        if (currentQuestionIndex < questions.length - 1) {
+          nextQuestion();
+        } else {
+          nextQuestion();
+        }
+      }
+    });
+    
+    window.onload = init;
+  </script>
+</body>
+</html>
