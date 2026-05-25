@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第四章：资本主义的本质及规律 - 练习题</title>
+  <style>
+    :root { --primary-color: #C62828; --primary-light: #FFCDD2; --secondary-color: #1565C0; --success-color: #2E7D32; --error-color: #C62828; --warning-color: #F9A825; --dark-color: #212121; --light-color: #FAFAFA; --gray-color: #757575; --shadow: 0 10px 30px rgba(0,0,0,0.08); --shadow-hover: 0 20px 40px rgba(0,0,0,0.12); --transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.1); --radius: 16px; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif; background:linear-gradient(135deg,#fdfbf7 0%,#f5f0e8 100%); min-height:100vh; color:var(--dark-color); padding:20px; }
+    .header { max-width:1000px; margin:0 auto 30px; display:flex; justify-content:space-between; align-items:center; padding:20px 0; }
+    .back-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; background:white; color:var(--primary-color); text-decoration:none; border-radius:var(--radius); font-weight:600; box-shadow:var(--shadow); transition:var(--transition); }
+    .back-btn:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+    .page-title { font-size:28px; font-weight:700; background:linear-gradient(to right,var(--primary-color),var(--secondary-color)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .container { max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 300px; gap:30px; }
+    .question-container { background:white; border-radius:var(--radius); padding:40px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+    .question-container::before { content:''; position:absolute; top:0; left:0; width:100%; height:6px; background:linear-gradient(to right,var(--primary-color),var(--secondary-color)); }
+    .progress-container { margin-bottom:30px; }
+    .progress-header { display:flex; justify-content:space-between; margin-bottom:10px; }
+    .progress-label { font-size:14px; color:var(--gray-color); }
+    .progress-bar { height:8px; background:var(--light-color); border-radius:4px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(to right,var(--primary-color),var(--secondary-color)); border-radius:4px; width:0%; transition:width 0.5s ease; }
+    .question-header { margin-bottom:30px; }
+    .question-number { font-size:14px; color:var(--primary-color); font-weight:600; margin-bottom:8px; }
+    .question-title { font-size:22px; line-height:1.5; margin-bottom:10px; }
+    .question-difficulty { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; margin-top:5px; }
+    .difficulty-easy { background:rgba(46,125,50,0.1); color:#2E7D32; }
+    .difficulty-medium { background:rgba(249,168,37,0.1); color:#F9A825; }
+    .difficulty-hard { background:rgba(198,40,40,0.1); color:#C62828; }
+    .options-container { margin:30px 0; }
+    .option { padding:18px 20px; background:var(--light-color); border-radius:var(--radius); margin-bottom:15px; cursor:pointer; transition:var(--transition); border:2px solid transparent; display:flex; align-items:center; }
+    .option:hover { background:white; border-color:var(--primary-light); transform:translateY(-3px); box-shadow:0 5px 15px rgba(0,0,0,0.05); }
+    .option.selected { border-color:var(--primary-color); background:var(--primary-light); }
+    .option.correct { border-color:var(--success-color); background:rgba(46,125,50,0.1); }
+    .option.incorrect { border-color:var(--error-color); background:rgba(198,40,40,0.1); }
+    .option-letter { width:36px; height:36px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-right:15px; font-weight:700; color:var(--dark-color); border:2px solid var(--light-color); transition:var(--transition); }
+    .option:hover .option-letter { border-color:var(--primary-color); background:var(--primary-color); color:white; }
+    .option.selected .option-letter { background:var(--primary-color); color:white; border-color:var(--primary-color); }
+    .option.correct .option-letter { background:var(--success-color); color:white; border-color:var(--success-color); }
+    .option.incorrect .option-letter { background:var(--error-color); color:white; border-color:var(--error-color); }
+    .option-text { flex:1; font-size:16px; }
+    .feedback-container { margin:30px 0; padding:20px; border-radius:var(--radius); display:none; animation:fadeIn 0.5s ease; }
+    .feedback-container.show { display:block; }
+    .feedback-correct { background:rgba(46,125,50,0.1); border-left:4px solid var(--success-color); }
+    .feedback-incorrect { background:rgba(198,40,40,0.1); border-left:4px solid var(--error-color); }
+    .feedback-header { display:flex; align-items:center; margin-bottom:10px; }
+    .feedback-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-right:12px; font-size:18px; flex-shrink:0; }
+    .feedback-correct .feedback-icon { background:var(--success-color); color:white; }
+    .feedback-incorrect .feedback-icon { background:var(--error-color); color:white; }
+    .feedback-title { font-weight:700; font-size:18px; }
+    .feedback-explanation { margin-top:10px; font-size:15px; line-height:1.6; color:var(--dark-color); }
+    .controls { display:flex; justify-content:space-between; margin-top:30px; }
+    .btn { padding:14px 32px; border:none; border-radius:var(--radius); font-size:16px; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:8px; }
+    .btn-primary { background:var(--primary-color); color:white; }
+    .btn-primary:hover:not(:disabled) { background:#8E0000; transform:translateY(-3px); box-shadow:0 10px 20px rgba(198,40,40,0.3); }
+    .btn-secondary { background:var(--light-color); color:var(--dark-color); }
+    .btn-secondary:hover { background:#e0e0e0; transform:translateY(-3px); }
+    .btn:disabled { opacity:0.5; cursor:not-allowed; transform:none!important; box-shadow:none!important; }
+    .sidebar { display:flex; flex-direction:column; gap:25px; }
+    .stats-card,.hint-card,.navigation-card { background:white; border-radius:var(--radius); padding:25px; box-shadow:var(--shadow); }
+    .stats-card { border-top:6px solid var(--primary-color); }
+    .hint-card { border-top:6px solid var(--warning-color); }
+    .navigation-card { border-top:6px solid var(--success-color); }
+    .card-title { font-size:18px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+    .card-title i { font-size:20px; }
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+    .stat-item { text-align:center; padding:15px; background:var(--light-color); border-radius:var(--radius); }
+    .stat-value { font-size:24px; font-weight:700; color:var(--primary-color); display:block; }
+    .stat-label { font-size:13px; color:var(--gray-color); display:block; margin-top:5px; }
+    .hint-content { font-size:14px; line-height:1.6; color:var(--dark-color); }
+    .question-list { max-height:300px; overflow-y:auto; margin-top:10px; }
+    .question-nav-item { display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:var(--light-color); border-radius:var(--radius); margin-bottom:10px; cursor:pointer; transition:var(--transition); }
+    .question-nav-item:hover { background:#e0e0e0; }
+    .question-nav-item.active { background:var(--primary-light); border-left:4px solid var(--primary-color); }
+    .question-nav-number { font-weight:600; color:var(--dark-color); }
+    .question-nav-status { width:10px; height:10px; border-radius:50%; background:var(--light-color); }
+    .question-nav-status.correct { background:var(--success-color); }
+    .question-nav-status.incorrect { background:var(--error-color); }
+    .question-nav-status.current { background:var(--primary-color); }
+    .completion-screen { max-width:800px; margin:50px auto; background:white; border-radius:var(--radius); padding:50px; text-align:center; box-shadow:var(--shadow); animation:fadeIn 0.8s ease; }
+    .completion-icon { font-size:80px; color:var(--success-color); margin-bottom:20px; animation:bounce 1s ease; }
+    .completion-title { font-size:32px; font-weight:700; margin-bottom:15px; color:var(--dark-color); }
+    .completion-subtitle { font-size:18px; color:var(--gray-color); margin-bottom:40px; }
+    .completion-stats { display:flex; justify-content:center; gap:30px; margin-bottom:40px; }
+    .completion-stat-item { padding:25px; background:var(--light-color); border-radius:var(--radius); min-width:150px; }
+    .completion-stat-value { font-size:36px; font-weight:700; color:var(--primary-color); display:block; }
+    .completion-stat-label { font-size:16px; color:var(--gray-color); margin-top:8px; display:block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-20px)} 60%{transform:translateY(-10px)} }
+    @media(max-width:900px){ .container{grid-template-columns:1fr} .sidebar{order:-1} }
+    @media(max-width:768px){ .question-container{padding:25px} .controls{flex-direction:column;gap:15px} .btn{width:100%;justify-content:center} .completion-stats{flex-direction:column;align-items:center} }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i>返回首页</a>
+    <h1 class="page-title">资本主义的本质及规律</h1>
+  </div>
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-container">
+        <div class="progress-header"><span class="progress-label">进度</span><span class="progress-label" id="progressText">0/0</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+      <div class="options-container" id="optionsContainer"></div>
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header"><div class="feedback-icon" id="feedbackIcon"></div><div class="feedback-title" id="feedbackTitle"></div></div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled><i class="fas fa-arrow-left"></i>上一题</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">下一题<i class="fas fa-arrow-right"></i></button>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div class="stats-card">
+        <div class="card-title"><i class="fas fa-chart-bar" style="color:var(--primary-color)"></i>学习统计</div>
+        <div class="stats-grid">
+          <div class="stat-item"><span class="stat-value" id="answeredCount">0</span><span class="stat-label">已答题</span></div>
+          <div class="stat-item"><span class="stat-value" id="correctCount">0</span><span class="stat-label">正确数</span></div>
+          <div class="stat-item"><span class="stat-value" id="accuracyRate">0%</span><span class="stat-label">正确率</span></div>
+          <div class="stat-item"><span class="stat-value" id="remainingCount">0</span><span class="stat-label">剩余题</span></div>
+        </div>
+      </div>
+      <div class="hint-card">
+        <div class="card-title"><i class="fas fa-lightbulb" style="color:var(--warning-color)"></i>答题提示</div>
+        <div class="hint-content"><p>一、点击选项选择答案</p><p>二、系统会自动判断对错</p><p>三、点击"下一题"继续答题</p><p>四、右侧可查看答题进度</p></div>
+      </div>
+      <div class="navigation-card">
+        <div class="card-title"><i class="fas fa-list-ol" style="color:var(--success-color)"></i>题目导航</div>
+        <div class="question-list" id="questionNav"></div>
+      </div>
+    </div>
+  </div>
+  <div class="completion-screen" id="completionScreen" style="display:none">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成题库练习！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    <div class="completion-stats">
+      <div class="completion-stat-item"><span class="completion-stat-value" id="finalCorrectCount">0</span><span class="completion-stat-label">正确题数</span></div>
+      <div class="completion-stat-item"><span class="completion-stat-value" id="finalTotalCount">0</span><span class="completion-stat-label">总题数</span></div>
+      <div class="completion-stat-item"><span class="completion-stat-value" id="finalAccuracyRate">0%</span><span class="completion-stat-label">正确率</span></div>
+    </div>
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary"><i class="fas fa-home"></i>返回首页</a>
+      <button class="btn btn-primary" onclick="restartQuiz()"><i class="fas fa-redo"></i>重新开始</button>
+    </div>
+  </div>
+  <script>
+    const questions = [
+  { id:1, title:"商品经济产生的基本条件是？", options:["社会分工和私有制", "生产力发展到一定阶段", "剩余产品的出现", "货币的产生"], answer:0, explanation:"商品经济产生和存在的基本条件：一是社会分工，二是生产资料和劳动产品属于不同所有者（私有制）。", tag:"商品经济", difficulty:"easy" },
+  { id:2, title:"商品的二因素是？", options:["使用价值和价值", "交换价值和使用价值", "具体劳动和抽象劳动", "个别劳动和社会劳动"], answer:0, explanation:"商品的二因素是使用价值和价值。使用价值是商品满足人的需要的有用性，价值是凝结在商品中的无差别的一般人类劳动。", tag:"商品二因素", difficulty:"easy" },
+  { id:3, title:"商品价值量的决定因素是？", options:["生产商品所耗费的劳动时间", "社会必要劳动时间", "市场供求关系", "商品的稀缺程度"], answer:1, explanation:"商品的价值量是由生产该商品的社会必要劳动时间决定的，而不是由个别劳动时间决定。", tag:"价值量", difficulty:"easy" },
+  { id:4, title:"理解政治经济学的枢纽是？", options:["劳动二重性理论", "剩余价值理论", "资本积累理论", "价值规律"], answer:0, explanation:"生产商品的劳动二重性（具体劳动和抽象劳动）理论是理解政治经济学的枢纽。", tag:"劳动二重性", difficulty:"medium" },
+  { id:5, title:"具体劳动和抽象劳动的关系是？", options:["两种不同的劳动", "同一劳动的两个方面", "先后进行的两次劳动", "互相独立的两个劳动过程"], answer:1, explanation:"具体劳动和抽象劳动不是两次劳动，而是同一劳动过程的两个方面。具体劳动创造使用价值，抽象劳动形成价值。", tag:"劳动二重性", difficulty:"medium" },
+  { id:6, title:"货币的本质是？", options:["一般等价物", "特殊商品", ["金银"], "交换媒介"], answer:0, explanation:"货币的本质是固定充当一般等价物的商品，体现商品生产者之间的社会经济关系。", tag:"货币本质", difficulty:"easy" },
+  { id:7, title:"货币的五大职能中，最基本的两个职能是？", options:["价值尺度和流通手段", "贮藏手段和支付手段", "流通手段和支付手段", "价值尺度和世界货币"], answer:0, explanation:"货币的五种职能是：价值尺度、流通手段、贮藏手段、支付手段和世界货币。其中价值尺度和流通手段是最基本的职能。", tag:"货币职能", difficulty:"easy" },
+  { id:8, title:"价值规律是？", options:["商品经济的基本规律", "资本主义特有的规律", "社会主义特有的规律", ["自然经济的规律"]], answer:0, explanation:"价值规律是商品经济的基本规律，只要存在商品生产和商品交换，价值规律就必然发挥作用。", tag:"价值规律", difficulty:"easy" },
+  { id:9, title:"价值规律作用的表现形式是？", options:["价格围绕价值上下波动", "价格永远等于价值", "价格与价值完全无关", "价值围绕价格波动"], answer:0, explanation:"价格围绕价值上下波动是价值规律作用的表现形式。", tag:"价值规律", difficulty:"easy" },
+  { id:10, title:"劳动力成为商品的两个基本条件是？", options:["劳动者有人身自由和劳动者一无所有", "社会分工和商品交换", "法律保护和市场竞争", "技术进步和社会化大生产"], answer:0, explanation:"劳动力成为商品的基本条件：一是劳动者有人身自由，能自由出卖劳动力；二是劳动者除了劳动力外一无所有，不得不靠出卖劳动力为生。", tag:"劳动力商品", difficulty:"medium" },
+  { id:11, title:"劳动力商品的价值是由？", options:["生产劳动力所耗费的劳动决定的", "生产和再生产劳动力所必需的生活资料的价值决定的", "市场供求关系决定的", "资本家决定的"], answer:1, explanation:"劳动力商品的价值是由生产和再生产劳动力所必需的生活资料的价值决定的。", tag:"劳动力商品", difficulty:"medium" },
+  { id:12, title:"劳动力商品使用价值的特殊性在于？", options:["能转移价值", "能创造出比自身价值更大的价值", "能保持自身价值不变", "能消灭价值"], answer:1, explanation:"劳动力商品使用价值的特殊性在于：通过对劳动力的使用（劳动），能创造出比劳动力自身价值更大的价值，即剩余价值。", tag:"劳动力商品", difficulty:"medium" },
+  { id:13, title:"资本主义生产过程是？", options:["单纯的劳动过程", "单纯的价值形成过程", "劳动过程和价值增殖过程的统一", "单纯的商品生产过程"], answer:2, explanation:"资本主义生产过程是劳动过程和价值增殖过程的统一。", tag:"资本主义生产", difficulty:"medium" },
+  { id:14, title:"剩余价值是由？", options:["全部资本创造的", "不变资本创造的", "可变资本创造的", "流通过程创造的"], answer:2, explanation:"剩余价值是由可变资本（即用于购买劳动力的那部分资本）创造的。不变资本只转移价值，不创造新价值。", tag:"剩余价值", difficulty:"medium" },
+  { id:15, title:"剩余价值率的公式是？", options:["m' = m/v", "m' = m/(c+v)", "m' = m/c", "m' = v/m"], answer:0, explanation:"剩余价值率m' = m（剩余价值）/ v（可变资本），反映了资本家对工人的剥削程度。", tag:"剩余价值率", difficulty:"medium" },
+  { id:16, title:"绝对剩余价值生产是？", options:["通过延长工作日来增加剩余价值", "通过提高劳动生产率来增加剩余价值", "通过降低工资来增加剩余价值", "通过扩大生产规模来增加剩余价值"], answer:0, explanation:"绝对剩余价值生产是指通过延长工作日的长度来增加剩余劳动时间，从而增加剩余价值。", tag:"绝对剩余价值", difficulty:"medium" },
+  { id:17, title:"相对剩余价值生产是？", options:["通过延长工作日来增加剩余价值", "通过缩短必要劳动时间、相应地延长剩余劳动时间来增加剩余价值", "通过降低工人工资来增加剩余价值", "通过增加劳动强度来增加剩余价值"], answer:1, explanation:"相对剩余价值生产是通过提高劳动生产率来缩短必要劳动时间，从而相对地延长剩余劳动时间。", tag:"相对剩余价值", difficulty:"medium" },
+  { id:18, title:"资本积累的实质是？", options:["资本家节约的结果", "剩余价值的资本化", "资本家勤劳的结果", "资本家经营有方的结果"], answer:1, explanation:"资本积累的实质是剩余价值的资本化，即资本家把剩余价值的一部分转化为资本，用于扩大再生产。", tag:"资本积累", difficulty:"medium" },
+  { id:19, title:"资本的有机构成是指？", options:["不变资本和可变资本的比例关系", "生产资料和劳动力的比例关系", "由技术构成决定并反映技术构成变化的资本价值构成", "固定资本和流动资本的比例关系"], answer:2, explanation:"资本的有机构成是指由技术构成决定并反映技术构成变化的资本价值构成，即c:v。", tag:"资本有机构成", difficulty:"hard" },
+  { id:20, title:"资本主义基本矛盾是？", options:["无产阶级和资产阶级的矛盾", "生产社会化和资本主义私人占有制之间的矛盾", "个别企业生产的有组织性与整个社会生产无政府状态之间的矛盾", "生产与消费的矛盾"], answer:1, explanation:"资本主义基本矛盾是生产社会化和资本主义私人占有制之间的矛盾，这一矛盾贯穿资本主义始终。", tag:"基本矛盾", difficulty:"medium" },
+  { id:21, title:"相对过剩人口是指？", options:["绝对的过剩", "相对于资本需求而言的过剩", "人口增长过快造成的过剩", "自然资源的约束造成的过剩"], answer:1, explanation:"相对过剩人口是指相对于资本对劳动力的需求而言出现的过剩，是资本有机构成提高的必然结果。", tag:"相对过剩人口", difficulty:"medium" },
+  { id:22, title:"资本主义工资的本质是？", options:["劳动的价值或价格", "劳动力的价值或价格", "工人创造的全部价值", "工人创造的全部剩余价值"], answer:1, explanation:"资本主义工资的本质是劳动力的价值或价格，但表现为"劳动的价格"，掩盖了资本家对工人的剥削。", tag:"工资", difficulty:"medium" },
+  { id:23, title:"资本主义经济危机的根源是？", options:["生产过剩", "消费不足", "资本主义基本矛盾", "市场失灵"], answer:2, explanation:"资本主义经济危机的根源是资本主义基本矛盾，即生产社会化和资本主义私人占有制之间的矛盾。", tag:"经济危机", difficulty:"medium" },
+  { id:24, title:"产业资本的循环经历的三个阶段是？", options:["购买、生产、销售", "生产、分配、交换", "购买、销售、消费", "生产、分配、消费"], answer:0, explanation:"产业资本在运动中依次经过购买阶段、生产阶段和销售阶段，分别采取货币资本、生产资本、商品资本三种形式。", tag:"资本循环", difficulty:"hard" },
+  { id:25, title:"利润率和剩余价值率的关系是？", options:["利润率等于剩余价值率", "利润率总是大于剩余价值率", "利润率总是小于剩余价值率", "两者没有关系"], answer:2, explanation:"利润率（m/(c+v)）总是小于剩余价值率（m/v），因为利润率是按全部预付资本计算的，这掩盖了资本家对工人的剥削程度。", tag:"利润率", difficulty:"hard" },
+  { id:26, title:"资本主义生产方式的绝对规律是？", options:["价值规律", "竞争规律", "生产剩余价值或赚钱", "供求规律"], answer:2, explanation:"生产剩余价值或赚钱是资本主义生产方式的绝对规律，即剩余价值规律。", tag:"剩余价值规律", difficulty:"easy" },
+  { id:27, title:"资本周转速度与？", options:["周转时间成正比", "周转次数成反比", "周转时间成反比，与周转次数成正比", "周转时间和周转次数都成正比"], answer:2, explanation:"资本周转速度与周转时间成反比，与周转次数成正比。周转时间越短，周转速度越快；周转次数越多，周转速度越快。", tag:"资本周转", difficulty:"medium" },
+  { id:28, title:"社会资本再生产理论的核心问题是？", options:["剩余价值的来源", "社会总产品的实现问题", "资本积累的源泉", "利润的平均化"], answer:1, explanation:"社会资本再生产理论的核心问题是社会总产品的实现问题，即价值补偿和物质补偿问题。", tag:"社会再生产", difficulty:"hard" }
+];
+    let currentQuestionIndex=0,userAnswers=[],quizCompleted=false;
+    const qt=document.getElementById('questionTitle'),qn=document.getElementById('questionNumber'),qd=document.getElementById('questionDifficulty'),oc=document.getElementById('optionsContainer'),fc=document.getElementById('feedbackContainer'),fi=document.getElementById('feedbackIcon'),ft=document.getElementById('feedbackTitle'),fe=document.getElementById('feedbackExplanation'),pb=document.getElementById('prevBtn'),nb=document.getElementById('nextBtn'),pf=document.getElementById('progressFill'),pt=document.getElementById('progressText'),ac=document.getElementById('answeredCount'),cc=document.getElementById('correctCount'),ar=document.getElementById('accuracyRate'),rc=document.getElementById('remainingCount'),qnv=document.getElementById('questionNav'),cs=document.getElementById('completionScreen'),fcc=document.getElementById('finalCorrectCount'),ftc=document.getElementById('finalTotalCount'),far=document.getElementById('finalAccuracyRate');
+    function init(){if(questions.length===0){qt.textContent="题库正在建设中，请稍后...";oc.innerHTML="<p style='color:var(--gray-color);text-align:center;padding:40px'>请先在代码的questions数组中添加题目</p>";nb.disabled=true;pb.disabled=true;return}userAnswers=new Array(questions.length).fill(null);loadQuestion();updateStats();generateQuestionNav()}
+    function loadQuestion(){const q=questions[currentQuestionIndex];qt.innerHTML=q.title;qn.textContent=`第 ${currentQuestionIndex+1} 题`;qd.textContent=q.difficulty==='easy'?'简单难度':q.difficulty==='medium'?'中等难度':'困难难度';qd.className=`question-difficulty difficulty-${q.difficulty}`;oc.innerHTML='';q.options.forEach((o,i)=>{const d=document.createElement('div');d.className='option';if(userAnswers[currentQuestionIndex]!==null){if(i===q.answer)d.classList.add('correct');else if(i===userAnswers[currentQuestionIndex]&&userAnswers[currentQuestionIndex]!==q.answer)d.classList.add('incorrect');if(i===userAnswers[currentQuestionIndex])d.classList.add('selected')}const l=document.createElement('div');l.className='option-letter';l.textContent=String.fromCharCode(65+i);const t=document.createElement('div');t.className='option-text';t.innerHTML=o;d.appendChild(l);d.appendChild(t);if(userAnswers[currentQuestionIndex]===null)d.onclick=()=>selectAnswer(d,i);oc.appendChild(d)});if(userAnswers[currentQuestionIndex]!==null)showFeedback();else fc.classList.remove('show');pb.disabled=currentQuestionIndex===0;nb.textContent=currentQuestionIndex===questions.length-1?'完成答题':'下一题';updateProgress();updateQuestionNav()}
+    function selectAnswer(e,i){const q=questions[currentQuestionIndex];document.querySelectorAll('.option').forEach(o=>o.onclick=null);e.classList.add('selected');userAnswers[currentQuestionIndex]=i;if(i===q.answer)e.classList.add('correct');else{e.classList.add('incorrect');document.querySelectorAll('.option')[q.answer].classList.add('correct')}showFeedback();updateStats();updateQuestionNav()}
+    function showFeedback(){const q=questions[currentQuestionIndex],a=userAnswers[currentQuestionIndex],c=a===q.answer;fi.innerHTML=c?'✓':'✗';ft.textContent=c?'回答正确！':'回答错误';fe.textContent=q.explanation;fc.className=`feedback-container ${c?'feedback-correct':'feedback-incorrect'}`;fc.classList.add('show')}
+    function prevQuestion(){if(currentQuestionIndex>0){currentQuestionIndex--;loadQuestion()}}
+    function nextQuestion(){if(userAnswers[currentQuestionIndex]===null){alert('请先选择答案');return}if(currentQuestionIndex<questions.length-1){currentQuestionIndex++;loadQuestion()}else showCompletionScreen()}
+    function showCompletionScreen(){document.querySelector('.container').style.display='none';cs.style.display='block';const t=questions.length,c=userAnswers.filter((a,i)=>a===questions[i].answer).length,a=t>0?Math.round((c/t)*100):0;fcc.textContent=c;ftc.textContent=t;far.textContent=`${a}%`;quizCompleted=true}
+    function restartQuiz(){currentQuestionIndex=0;userAnswers=new Array(questions.length).fill(null);quizCompleted=false;cs.style.display='none';document.querySelector('.container').style.display='grid';loadQuestion();updateStats();updateQuestionNav()}
+    function updateProgress(){const p=((currentQuestionIndex+1)/questions.length)*100;pf.style.width=`${p}%`;pt.textContent=`${currentQuestionIndex+1}/${questions.length}`}
+    function updateStats(){const t=questions.length,a=userAnswers.filter(a=>a!==null).length,c=userAnswers.filter((a,i)=>a===questions[i].answer).length,acr=a>0?Math.round((c/a)*100):0,r=t-a;ac.textContent=a;cc.textContent=c;ar.textContent=`${acr}%`;rc.textContent=r}
+    function generateQuestionNav(){qnv.innerHTML='';questions.forEach((q,i)=>{const n=document.createElement('div');n.className='question-nav-item';if(i===currentQuestionIndex)n.classList.add('active');n.onclick=()=>{if(quizCompleted||userAnswers[i]!==null||i===currentQuestionIndex+1){currentQuestionIndex=i;loadQuestion()}else alert('请按顺序答题')};const nb=document.createElement('div');nb.className='question-nav-number';nb.textContent=`第 ${i+1} 题`;const ns=document.createElement('div');ns.className='question-nav-status';if(userAnswers[i]!==null)ns.classList.add(userAnswers[i]===q.answer?'correct':'incorrect');else if(i===currentQuestionIndex)ns.classList.add('current');n.appendChild(nb);n.appendChild(ns);qnv.appendChild(n)})}
+    function updateQuestionNav(){document.querySelectorAll('.question-nav-item').forEach((n,i)=>{if(i===currentQuestionIndex)n.classList.add('active');else n.classList.remove('active');const s=n.querySelector('.question-nav-status');s.className='question-nav-status';if(userAnswers[i]!==null)s.classList.add(userAnswers[i]===questions[i].answer?'correct':'incorrect');else if(i===currentQuestionIndex)s.classList.add('current')})}
+    document.addEventListener('keydown',function(e){if(cs.style.display==='block')return;if(e.key>='1'&&e.key<='4'&&userAnswers[currentQuestionIndex]===null){const i=parseInt(e.key)-1,o=document.querySelectorAll('.option');if(i<o.length)o[i].click()}if((e.key==='ArrowLeft'||e.key==='a'||e.key==='A')&&currentQuestionIndex>0)prevQuestion();if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){if(currentQuestionIndex<questions.length-1)nextQuestion();else if(userAnswers[currentQuestionIndex]!==null)nextQuestion()}if((e.key===' '||e.key==='Enter')&&userAnswers[currentQuestionIndex]!==null){if(currentQuestionIndex<questions.length-1)nextQuestion();else nextQuestion()}});
+    window.onload=init;
+  </script>
+</body>
+</html>

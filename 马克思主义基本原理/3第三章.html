@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第三章：人类社会及其发展规律 - 练习题</title>
+  <style>
+    :root {
+      --primary-color: #C62828;
+      --primary-light: #FFCDD2;
+      --secondary-color: #1565C0;
+      --success-color: #2E7D32;
+      --error-color: #C62828;
+      --warning-color: #F9A825;
+      --dark-color: #212121;
+      --light-color: #FAFAFA;
+      --gray-color: #757575;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #fdfbf7 0%, #f5f0e8 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      padding: 20px;
+    }
+
+    .header {
+      max-width: 1000px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      color: var(--primary-color);
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .back-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 30px;
+    }
+
+    .question-container {
+      background: white;
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    .progress-container { margin-bottom: 30px; }
+    .progress-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .progress-label { font-size: 14px; color: var(--gray-color); }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--light-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .question-header { margin-bottom: 30px; }
+    .question-number { font-size: 14px; color: var(--primary-color); font-weight: 600; margin-bottom: 8px; }
+    .question-title { font-size: 22px; line-height: 1.5; margin-bottom: 10px; }
+
+    .question-difficulty {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .difficulty-easy { background: rgba(46, 125, 50, 0.1); color: #2E7D32; }
+    .difficulty-medium { background: rgba(249, 168, 37, 0.1); color: #F9A825; }
+    .difficulty-hard { background: rgba(198, 40, 40, 0.1); color: #C62828; }
+
+    .options-container { margin: 30px 0; }
+
+    .option {
+      padding: 18px 20px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .option:hover {
+      background: white;
+      border-color: var(--primary-light);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .option.selected { border-color: var(--primary-color); background: var(--primary-light); }
+    .option.correct { border-color: var(--success-color); background: rgba(46, 125, 50, 0.1); }
+    .option.incorrect { border-color: var(--error-color); background: rgba(198, 40, 40, 0.1); }
+
+    .option-letter {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: 700;
+      color: var(--dark-color);
+      border: 2px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .option:hover .option-letter { border-color: var(--primary-color); background: var(--primary-color); color: white; }
+    .option.selected .option-letter { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+    .option.correct .option-letter { background: var(--success-color); color: white; border-color: var(--success-color); }
+    .option.incorrect .option-letter { background: var(--error-color); color: white; border-color: var(--error-color); }
+
+    .option-text { flex: 1; font-size: 16px; }
+
+    .feedback-container {
+      margin: 30px 0;
+      padding: 20px;
+      border-radius: var(--radius);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .feedback-container.show { display: block; }
+    .feedback-correct { background: rgba(46, 125, 50, 0.1); border-left: 4px solid var(--success-color); }
+    .feedback-incorrect { background: rgba(198, 40, 40, 0.1); border-left: 4px solid var(--error-color); }
+
+    .feedback-header { display: flex; align-items: center; margin-bottom: 10px; }
+    .feedback-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .feedback-correct .feedback-icon { background: var(--success-color); color: white; }
+    .feedback-incorrect .feedback-icon { background: var(--error-color); color: white; }
+    .feedback-title { font-weight: 700; font-size: 18px; }
+    .feedback-explanation { margin-top: 10px; font-size: 15px; line-height: 1.6; color: var(--dark-color); }
+
+    .controls { display: flex; justify-content: space-between; margin-top: 30px; }
+
+    .btn {
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn-primary:hover:not(:disabled) { background: #8E0000; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(198, 40, 40, 0.3); }
+    .btn-secondary { background: var(--light-color); color: var(--dark-color); }
+    .btn-secondary:hover { background: #e0e0e0; transform: translateY(-3px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+    .sidebar { display: flex; flex-direction: column; gap: 25px; }
+    .stats-card, .hint-card, .navigation-card { background: white; border-radius: var(--radius); padding: 25px; box-shadow: var(--shadow); }
+    .stats-card { border-top: 6px solid var(--primary-color); }
+    .hint-card { border-top: 6px solid var(--warning-color); }
+    .navigation-card { border-top: 6px solid var(--success-color); }
+
+    .card-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .card-title i { font-size: 20px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    .stat-item { text-align: center; padding: 15px; background: var(--light-color); border-radius: var(--radius); }
+    .stat-value { font-size: 24px; font-weight: 700; color: var(--primary-color); display: block; }
+    .stat-label { font-size: 13px; color: var(--gray-color); display: block; margin-top: 5px; }
+    .hint-content { font-size: 14px; line-height: 1.6; color: var(--dark-color); }
+    .question-list { max-height: 300px; overflow-y: auto; margin-top: 10px; }
+
+    .question-nav-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 15px;
+      background: var(--light-color);
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .question-nav-item:hover { background: #e0e0e0; }
+    .question-nav-item.active { background: var(--primary-light); border-left: 4px solid var(--primary-color); }
+    .question-nav-number { font-weight: 600; color: var(--dark-color); }
+    .question-nav-status { width: 10px; height: 10px; border-radius: 50%; background: var(--light-color); }
+    .question-nav-status.correct { background: var(--success-color); }
+    .question-nav-status.incorrect { background: var(--error-color); }
+    .question-nav-status.current { background: var(--primary-color); }
+
+    .completion-screen {
+      max-width: 800px;
+      margin: 50px auto;
+      background: white;
+      border-radius: var(--radius);
+      padding: 50px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.8s ease;
+    }
+
+    .completion-icon { font-size: 80px; color: var(--success-color); margin-bottom: 20px; animation: bounce 1s ease; }
+    .completion-title { font-size: 32px; font-weight: 700; margin-bottom: 15px; color: var(--dark-color); }
+    .completion-subtitle { font-size: 18px; color: var(--gray-color); margin-bottom: 40px; }
+    .completion-stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; }
+
+    .completion-stat-item { padding: 25px; background: var(--light-color); border-radius: var(--radius); min-width: 150px; }
+    .completion-stat-value { font-size: 36px; font-weight: 700; color: var(--primary-color); display: block; }
+    .completion-stat-label { font-size: 16px; color: var(--gray-color); margin-top: 8px; display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { order: -1; }
+    }
+
+    @media (max-width: 768px) {
+      .question-container { padding: 25px; }
+      .controls { flex-direction: column; gap: 15px; }
+      .btn { width: 100%; justify-content: center; }
+      .completion-stats { flex-direction: column; align-items: center; }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+      返回首页
+    </a>
+    <h1 class="page-title">人类社会及其发展规律</h1>
+  </div>
+
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-container">
+        <div class="progress-header">
+          <span class="progress-label">进度</span>
+          <span class="progress-label" id="progressText">0/0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="question-header">
+        <div class="question-number" id="questionNumber">第 0 题</div>
+        <h2 class="question-title" id="questionTitle">题目将在这里显示</h2>
+        <div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div>
+      </div>
+
+      <div class="options-container" id="optionsContainer"></div>
+
+      <div class="feedback-container" id="feedbackContainer">
+        <div class="feedback-header">
+          <div class="feedback-icon" id="feedbackIcon"></div>
+          <div class="feedback-title" id="feedbackTitle"></div>
+        </div>
+        <div class="feedback-explanation" id="feedbackExplanation"></div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>
+          <i class="fas fa-arrow-left"></i>
+          上一题
+        </button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+          下一题
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="stats-card">
+        <div class="card-title">
+          <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+          学习统计
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="answeredCount">0</span>
+            <span class="stat-label">已答题</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="correctCount">0</span>
+            <span class="stat-label">正确数</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="accuracyRate">0%</span>
+            <span class="stat-label">正确率</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="remainingCount">0</span>
+            <span class="stat-label">剩余题</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint-card">
+        <div class="card-title">
+          <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+          答题提示
+        </div>
+        <div class="hint-content">
+          <p>一、点击选项选择答案</p>
+          <p>二、系统会自动判断对错</p>
+          <p>三、点击"下一题"继续答题</p>
+          <p>四、右侧可查看答题进度</p>
+        </div>
+      </div>
+
+      <div class="navigation-card">
+        <div class="card-title">
+          <i class="fas fa-list-ol" style="color: var(--success-color);"></i>
+          题目导航
+        </div>
+        <div class="question-list" id="questionNav"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="completion-screen" id="completionScreen" style="display: none;">
+    <div class="completion-icon">🎉</div>
+    <h2 class="completion-title">恭喜完成题库练习！</h2>
+    <p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+
+    <div class="completion-stats">
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalCorrectCount">0</span>
+        <span class="completion-stat-label">正确题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalTotalCount">0</span>
+        <span class="completion-stat-label">总题数</span>
+      </div>
+      <div class="completion-stat-item">
+        <span class="completion-stat-value" id="finalAccuracyRate">0%</span>
+        <span class="completion-stat-label">正确率</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <a href="index.html" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        返回首页
+      </a>
+      <button class="btn btn-primary" onclick="restartQuiz()">
+        <i class="fas fa-redo"></i>
+        重新开始
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+  {
+    id: 1,
+    title: "历史唯物主义认为，社会存在是指？",
+    options: ["社会生活的物质方面", "社会生活的精神方面", "社会生活的政治方面", "社会生活的文化方面"],
+    answer: 0,
+    explanation: "社会存在是指社会生活的物质方面，包括地理环境、人口因素和物质资料的生产方式。",
+    tag: "社会存在",
+    difficulty: "easy"
+  },
+  {
+    id: 2,
+    title: "社会意识是指？",
+    options: ["社会生活的物质方面", "社会生活的精神方面", "生产方式", "地理环境"],
+    answer: 1,
+    explanation: "社会意识是社会生活的精神方面，包括政治法律思想、道德、艺术、宗教、哲学等。",
+    tag: "社会意识",
+    difficulty: "easy"
+  },
+  {
+    id: 3,
+    title: "社会存在与社会意识的关系是？",
+    options: ["社会意识决定社会存在", "社会存在决定社会意识", "二者互不决定", "二者相互决定"],
+    answer: 1,
+    explanation: "社会存在决定社会意识，社会意识是对社会存在的反映，这是历史唯物主义的基本观点。",
+    tag: "社会存在与社会意识",
+    difficulty: "easy"
+  },
+  {
+    id: 4,
+    title: "社会发展的决定力量是？",
+    options: ["地理环境", "人口因素", "物质资料的生产方式", "政治制度"],
+    answer: 2,
+    explanation: "物质资料的生产方式是社会发展的决定力量。生产方式决定社会的结构、性质和面貌。",
+    tag: "生产方式",
+    difficulty: "easy"
+  },
+  {
+    id: 5,
+    title: "生产力中最活跃的因素是？",
+    options: ["劳动对象", "劳动资料", "劳动者", "科学技术"],
+    answer: 2,
+    explanation: "劳动者是生产力中最活跃的因素，是生产力的主体。",
+    tag: "生产力",
+    difficulty: "easy"
+  },
+  {
+    id: 6,
+    title: "生产关系的基础是？",
+    options: ["生产资料所有制形式", "人们在生产中的地位", "产品分配形式", "消费关系"],
+    answer: 0,
+    explanation: "生产资料所有制形式是生产关系的基础，决定着生产关系的其他方面。",
+    tag: "生产关系",
+    difficulty: "easy"
+  },
+  {
+    id: 7,
+    title: "经济基础是指？",
+    options: ["一定社会占统治地位的生产力", "一定社会占统治地位的生产关系的总和", "上层建筑", "社会意识形态"],
+    answer: 1,
+    explanation: "经济基础是指由社会一定发展阶段的生产力所决定的生产关系的总和。",
+    tag: "经济基础",
+    difficulty: "easy"
+  },
+  {
+    id: 8,
+    title: "上层建筑的核心是？",
+    options: ["哲学", "宗教", "政治上层建筑中的国家政权", "道德"],
+    answer: 2,
+    explanation: "国家政权是上层建筑的核心，政治上层建筑中的国家是统治阶级进行统治的工具。",
+    tag: "上层建筑",
+    difficulty: "medium"
+  },
+  {
+    id: 9,
+    title: "社会基本矛盾是？",
+    options: ["生产力和生产关系的矛盾、经济基础和上层建筑的矛盾", "阶级矛盾", "人民内部矛盾", "人与自然界的矛盾"],
+    answer: 0,
+    explanation: "社会基本矛盾包括生产力与生产关系的矛盾和经济基础与上层建筑的矛盾，这两对矛盾推动社会发展。",
+    tag: "社会基本矛盾",
+    difficulty: "easy"
+  },
+  {
+    id: 10,
+    title: "阶级斗争的根源在于？",
+    options: ["政治观点的不同", "思想意识的不同", "物质利益的根本对立", "宗教信仰的不同"],
+    answer: 2,
+    explanation: "阶级斗争的根源在于物质利益的根本对立，阶级首先是一个经济范畴。",
+    tag: "阶级斗争",
+    difficulty: "medium"
+  },
+  {
+    id: 11,
+    title: "社会革命的根源在于？",
+    options: ["社会基本矛盾的尖锐化", "少数人的政治野心", "外来势力的干预", "统治者的腐败"],
+    answer: 0,
+    explanation: "社会革命的根源在于社会基本矛盾的尖锐化，即生产力与生产关系的矛盾、经济基础与上层建筑的矛盾达到不可调和的程度。",
+    tag: "社会革命",
+    difficulty: "medium"
+  },
+  {
+    id: 12,
+    title: "科学技术在社会发展中的作用是？",
+    options: ["决定作用", "推动作用但不起决定作用", "无作用", "阻碍作用"],
+    answer: 1,
+    explanation: "科学技术对社会发展具有重要的推动作用，是社会发展的强大杠杆，但不属于社会基本矛盾，不能决定社会形态的更替。",
+    tag: "科技作用",
+    difficulty: "medium"
+  },
+  {
+    id: 13,
+    title: "人民群众是历史的创造者，这是？",
+    options: ["唯心主义的观点", "历史唯物主义的基本观点", "英雄史观", "宿命论的观点"],
+    answer: 1,
+    explanation: "人民群众是历史的创造者，这是历史唯物主义的基本观点，与英雄史观根本对立。",
+    tag: "群众史观",
+    difficulty: "easy"
+  },
+  {
+    id: 14,
+    title: "历史人物在历史发展中的作用是？",
+    options: ["决定历史发展的方向", "对历史发展起重大影响作用但不能决定历史发展的总趋势", "可以随意改变历史进程", "没有任何作用"],
+    answer: 1,
+    explanation: "历史人物对历史发展有重大影响，可以加速或延缓历史进程，但不能决定历史发展的总趋势。",
+    tag: "历史人物",
+    difficulty: "easy"
+  },
+  {
+    id: 15,
+    title: "社会形态更替的最根本原因是？",
+    options: ["人民群众的愿望", "先进思想理论的指导", "生产力的发展", "阶级斗争"],
+    answer: 2,
+    explanation: "社会形态更替的最根本原因在于生产力的发展，生产力决定生产关系，进而推动社会形态的演进。",
+    tag: "社会形态",
+    difficulty: "medium"
+  },
+  {
+    id: 16,
+    title: "上层建筑对经济基础的反作用表现为？",
+    options: ["总是积极的促进作用", "可能是促进作用也可能是阻碍作用", "总是消极的阻碍作用", "没有任何反作用"],
+    answer: 1,
+    explanation: "上层建筑对经济基础的反作用有两种：当上层建筑适合经济基础时起促进作用，不适合时起阻碍作用。",
+    tag: "上层建筑",
+    difficulty: "medium"
+  },
+  {
+    id: 17,
+    title: "国家的本质是？",
+    options: ["阶级统治的工具", "公共事务管理机构", "地理范围上的组织", "社会福利组织"],
+    answer: 0,
+    explanation: "国家的本质是阶级统治的工具，是统治阶级对被统治阶级实行统治的暴力组织。",
+    tag: "国家本质",
+    difficulty: "easy"
+  },
+  {
+    id: 18,
+    title: "社会意识的相对独立性最突出的表现是？",
+    options: ["社会意识的发展具有历史继承性", "社会意识对社会存在具有能动的反作用", "社会意识与社会存在发展的不平衡性", "社会意识内部各形式之间的相互作用"],
+    answer: 1,
+    explanation: "社会意识对社会存在具有能动的反作用，这是社会意识相对独立性最突出的表现。",
+    tag: "社会意识",
+    difficulty: "hard"
+  },
+  {
+    id: 19,
+    title: "划分历史唯物主义和历史唯心主义的根本标准是？",
+    options: ["是否承认阶级斗争", "是否承认社会存在决定社会意识", "是否承认历史发展规律", "是否承认人民群众的作用"],
+    answer: 1,
+    explanation: "对"社会存在决定社会意识"还是"社会意识决定社会存在"的不同回答，是划分历史唯物主义和历史唯心主义的根本标准。",
+    tag: "历史唯物主义",
+    difficulty: "medium"
+  },
+  {
+    id: 20,
+    title: "地理环境在社会发展中的作用是？",
+    options: ["决定性作用", "不起作用", "重要条件但不是决定因素", "阻碍作用"],
+    answer: 2,
+    explanation: "地理环境是社会存在和发展的必要条件，对社会发展起加速或延缓作用，但不是决定因素。",
+    tag: "地理环境",
+    difficulty: "easy"
+  },
+  {
+    id: 21,
+    title: "社会形态是？",
+    options: ["生产力和生产关系的统一", "经济基础和上层建筑的统一", "社会存在和社会意识的统一", "物质文明和精神文明的统一"],
+    answer: 1,
+    explanation: "社会形态是经济基础和上层建筑的统一，是社会的经济形态、政治形态和观念形态的统一体。",
+    tag: "社会形态",
+    difficulty: "medium"
+  },
+  {
+    id: 22,
+    title: "历史唯物主义认为，人的本质在于？",
+    options: ["人的自然属性", "人的理性", "一切社会关系的总和", "人的自由意志"],
+    answer: 2,
+    explanation: "马克思认为，人的本质不是单个人所固有的抽象物，在其现实性上，它是一切社会关系的总和。",
+    tag: "人的本质",
+    difficulty: "medium"
+  },
+  {
+    id: 23,
+    title: "改革在社会发展中的作用是？",
+    options: ["可以代替社会革命", "是社会发展的直接动力之一，但不能代替社会革命", "比社会革命更重要", "对社会发展没有任何作用"],
+    answer: 1,
+    explanation: "改革是社会发展的重要动力，但不能代替社会革命。革命解决根本制度问题，改革则在基本制度框架内进行自我完善。",
+    tag: "改革",
+    difficulty: "medium"
+  },
+  {
+    id: 24,
+    title: "人类社会发展的基本规律是？",
+    options: ["生产力决定生产关系、经济基础决定上层建筑的规律", "阶级斗争规律", "优胜劣汰规律", "价值规律"],
+    answer: 0,
+    explanation: "生产关系一定要适合生产力状况的规律、上层建筑一定要适合经济基础状况的规律是人类社会发展的基本规律。",
+    tag: "社会规律",
+    difficulty: "easy"
+  },
+  {
+    id: 25,
+    title: "文化对社会发展的作用主要体现在？",
+    options: ["决定作用", "为社会发展提供精神动力和智力支持", "没有任何作用", "阻碍作用"],
+    answer: 1,
+    explanation: "文化作为上层建筑的组成部分，对社会发展提供思想保证、精神动力和智力支持。",
+    tag: "文化作用",
+    difficulty: "easy"
+  },
+  {
+    id: 26,
+    title: "唯物史观认为，评价历史人物的科学方法是？",
+    options: ["历史主义方法和阶级分析方法", "道德评价方法", "主观评价方法", "个人崇拜方法"],
+    answer: 0,
+    explanation: "评价历史人物应运用历史主义方法和阶级分析方法，从其历史背景和阶级立场出发进行客观评价。",
+    tag: "历史人物评价",
+    difficulty: "hard"
+  }
+];
+
+    let currentQuestionIndex = 0;
+    let userAnswers = [];
+    let quizCompleted = false;
+
+    const questionTitleEl = document.getElementById('questionTitle');
+    const questionNumberEl = document.getElementById('questionNumber');
+    const questionDifficultyEl = document.getElementById('questionDifficulty');
+    const optionsContainerEl = document.getElementById('optionsContainer');
+    const feedbackContainerEl = document.getElementById('feedbackContainer');
+    const feedbackIconEl = document.getElementById('feedbackIcon');
+    const feedbackTitleEl = document.getElementById('feedbackTitle');
+    const feedbackExplanationEl = document.getElementById('feedbackExplanation');
+    const prevBtnEl = document.getElementById('prevBtn');
+    const nextBtnEl = document.getElementById('nextBtn');
+    const progressFillEl = document.getElementById('progressFill');
+    const progressTextEl = document.getElementById('progressText');
+    const answeredCountEl = document.getElementById('answeredCount');
+    const correctCountEl = document.getElementById('correctCount');
+    const accuracyRateEl = document.getElementById('accuracyRate');
+    const remainingCountEl = document.getElementById('remainingCount');
+    const questionNavEl = document.getElementById('questionNav');
+    const completionScreenEl = document.getElementById('completionScreen');
+    const finalCorrectCountEl = document.getElementById('finalCorrectCount');
+    const finalTotalCountEl = document.getElementById('finalTotalCount');
+    const finalAccuracyRateEl = document.getElementById('finalAccuracyRate');
+
+    function init() {
+      if (questions.length === 0) {
+        questionTitleEl.textContent = "题库正在建设中，请稍后...";
+        optionsContainerEl.innerHTML = "<p style='color: var(--gray-color); text-align: center; padding: 40px;'>请先在代码的questions数组中添加题目</p>";
+        nextBtnEl.disabled = true;
+        prevBtnEl.disabled = true;
+        return;
+      }
+      userAnswers = new Array(questions.length).fill(null);
+      loadQuestion();
+      updateStats();
+      generateQuestionNav();
+    }
+
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      questionTitleEl.innerHTML = question.title;
+      questionNumberEl.textContent = `第 ${currentQuestionIndex + 1} 题`;
+      questionDifficultyEl.textContent =
+        question.difficulty === 'easy' ? '简单难度' :
+        question.difficulty === 'medium' ? '中等难度' : '困难难度';
+      questionDifficultyEl.className = `question-difficulty difficulty-${question.difficulty}`;
+      optionsContainerEl.innerHTML = '';
+      question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option';
+        if (userAnswers[currentQuestionIndex] !== null) {
+          if (index === question.answer) { optionDiv.classList.add('correct'); }
+          else if (index === userAnswers[currentQuestionIndex] && userAnswers[currentQuestionIndex] !== question.answer) { optionDiv.classList.add('incorrect'); }
+          if (index === userAnswers[currentQuestionIndex]) { optionDiv.classList.add('selected'); }
+        }
+        const optionLetter = document.createElement('div');
+        optionLetter.className = 'option-letter';
+        optionLetter.textContent = String.fromCharCode(65 + index);
+        const optionText = document.createElement('div');
+        optionText.className = 'option-text';
+        optionText.innerHTML = option;
+        optionDiv.appendChild(optionLetter);
+        optionDiv.appendChild(optionText);
+        if (userAnswers[currentQuestionIndex] === null) { optionDiv.onclick = () => selectAnswer(optionDiv, index); }
+        optionsContainerEl.appendChild(optionDiv);
+      });
+      if (userAnswers[currentQuestionIndex] !== null) { showFeedback(); }
+      else { feedbackContainerEl.classList.remove('show'); }
+      prevBtnEl.disabled = currentQuestionIndex === 0;
+      nextBtnEl.textContent = currentQuestionIndex === questions.length - 1 ? '完成答题' : '下一题';
+      updateProgress();
+      updateQuestionNav();
+    }
+
+    function selectAnswer(optionElement, answerIndex) {
+      const question = questions[currentQuestionIndex];
+      const options = document.querySelectorAll('.option');
+      options.forEach(option => { option.onclick = null; });
+      optionElement.classList.add('selected');
+      userAnswers[currentQuestionIndex] = answerIndex;
+      if (answerIndex === question.answer) { optionElement.classList.add('correct'); }
+      else { optionElement.classList.add('incorrect'); const correctOption = options[question.answer]; correctOption.classList.add('correct'); }
+      showFeedback();
+      updateStats();
+      updateQuestionNav();
+    }
+
+    function showFeedback() {
+      const question = questions[currentQuestionIndex];
+      const userAnswer = userAnswers[currentQuestionIndex];
+      const isCorrect = userAnswer === question.answer;
+      feedbackIconEl.innerHTML = isCorrect ? '✓' : '✗';
+      feedbackTitleEl.textContent = isCorrect ? '回答正确！' : '回答错误';
+      feedbackExplanationEl.textContent = question.explanation;
+      feedbackContainerEl.className = `feedback-container ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+      feedbackContainerEl.classList.add('show');
+    }
+
+    function prevQuestion() { if (currentQuestionIndex > 0) { currentQuestionIndex--; loadQuestion(); } }
+    function nextQuestion() { if (userAnswers[currentQuestionIndex] === null) { alert('请先选择答案'); return; } if (currentQuestionIndex < questions.length - 1) { currentQuestionIndex++; loadQuestion(); } else { showCompletionScreen(); } }
+
+    function showCompletionScreen() {
+      document.querySelector('.container').style.display = 'none';
+      completionScreenEl.style.display = 'block';
+      const totalQuestions = questions.length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+      finalCorrectCountEl.textContent = correctAnswers;
+      finalTotalCountEl.textContent = totalQuestions;
+      finalAccuracyRateEl.textContent = `${accuracy}%`;
+      quizCompleted = true;
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0; userAnswers = new Array(questions.length).fill(null); quizCompleted = false;
+      completionScreenEl.style.display = 'none';
+      document.querySelector('.container').style.display = 'grid';
+      loadQuestion(); updateStats(); updateQuestionNav();
+    }
+
+    function updateProgress() {
+      const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressFillEl.style.width = `${progressPercentage}%`;
+      progressTextEl.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+    }
+
+    function updateStats() {
+      const totalQuestions = questions.length;
+      const answeredQuestions = userAnswers.filter(answer => answer !== null).length;
+      const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].answer).length;
+      const accuracy = answeredQuestions > 0 ? Math.round((correctAnswers / answeredQuestions) * 100) : 0;
+      const remainingQuestions = totalQuestions - answeredQuestions;
+      answeredCountEl.textContent = answeredQuestions; correctCountEl.textContent = correctAnswers;
+      accuracyRateEl.textContent = `${accuracy}%`; remainingCountEl.textContent = remainingQuestions;
+    }
+
+    function generateQuestionNav() {
+      questionNavEl.innerHTML = '';
+      questions.forEach((question, index) => {
+        const navItem = document.createElement('div'); navItem.className = 'question-nav-item';
+        if (index === currentQuestionIndex) { navItem.classList.add('active'); }
+        navItem.onclick = () => { if (quizCompleted || userAnswers[index] !== null || index === currentQuestionIndex + 1) { currentQuestionIndex = index; loadQuestion(); } else { alert('请按顺序答题'); } };
+        const navNumber = document.createElement('div'); navNumber.className = 'question-nav-number'; navNumber.textContent = `第 ${index + 1} 题`;
+        const navStatus = document.createElement('div'); navStatus.className = 'question-nav-status';
+        if (userAnswers[index] !== null) { navStatus.classList.add(userAnswers[index] === question.answer ? 'correct' : 'incorrect'); }
+        else if (index === currentQuestionIndex) { navStatus.classList.add('current'); }
+        navItem.appendChild(navNumber); navItem.appendChild(navStatus);
+        questionNavEl.appendChild(navItem);
+      });
+    }
+
+    function updateQuestionNav() {
+      const navItems = document.querySelectorAll('.question-nav-item');
+      navItems.forEach((item, index) => {
+        if (index === currentQuestionIndex) { item.classList.add('active'); } else { item.classList.remove('active'); }
+        const statusIndicator = item.querySelector('.question-nav-status'); statusIndicator.className = 'question-nav-status';
+        if (userAnswers[index] !== null) { statusIndicator.classList.add(userAnswers[index] === questions[index].answer ? 'correct' : 'incorrect'); }
+        else if (index === currentQuestionIndex) { statusIndicator.classList.add('current'); }
+      });
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (completionScreenEl.style.display === 'block') return;
+      if (e.key >= '1' && e.key <= '4' && userAnswers[currentQuestionIndex] === null) { const optionIndex = parseInt(e.key) - 1; const options = document.querySelectorAll('.option'); if (optionIndex < options.length) { options[optionIndex].click(); } }
+      if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && currentQuestionIndex > 0) { prevQuestion(); }
+      if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) { if (currentQuestionIndex < questions.length - 1) { nextQuestion(); } else if (userAnswers[currentQuestionIndex] !== null) { nextQuestion(); } }
+      if ((e.key === ' ' || e.key === 'Enter') && userAnswers[currentQuestionIndex] !== null) { if (currentQuestionIndex < questions.length - 1) { nextQuestion(); } else { nextQuestion(); } }
+    });
+
+    window.onload = init;
+  </script>
+</body>
+</html>

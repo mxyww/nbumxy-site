@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第六章：社会主义的发展及其规律 - 练习题</title>
+  <style>
+    :root { --primary-color: #C62828; --primary-light: #FFCDD2; --secondary-color: #1565C0; --success-color: #2E7D32; --error-color: #C62828; --warning-color: #F9A825; --dark-color: #212121; --light-color: #FAFAFA; --gray-color: #757575; --shadow: 0 10px 30px rgba(0,0,0,0.08); --shadow-hover: 0 20px 40px rgba(0,0,0,0.12); --transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.1); --radius: 16px; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif; background:linear-gradient(135deg,#fdfbf7 0%,#f5f0e8 100%); min-height:100vh; color:var(--dark-color); padding:20px; }
+    .header { max-width:1000px; margin:0 auto 30px; display:flex; justify-content:space-between; align-items:center; padding:20px 0; }
+    .back-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; background:white; color:var(--primary-color); text-decoration:none; border-radius:var(--radius); font-weight:600; box-shadow:var(--shadow); transition:var(--transition); }
+    .back-btn:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+    .page-title { font-size:28px; font-weight:700; background:linear-gradient(to right,var(--primary-color),var(--secondary-color)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .container { max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 300px; gap:30px; }
+    .question-container { background:white; border-radius:var(--radius); padding:40px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+    .question-container::before { content:''; position:absolute; top:0; left:0; width:100%; height:6px; background:linear-gradient(to right,var(--primary-color),var(--secondary-color)); }
+    .progress-container { margin-bottom:30px; } .progress-header { display:flex; justify-content:space-between; margin-bottom:10px; } .progress-label { font-size:14px; color:var(--gray-color); }
+    .progress-bar { height:8px; background:var(--light-color); border-radius:4px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(to right,var(--primary-color),var(--secondary-color)); border-radius:4px; width:0%; transition:width 0.5s ease; }
+    .question-header { margin-bottom:30px; } .question-number { font-size:14px; color:var(--primary-color); font-weight:600; margin-bottom:8px; }
+    .question-title { font-size:22px; line-height:1.5; margin-bottom:10px; }
+    .question-difficulty { display:inline-block; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; margin-top:5px; }
+    .difficulty-easy { background:rgba(46,125,50,0.1); color:#2E7D32; } .difficulty-medium { background:rgba(249,168,37,0.1); color:#F9A825; } .difficulty-hard { background:rgba(198,40,40,0.1); color:#C62828; }
+    .options-container { margin:30px 0; }
+    .option { padding:18px 20px; background:var(--light-color); border-radius:var(--radius); margin-bottom:15px; cursor:pointer; transition:var(--transition); border:2px solid transparent; display:flex; align-items:center; }
+    .option:hover { background:white; border-color:var(--primary-light); transform:translateY(-3px); box-shadow:0 5px 15px rgba(0,0,0,0.05); }
+    .option.selected { border-color:var(--primary-color); background:var(--primary-light); }
+    .option.correct { border-color:var(--success-color); background:rgba(46,125,50,0.1); } .option.incorrect { border-color:var(--error-color); background:rgba(198,40,40,0.1); }
+    .option-letter { width:36px; height:36px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-right:15px; font-weight:700; color:var(--dark-color); border:2px solid var(--light-color); transition:var(--transition); }
+    .option:hover .option-letter { border-color:var(--primary-color); background:var(--primary-color); color:white; }
+    .option.selected .option-letter { background:var(--primary-color); color:white; border-color:var(--primary-color); }
+    .option.correct .option-letter { background:var(--success-color); color:white; border-color:var(--success-color); } .option.incorrect .option-letter { background:var(--error-color); color:white; border-color:var(--error-color); }
+    .option-text { flex:1; font-size:16px; }
+    .feedback-container { margin:30px 0; padding:20px; border-radius:var(--radius); display:none; animation:fadeIn 0.5s ease; }
+    .feedback-container.show { display:block; } .feedback-correct { background:rgba(46,125,50,0.1); border-left:4px solid var(--success-color); } .feedback-incorrect { background:rgba(198,40,40,0.1); border-left:4px solid var(--error-color); }
+    .feedback-header { display:flex; align-items:center; margin-bottom:10px; }
+    .feedback-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-right:12px; font-size:18px; flex-shrink:0; }
+    .feedback-correct .feedback-icon { background:var(--success-color); color:white; } .feedback-incorrect .feedback-icon { background:var(--error-color); color:white; }
+    .feedback-title { font-weight:700; font-size:18px; } .feedback-explanation { margin-top:10px; font-size:15px; line-height:1.6; color:var(--dark-color); }
+    .controls { display:flex; justify-content:space-between; margin-top:30px; }
+    .btn { padding:14px 32px; border:none; border-radius:var(--radius); font-size:16px; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:8px; }
+    .btn-primary { background:var(--primary-color); color:white; } .btn-primary:hover:not(:disabled) { background:#8E0000; transform:translateY(-3px); box-shadow:0 10px 20px rgba(198,40,40,0.3); }
+    .btn-secondary { background:var(--light-color); color:var(--dark-color); } .btn-secondary:hover { background:#e0e0e0; transform:translateY(-3px); }
+    .btn:disabled { opacity:0.5; cursor:not-allowed; transform:none!important; box-shadow:none!important; }
+    .sidebar { display:flex; flex-direction:column; gap:25px; } .stats-card,.hint-card,.navigation-card { background:white; border-radius:var(--radius); padding:25px; box-shadow:var(--shadow); }
+    .stats-card { border-top:6px solid var(--primary-color); } .hint-card { border-top:6px solid var(--warning-color); } .navigation-card { border-top:6px solid var(--success-color); }
+    .card-title { font-size:18px; font-weight:700; margin-bottom:20px; display:flex; align-items:center; gap:10px; } .card-title i { font-size:20px; }
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; } .stat-item { text-align:center; padding:15px; background:var(--light-color); border-radius:var(--radius); }
+    .stat-value { font-size:24px; font-weight:700; color:var(--primary-color); display:block; } .stat-label { font-size:13px; color:var(--gray-color); display:block; margin-top:5px; }
+    .hint-content { font-size:14px; line-height:1.6; color:var(--dark-color); } .question-list { max-height:300px; overflow-y:auto; margin-top:10px; }
+    .question-nav-item { display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:var(--light-color); border-radius:var(--radius); margin-bottom:10px; cursor:pointer; transition:var(--transition); }
+    .question-nav-item:hover { background:#e0e0e0; } .question-nav-item.active { background:var(--primary-light); border-left:4px solid var(--primary-color); }
+    .question-nav-number { font-weight:600; color:var(--dark-color); } .question-nav-status { width:10px; height:10px; border-radius:50%; background:var(--light-color); }
+    .question-nav-status.correct { background:var(--success-color); } .question-nav-status.incorrect { background:var(--error-color); } .question-nav-status.current { background:var(--primary-color); }
+    .completion-screen { max-width:800px; margin:50px auto; background:white; border-radius:var(--radius); padding:50px; text-align:center; box-shadow:var(--shadow); animation:fadeIn 0.8s ease; }
+    .completion-icon { font-size:80px; color:var(--success-color); margin-bottom:20px; animation:bounce 1s ease; }
+    .completion-title { font-size:32px; font-weight:700; margin-bottom:15px; color:var(--dark-color); } .completion-subtitle { font-size:18px; color:var(--gray-color); margin-bottom:40px; }
+    .completion-stats { display:flex; justify-content:center; gap:30px; margin-bottom:40px; } .completion-stat-item { padding:25px; background:var(--light-color); border-radius:var(--radius); min-width:150px; }
+    .completion-stat-value { font-size:36px; font-weight:700; color:var(--primary-color); display:block; } .completion-stat-label { font-size:16px; color:var(--gray-color); margin-top:8px; display:block; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-20px)} 60%{transform:translateY(-10px)} }
+    @media(max-width:900px){ .container{grid-template-columns:1fr} .sidebar{order:-1} }
+    @media(max-width:768px){ .question-container{padding:25px} .controls{flex-direction:column;gap:15px} .btn{width:100%;justify-content:center} .completion-stats{flex-direction:column;align-items:center} }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i>返回首页</a>
+    <h1 class="page-title">社会主义的发展及其规律</h1>
+  </div>
+  <div class="container">
+    <div class="question-container">
+      <div class="progress-container"><div class="progress-header"><span class="progress-label">进度</span><span class="progress-label" id="progressText">0/0</span></div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
+      <div class="question-header"><div class="question-number" id="questionNumber">第 0 题</div><h2 class="question-title" id="questionTitle">题目将在这里显示</h2><div class="question-difficulty difficulty-medium" id="questionDifficulty">中等难度</div></div>
+      <div class="options-container" id="optionsContainer"></div>
+      <div class="feedback-container" id="feedbackContainer"><div class="feedback-header"><div class="feedback-icon" id="feedbackIcon"></div><div class="feedback-title" id="feedbackTitle"></div></div><div class="feedback-explanation" id="feedbackExplanation"></div></div>
+      <div class="controls"><button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled><i class="fas fa-arrow-left"></i>上一题</button><button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">下一题<i class="fas fa-arrow-right"></i></button></div>
+    </div>
+    <div class="sidebar">
+      <div class="stats-card"><div class="card-title"><i class="fas fa-chart-bar" style="color:var(--primary-color)"></i>学习统计</div><div class="stats-grid"><div class="stat-item"><span class="stat-value" id="answeredCount">0</span><span class="stat-label">已答题</span></div><div class="stat-item"><span class="stat-value" id="correctCount">0</span><span class="stat-label">正确数</span></div><div class="stat-item"><span class="stat-value" id="accuracyRate">0%</span><span class="stat-label">正确率</span></div><div class="stat-item"><span class="stat-value" id="remainingCount">0</span><span class="stat-label">剩余题</span></div></div></div>
+      <div class="hint-card"><div class="card-title"><i class="fas fa-lightbulb" style="color:var(--warning-color)"></i>答题提示</div><div class="hint-content"><p>一、点击选项选择答案</p><p>二、系统会自动判断对错</p><p>三、点击"下一题"继续答题</p><p>四、右侧可查看答题进度</p></div></div>
+      <div class="navigation-card"><div class="card-title"><i class="fas fa-list-ol" style="color:var(--success-color)"></i>题目导航</div><div class="question-list" id="questionNav"></div></div>
+    </div>
+  </div>
+  <div class="completion-screen" id="completionScreen" style="display:none">
+    <div class="completion-icon">🎉</div><h2 class="completion-title">恭喜完成题库练习！</h2><p class="completion-subtitle">你已经完成了所有题目，继续加油！</p>
+    <div class="completion-stats"><div class="completion-stat-item"><span class="completion-stat-value" id="finalCorrectCount">0</span><span class="completion-stat-label">正确题数</span></div><div class="completion-stat-item"><span class="completion-stat-value" id="finalTotalCount">0</span><span class="completion-stat-label">总题数</span></div><div class="completion-stat-item"><span class="completion-stat-value" id="finalAccuracyRate">0%</span><span class="completion-stat-label">正确率</span></div></div>
+    <div class="controls"><a href="index.html" class="btn btn-secondary"><i class="fas fa-home"></i>返回首页</a><button class="btn btn-primary" onclick="restartQuiz()"><i class="fas fa-redo"></i>重新开始</button></div>
+  </div>
+  <script>
+    const questions = [
+  { id:1, title:"科学社会主义产生的标志是？", options:["《乌托邦》的发表", "《共产党宣言》的发表", "十月革命的胜利", "巴黎公社的建立"], answer:1, explanation:"1848年《共产党宣言》的发表标志着科学社会主义的诞生。", tag:"社会主义诞生", difficulty:"easy" },
+  { id:2, title:"空想社会主义的主要代表人物是？", options:["圣西门、傅立叶、欧文", "马克思、恩格斯、列宁", "黑格尔、费尔巴哈、亚当·斯密", "卢梭、伏尔泰、孟德斯鸠"], answer:0, explanation:"19世纪初的空想社会主义主要代表人物是法国的圣西门、傅立叶和英国的欧文。", tag:"空想社会主义", difficulty:"easy" },
+  { id:3, title:"空想社会主义的历史局限性在于？", options:["没有批判资本主义", "没有发现社会主义代替资本主义的必然性和现实力量", "提出了社会主义必然代替资本主义的理论", "不需要改良社会"], answer:1, explanation:"空想社会主义者虽然批判了资本主义，但没有发现社会主义代替资本主义的历史必然性，也没有找到实现社会主义的现实力量和正确途径。", tag:"空想社会主义", difficulty:"medium" },
+  { id:4, title:"无产阶级革命的根本问题是？", options:["经济建设问题", "政权问题", "文化教育问题", "改善民生问题"], answer:1, explanation:"无产阶级革命的根本问题是政权问题，无产阶级必须夺取政权。", tag:"无产阶级革命", difficulty:"medium" },
+  { id:5, title:"马克思、恩格斯认为，无产阶级夺取政权的途径是？", options:["只能通过暴力革命", "只能通过和平过渡", "暴力和和平两种方式都可能", "只能通过议会斗争"], answer:2, explanation:"马克思、恩格斯认为，无产阶级可以通过暴力和和平两种途径夺取政权，具体方式取决于当时的历史条件。", tag:"无产阶级革命", difficulty:"medium" },
+  { id:6, title:"世界上第一个无产阶级政权是？", options:["十月革命建立的苏维埃政权", "巴黎公社", "中国苏维埃政权", "东德政府"], answer:1, explanation:"1871年的巴黎公社是世界上第一个无产阶级政权，虽然存在时间很短，但意义重大。", tag:"巴黎公社", difficulty:"easy" },
+  { id:7, title:"十月革命的历史意义在于？", options:["建立了资本主义制度", "建立了世界上第一个社会主义国家", ["恢复了沙皇统治"], "建立了世界上第一个资产阶级共和国"], answer:1, explanation:"1917年俄国十月革命建立了世界上第一个社会主义国家，开创了人类历史的新纪元。", tag:"十月革命", difficulty:"easy" },
+  { id:8, title:"社会主义制度建立后，社会的主要矛盾是？", options:["无产阶级与资产阶级的矛盾", "人民日益增长的物质文化需要同落后的社会生产之间的矛盾（在中国社会主义初级阶段）", "社会主义道路与资本主义道路的矛盾", "社会主义国家之间的矛盾"], answer:1, explanation:"在不同时期的不同国家，社会主要矛盾有所不同。在中国社会主义初级阶段，主要矛盾是人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾。", tag:"主要矛盾", difficulty:"medium" },
+  { id:9, title:"社会主义建设的基本任务是？", options:["以阶级斗争为纲", "大力发展生产力", "消灭一切差别", "取消商品经济"], answer:1, explanation:"社会主义建设的根本任务是解放和发展生产力。", tag:"社会主义建设", difficulty:"easy" },
+  { id:10, title:"社会主义与资本主义的根本区别在于？", options:["经济发展速度", "生产关系的性质", "科技发展水平", "城市化程度"], answer:1, explanation:"社会主义与资本主义的根本区别在于生产关系的性质，特别是所有制基础不同。", tag:"社会主义特征", difficulty:"medium" },
+  { id:11, title:"社会主义发展道路具有？", options:["单一性", "统一性", "多样性", "固定性"], answer:2, explanation:"社会主义发展道路具有多样性，各国根据本国国情选择适合的发展道路。", tag:"社会主义道路", difficulty:"easy" },
+  { id:12, title:"社会主义国家改革的性质是？", options:["对社会主义根本制度的否定", "社会主义制度的自我完善和发展", "走资本主义道路", "回到传统社会主义模式"], answer:1, explanation:"社会主义改革的性质是社会主义制度的自我完善和发展，而不是否定社会主义制度。", tag:"社会主义改革", difficulty:"medium" },
+  { id:13, title:"改革开放以来，中国成功开辟了？", options:["资本主义现代化道路", "中国特色社会主义道路", "传统社会主义道路", "西方现代化道路"], answer:1, explanation:"改革开放以来，中国成功开辟了中国特色社会主义道路。", tag:"中国特色社会主义", difficulty:"easy" },
+  { id:14, title:"历史唯物主义认为，社会制度更替的决定性因素是？", options:["伟大人物", "科学理论的指导", "生产力的发展", "国际环境"], answer:2, explanation:"社会主义代替资本主义是生产力发展的客观要求，生产力的发展是社会制度更替的决定性因素。", tag:"制度更替", difficulty:"medium" },
+  { id:15, title:"马克思主义政党的性质是？", options:["全体人民的党", "特殊利益集团", "无产阶级的先锋队", "资产阶级的政党"], answer:2, explanation:"马克思主义政党是无产阶级的先锋队，是社会主义事业的领导核心。", tag:"政党", difficulty:"easy" },
+  { id:16, title:"列宁关于社会主义在一国或数国首先胜利的理论依据是？", options:["资本主义发展不平衡规律", "资本主义的普遍繁荣", "社会主义在所有国家同时胜利", "落后国家不能建设社会主义"], answer:0, explanation:"列宁根据帝国主义时代资本主义经济政治发展不平衡的规律，得出社会主义可能在一国或数国首先取得胜利的结论。", tag:"列宁理论", difficulty:"medium" },
+  { id:17, title:"社会主义在经济上的基本特征是？", options:["完全的按需分配", "生产资料公有制为主体", "取消商品货币关系", "私有制占绝对主导"], answer:1, explanation:"生产资料公有制是社会主义经济制度的基础和基本特征。", tag:"经济特征", difficulty:"easy" },
+  { id:18, title:"科学社会主义的核心理论是？", options:["阶级斗争学说", "无产阶级专政和社会主义必然代替资本主义的理论", "剩余价值学说", "唯物辩证法"], answer:1, explanation:"科学社会主义的核心理论是关于无产阶级专政和社会主义必然代替资本主义的理论。", tag:"科学社会主义", difficulty:"medium" },
+  { id:19, title:"中国特色社会主义进入新时代，意味着科学社会主义在二十一世纪的中国焕发出强大生机活力。这说明？", options:["社会主义已经过时", "科学社会主义具有强大的生命力", "中国已经实现了共产主义", "社会主义的发展不需要任何改革"], answer:1, explanation:"中国特色社会主义的成功实践证明了科学社会主义具有强大的生命力。", tag:"科学社会主义", difficulty:"easy" },
+  { id:20, title:"社会主义民主的本质是？", options:["少数人的民主", "金钱操控的民主", "人民当家作主", "资产阶级民主"], answer:2, explanation:"人民当家作主是社会主义民主政治的本质和核心。", tag:"社会主义民主", difficulty:"easy" },
+  { id:21, title:"列宁认为，无产阶级专政国家的形式是？", options:["只能是苏维埃", "因各国具体条件而异", "只能是议会制", "只能是君主立宪制"], answer:1, explanation:"列宁认为无产阶级专政国家的形式可以因各国不同的历史条件和国情而异。", tag:"无产阶级专政", difficulty:"medium" },
+  { id:22, title:"马克思关于"两个必然"是指？", options:["社会主义必然灭亡、资本主义必然胜利", "资本主义必然灭亡、社会主义必然胜利", "封建主义必然灭亡、资本主义必然胜利", "资本主义必然灭亡、封建主义必然复兴"], answer:1, explanation:"马克思的"两个必然"是指资本主义必然灭亡、社会主义必然胜利。", tag:"两个必然", difficulty:"easy" }
+];
+    let currentQuestionIndex=0,userAnswers=[],quizCompleted=false;
+    const qt=document.getElementById('questionTitle'),qn=document.getElementById('questionNumber'),qd=document.getElementById('questionDifficulty'),oc=document.getElementById('optionsContainer'),fc=document.getElementById('feedbackContainer'),fi=document.getElementById('feedbackIcon'),ft=document.getElementById('feedbackTitle'),fe=document.getElementById('feedbackExplanation'),pb=document.getElementById('prevBtn'),nb=document.getElementById('nextBtn'),pf=document.getElementById('progressFill'),pt=document.getElementById('progressText'),ac=document.getElementById('answeredCount'),cc=document.getElementById('correctCount'),ar=document.getElementById('accuracyRate'),rc=document.getElementById('remainingCount'),qnv=document.getElementById('questionNav'),cs=document.getElementById('completionScreen'),fcc=document.getElementById('finalCorrectCount'),ftc=document.getElementById('finalTotalCount'),far=document.getElementById('finalAccuracyRate');
+    function init(){if(questions.length===0){qt.textContent="题库正在建设中，请稍后...";oc.innerHTML="<p style='color:var(--gray-color);text-align:center;padding:40px'>请先在代码的questions数组中添加题目</p>";nb.disabled=true;pb.disabled=true;return}userAnswers=new Array(questions.length).fill(null);loadQuestion();updateStats();generateQuestionNav()}
+    function loadQuestion(){const q=questions[currentQuestionIndex];qt.innerHTML=q.title;qn.textContent=`第 ${currentQuestionIndex+1} 题`;qd.textContent=q.difficulty==='easy'?'简单难度':q.difficulty==='medium'?'中等难度':'困难难度';qd.className=`question-difficulty difficulty-${q.difficulty}`;oc.innerHTML='';q.options.forEach((o,i)=>{const d=document.createElement('div');d.className='option';if(userAnswers[currentQuestionIndex]!==null){if(i===q.answer)d.classList.add('correct');else if(i===userAnswers[currentQuestionIndex]&&userAnswers[currentQuestionIndex]!==q.answer)d.classList.add('incorrect');if(i===userAnswers[currentQuestionIndex])d.classList.add('selected')}const l=document.createElement('div');l.className='option-letter';l.textContent=String.fromCharCode(65+i);const t=document.createElement('div');t.className='option-text';t.innerHTML=o;d.appendChild(l);d.appendChild(t);if(userAnswers[currentQuestionIndex]===null)d.onclick=()=>selectAnswer(d,i);oc.appendChild(d)});if(userAnswers[currentQuestionIndex]!==null)showFeedback();else fc.classList.remove('show');pb.disabled=currentQuestionIndex===0;nb.textContent=currentQuestionIndex===questions.length-1?'完成答题':'下一题';updateProgress();updateQuestionNav()}
+    function selectAnswer(e,i){const q=questions[currentQuestionIndex];document.querySelectorAll('.option').forEach(o=>o.onclick=null);e.classList.add('selected');userAnswers[currentQuestionIndex]=i;if(i===q.answer)e.classList.add('correct');else{e.classList.add('incorrect');document.querySelectorAll('.option')[q.answer].classList.add('correct')}showFeedback();updateStats();updateQuestionNav()}
+    function showFeedback(){const q=questions[currentQuestionIndex],a=userAnswers[currentQuestionIndex],c=a===q.answer;fi.innerHTML=c?'✓':'✗';ft.textContent=c?'回答正确！':'回答错误';fe.textContent=q.explanation;fc.className=`feedback-container ${c?'feedback-correct':'feedback-incorrect'}`;fc.classList.add('show')}
+    function prevQuestion(){if(currentQuestionIndex>0){currentQuestionIndex--;loadQuestion()}}
+    function nextQuestion(){if(userAnswers[currentQuestionIndex]===null){alert('请先选择答案');return}if(currentQuestionIndex<questions.length-1){currentQuestionIndex++;loadQuestion()}else showCompletionScreen()}
+    function showCompletionScreen(){document.querySelector('.container').style.display='none';cs.style.display='block';const t=questions.length,c=userAnswers.filter((a,i)=>a===questions[i].answer).length,a=t>0?Math.round((c/t)*100):0;fcc.textContent=c;ftc.textContent=t;far.textContent=`${a}%`;quizCompleted=true}
+    function restartQuiz(){currentQuestionIndex=0;userAnswers=new Array(questions.length).fill(null);quizCompleted=false;cs.style.display='none';document.querySelector('.container').style.display='grid';loadQuestion();updateStats();updateQuestionNav()}
+    function updateProgress(){const p=((currentQuestionIndex+1)/questions.length)*100;pf.style.width=`${p}%`;pt.textContent=`${currentQuestionIndex+1}/${questions.length}`}
+    function updateStats(){const t=questions.length,a=userAnswers.filter(a=>a!==null).length,c=userAnswers.filter((a,i)=>a===questions[i].answer).length,acr=a>0?Math.round((c/a)*100):0,r=t-a;ac.textContent=a;cc.textContent=c;ar.textContent=`${acr}%`;rc.textContent=r}
+    function generateQuestionNav(){qnv.innerHTML='';questions.forEach((q,i)=>{const n=document.createElement('div');n.className='question-nav-item';if(i===currentQuestionIndex)n.classList.add('active');n.onclick=()=>{if(quizCompleted||userAnswers[i]!==null||i===currentQuestionIndex+1){currentQuestionIndex=i;loadQuestion()}else alert('请按顺序答题')};const nb=document.createElement('div');nb.className='question-nav-number';nb.textContent=`第 ${i+1} 题`;const ns=document.createElement('div');ns.className='question-nav-status';if(userAnswers[i]!==null)ns.classList.add(userAnswers[i]===q.answer?'correct':'incorrect');else if(i===currentQuestionIndex)ns.classList.add('current');n.appendChild(nb);n.appendChild(ns);qnv.appendChild(n)})}
+    function updateQuestionNav(){document.querySelectorAll('.question-nav-item').forEach((n,i)=>{if(i===currentQuestionIndex)n.classList.add('active');else n.classList.remove('active');const s=n.querySelector('.question-nav-status');s.className='question-nav-status';if(userAnswers[i]!==null)s.classList.add(userAnswers[i]===questions[i].answer?'correct':'incorrect');else if(i===currentQuestionIndex)s.classList.add('current')})}
+    document.addEventListener('keydown',function(e){if(cs.style.display==='block')return;if(e.key>='1'&&e.key<='4'&&userAnswers[currentQuestionIndex]===null){const i=parseInt(e.key)-1,o=document.querySelectorAll('.option');if(i<o.length)o[i].click()}if((e.key==='ArrowLeft'||e.key==='a'||e.key==='A')&&currentQuestionIndex>0)prevQuestion();if(e.key==='ArrowRight'||e.key==='d'||e.key==='D'){if(currentQuestionIndex<questions.length-1)nextQuestion();else if(userAnswers[currentQuestionIndex]!==null)nextQuestion()}if((e.key===' '||e.key==='Enter')&&userAnswers[currentQuestionIndex]!==null){if(currentQuestionIndex<questions.length-1)nextQuestion();else nextQuestion()}});
+    window.onload=init;
+  </script>
+</body>
+</html>
